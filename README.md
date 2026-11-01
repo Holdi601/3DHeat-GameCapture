@@ -453,8 +453,8 @@ project on purpose. The positions are the game's own world coordinates, which
 makes them the handle for finding the same ground in the game's files:
 
 ```bash
-cd ../gamefiles
-python -m heat3d_gamefiles course ../gamecapture/lap.json -o map.glb
+cd ../3DHeat-GameFiles   # https://github.com/Holdi601/3DHeat-GameFiles
+python -m heat3d_gamefiles course ../3DHeat-GameCapture/lap.json -o map.glb
 ```
 
 That exports the track the lap ran over straight out of the shipped archive —
@@ -480,8 +480,8 @@ extractor takes it unchanged — or skip it and name the course, which reads the
 same library directly:
 
 ```bash
-cd ../gamefiles
-python -m heat3d_gamefiles course "Lakeside Circuit" -o ../gamecapture/races/lakeside.glb
+cd ../3DHeat-GameFiles   # https://github.com/Holdi601/3DHeat-GameFiles
+python -m heat3d_gamefiles course "Lakeside Circuit" -o ../3DHeat-GameCapture/races/lakeside.glb
 ```
 
 `lakeside.csv` is every sample of every lap — position,
@@ -586,12 +586,12 @@ viewer reads as it is.
 None of the rally, BeamNG or Trackmania recorders has been run against the live
 game yet: they are built and tested on packets made from the documented layouts,
 and each checks its packets as they arrive and says so when a layout does not
-match. [`../docs/games.md`](../docs/games.md) has the sources and what is not
+match. [`docs/games.md`](docs/games.md) has the sources and what is not
 yet confirmed.
 
 Every lap file is a `heat3d-lap` document: channels as columns under
 canonical names, per wheel as `tireTemp.FL` and so on - see
-[`../docs/lap-format.md`](../docs/lap-format.md). Drop the files on the
+[`docs/lap-format.md`](docs/lap-format.md). Drop the files on the
 viewer's Race tab. iRacing needs no recorder: its
 own `.ibt` files load directly.
 
@@ -616,3 +616,35 @@ tested from the other side, in the viewer's own tests, which generate
 a reference level through this exporter's own writer and parse it with the
 viewer's real parser — so the file format stays under test on both sides of the
 language boundary, with no game and no capture hardware.
+
+---
+
+## Part of 3DHeat
+
+3DHeat GameCapture is one of the free tools around the 3DHeat telemetry viewer. Each is its
+own project, with its own releases and licence:
+
+| Tool | What it does |
+|---|---|
+| [3DHeat GameFiles](https://github.com/Holdi601/3DHeat-GameFiles) | courses and levels out of the archives games ship, as glTF |
+| [3DHeat GameCapture](https://github.com/Holdi601/3DHeat-GameCapture) | lap telemetry from racing games' published interfaces; levels reconstructed from gameplay video |
+| [3DHeat Unreal Exporter](https://github.com/Holdi601/3DHeat-UnrealExporter) | an Unreal Editor plugin that exports a level as glTF |
+| [3DHeat CS2](https://github.com/Holdi601/3DHeat-CS2) | Counter-Strike 2 demos into heatmap tables and match summaries; maps into geometry |
+| [3DHeat Watcher](https://github.com/Holdi601/3DHeat-Watcher) | records your play in the background from what games publish, for your own statistics |
+
+## Updates
+
+3DHeat GameCapture checks this repository's releases when it starts (at most every few
+hours, never holding it up for more than a few seconds), says when a newer
+version is out, and offers to update: a clone with `git pull` when it has no
+local changes, a downloaded copy by replacing its files from the release archive,
+after checking the archive is the version it claims. Your own files - recordings,
+settings, exports - are never touched. To update on request: `python -m heat3d_update`.
+`HEAT3D_NO_UPDATE=1` switches the check off.
+
+## Licence
+
+MIT - see [`LICENSE`](LICENSE), and [`LICENSES.md`](LICENSES.md) for the
+third-party packages it uses and what the games it reads oblige.
+
+Documentation: the [wiki](https://github.com/Holdi601/3DHeat-GameCapture/wiki).

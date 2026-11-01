@@ -355,7 +355,7 @@ def _check_for_update() -> None:
     import sys as _sys
     from pathlib import Path as _Path
 
-    root = str(_Path(__file__).resolve().parents[2])
+    root = str(_Path(__file__).resolve().parents[1])
     if root not in _sys.path:
         _sys.path.append(root)
     try:
