@@ -89,7 +89,8 @@ def disabled() -> bool:
 
 def _cache_path() -> Path:
     base = os.environ.get("LOCALAPPDATA") or str(Path.home() / ".cache")
-    return Path(base) / "3DHeat" / "update-check.json"
+    # One per tool: each tool has its own releases, and one answer must not stand in for another.
+    return Path(base) / "3DHeat" / f"update-check-{REPO.split('/')[-1]}.json"
 
 
 def _get(url: str) -> bytes:
