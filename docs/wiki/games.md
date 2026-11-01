@@ -1,3 +1,4 @@
+
 # Games: recording and courses
 
 How each supported game is recorded, what it sends, and which of their courses
@@ -13,7 +14,7 @@ remains subject to that game's licence.
 
 ## Telemetry
 
-Every game ends up as `heat3d-lap` files ([`lap-format.md`](lap-format.md)),
+Every game ends up as `heat3d-lap` files ([`lap-format.md`](lap-format)),
 with canonical channel names and a `meta` block saying what its numbers mean -
 how its slip is scaled, circuit or rally or arcade, the surface when known - so
 a reader treats them all alike. All commands are `python -m heat3d_capture ...`

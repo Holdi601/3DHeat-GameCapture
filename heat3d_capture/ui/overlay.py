@@ -71,7 +71,7 @@ def make_click_through(window_id: int) -> bool:
 def build_overlay():  # pragma: no cover - constructed only with a display
     from PySide6 import QtCore, QtGui, QtWidgets
 
-    from .preview import coverage_map, health_text, mark_weak_spots
+    from .preview import coverage_map, health_text, mark_marked_spots, mark_weak_spots
 
     class Overlay(QtWidgets.QWidget):
         """A frameless, transparent, click-through panel pinned over the game."""
@@ -134,17 +134,23 @@ def build_overlay():  # pragma: no cover - constructed only with a display
                     extent=extent,
                     size=MAP_SIZE,
                 )
-                self._map = mark_weak_spots(image, spots, extent)
-                self._health = health_text(reconstructor.state)
                 state = reconstructor.state
+                self._map = mark_marked_spots(
+                    mark_weak_spots(image, spots, extent), state.marked, extent
+                )
+                self._health = health_text(reconstructor.state)
+                marked = f" · {len(state.marked)} marked" if state.marked else ""
                 self._stats = (
-                    f"{state.fused} placed · {len(spots)} to revisit · "
+                    f"{state.fused} placed · {len(spots)} to revisit{marked} · "
                     f"{state.trajectory_length:.0f} m"
                 )
                 self._sharpness = state.sharpness
                 self._advice = (state.advice, state.advice_level)
             if progress is not None:
-                self._speed = progress.change
+                # How close the next frame is to being kept, against the
+                # threshold in use: the raw change is a few thousandths and
+                # drew as an empty bar.
+                self._speed = progress.toward_next_view
             self.update()
 
         def report_broken(self, reason: str, count: int) -> None:

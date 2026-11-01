@@ -20,7 +20,9 @@ scene graph to speak of — and a dependency that can write all of glTF would me
 carrying its version skew for the few hundred lines below. Reconstruction output
 is also large enough that controlling the byte layout directly matters.
 
-Coordinates are viewer space: **Y up**, right-handed, and by default scaled to
+Coordinates are viewer space: **Y up**, right-handed — except a scan placed by
+Forza telemetry, which stays in the game's own world exactly as its lap files do
+(Y up, left-handed), so the racing lines land on it — and by default scaled to
 centimetres to match the Unreal exporter, so a capture and an engine export of
 the same place load at the same size with the same camera defaults.
 """
@@ -75,11 +77,11 @@ class Part:
     uvs: np.ndarray | None = None
     #: (N, 3) float vertex colours in 0..1, written as glTF `COLOR_0`.
     #:
-    #: The viewer ignores these — it renders levels untextured on purpose, so the
-    #: background does not compete with the heatmap it sits behind. They are
-    #: written for everywhere else: Blender and every other glTF tool reads
-    #: COLOR_0, and a reconstructed level is worth looking at outside this
-    #: viewer too.
+    #: The viewer reads them and, when its level panel's "Captured colour" is
+    #: switched on, shades the ground with them — a reconstructed road is
+    #: otherwise the same grey as its verge. It is off by default there, so the
+    #: background does not compete with the heatmap it sits behind. Blender and
+    #: every other glTF tool reads COLOR_0 too.
     colours: np.ndarray | None = None
     #: PNG bytes for this part's base colour texture.
     texture_png: bytes | None = None

@@ -1,3 +1,8 @@
+---
+title: Games
+nav_order: 4
+---
+
 # Games: recording and courses
 
 How each supported game is recorded, what it sends, and which of their courses

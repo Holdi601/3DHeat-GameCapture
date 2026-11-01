@@ -26,7 +26,11 @@ source is what counts, not this file.
 | windows-capture | MIT | |
 | **PySide6-Essentials** | **LGPL-3.0** | See below |
 | pytest | MIT | Development only |
-| torch, transformers, onnxscript | BSD-3-Clause / Apache-2.0 | One-off model conversion only; not a runtime dependency |
+| rapidocr_onnxruntime (with the PaddleOCR PP-OCRv3 detection and recognition models it ships) | Apache-2.0 | The `hud` verb's OCR, run locally; pyclipper (MIT), Shapely (BSD-3-Clause), PyYAML (MIT), six (MIT) come with it |
+| pyarrow | Apache-2.0 | The `hud` verb's Parquet table |
+| torch, transformers, onnxscript | BSD-3-Clause / Apache-2.0 | Model conversion, and the offline `reconstruct` path (`requirements-offline.txt`); not needed by the scanner |
+| einops, safetensors, huggingface_hub, Pillow | MIT / Apache-2.0 / Apache-2.0 / MIT-CMU | Offline `reconstruct` path only |
+| **vggt** (the model code, from Meta's GitHub) | **VGGT License** (Meta research-materials agreement, with an acceptable-use policy; read off the installed package's `LICENSE.txt`) | Offline `reconstruct` path only; its weights are licensed separately, below |
 
 **PySide6 is the one with conditions.** LGPL-3.0 permits use in proprietary
 software, including commercially, provided Qt stays a *replaceable* library: it is

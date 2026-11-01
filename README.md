@@ -153,8 +153,22 @@ adaptive retry is the work in progress.
 
 The model is `facebook/VGGT-1B`, which is **CC-BY-NC-4.0 — non-commercial only,
 and a reconstruction made with it inherits that.** `describe_licence()` says so,
-and `LICENSES.md` has the detail. It needs PyTorch, which this project
-deliberately does not pin; install it first, matched to your GPU.
+and `LICENSES.md` has the detail; `--model vggt-1b-commercial` loads the
+separately licensed weights instead, for whoever Meta has granted them to. It
+needs PyTorch, which this project deliberately does not pin (install it first,
+matched to your GPU), and VGGT's own code and transformers, which the scanner
+does not need and `requirements.txt` therefore does not list. They are in
+`requirements-offline.txt`, and `reconstruct` checks for them and offers to
+install them before it starts:
+
+```bash
+.venv/Scripts/python -m pip install -r requirements-offline.txt
+.venv/Scripts/python -m pip install --no-deps "vggt @ git+https://github.com/facebookresearch/vggt.git"
+```
+
+`--no-deps` because VGGT's metadata pins numpy below 2, which pip would honour by
+downgrading the numpy everything else here needs. VGGT's code is under Meta's
+own research licence (the `VGGT License`), separately from its weights.
 
 ## Runs on anyone's machine
 
@@ -230,6 +244,12 @@ unexplored corner does not read as a badly scanned one. Weak areas are merged by
 connectivity and listed with an instruction: *"Only seen from one angle. Step
 sideways and look at it again."* Numbered rings on the map match the list.
 
+What the metric cannot see, the driver can mark: **Ctrl+Alt+F10** notes where the
+camera is now — a corner taken badly, a view that something blocked. Marked spots
+are amber squares labelled M1, M2… on the window's map and the overlay's, are
+listed under the weak spots, and are saved beside the level as
+`<name>.marks.json`, in the level's own coordinates and in metres.
+
 Connectivity matters more than it sounds. The first version grouped by a fixed
 block grid and reported one neglected side room as eight separate numbered rings
 in a row — and nobody reading that can tell eight places from one place counted
@@ -277,46 +297,64 @@ So a break is now followed by **relocalisation** against a database of past
 keyframes. Until it succeeds, frames are dropped rather than fused; nothing is
 ever placed at a guessed origin.
 
-That database also gives **loop closure**: matching against keyframes from much
-earlier detects a revisit and snaps the track back onto where it was, bounding
-drift instead of letting it grow for as long as someone keeps walking. It is not
-a global pose graph and does not retroactively move geometry already fused — it
-stops the divergence compounding, and both recoveries and closures are counted on
-screen rather than hidden, so a track that is not a straight line has an
-explanation.
+That database could also give **loop closure** — matching against keyframes
+from much earlier to detect a revisit and snap the track back onto where it was —
+and the code for it is there (`VisualOdometry(loop_closure=True)`), but it is
+**off, and nothing in the scanner or the offline path turns it on.** On a rally
+stage every stretch of road looks like every other, feature matching agrees
+anyway, and on a real lap seventy-six false "revisits" kept a hundred-metre drive
+inside a five-metre box (`tests/test_loop_closure_harm.py`). Drift therefore
+grows for as long as someone keeps walking; recoveries are counted on screen
+rather than hidden, so a track that is not a straight line has an explanation.
+
+## Reading the HUD of a recording
+
+`hud` reads a game's HUD out of the player's own recording after the match: the
+kill feed as timed events, and the player's own track from the minimap, as a
+3DHeat table with the minimap stitched into a map image to lay under it. Nothing
+touches the game; only the player's own position is derived. Battlefield 6 is the
+first profile.
+
+```
+.venv/Scripts/python -m heat3d_capture hud "<recording>.mp4" --game bf6 --player <name> -o out/match
+```
+
+Every option, the method, measured accuracy and limits:
+[Reading HUD from video](https://holdi601.github.io/3DHeat-GameCapture/hud-video.html).
 
 ## State
 
 Feature complete: capture, HUD rejection, keyframe selection, depth, pose with
-relocalisation and loop closure, telemetry-driven poses, fusion, coverage,
+relocalisation (loop closure exists but is off), telemetry-driven poses, fusion, coverage,
 colour projection, an in-game overlay, and a `.glb` the viewer loads with no
 special handling.
 
-| Piece | What it does | Tests |
-|---|---|---|
-| `runtime/preflight.py` | First-run dependency check that asks before installing | 27 |
-| `runtime/device.py` | Backend ladder, and what to expect from this machine | 23 |
-| `capture/sources.py` | Live window/monitor capture and video files | 15 |
-| `depth/onnx_estimator.py` | The portable depth path the app uses | 13 |
-| `depth/estimator.py` | The PyTorch path, for conversion and scale anchoring | 15 |
-| `pose/odometry.py` | Where the camera was, with the scale chained frame to frame | 23 |
-| `fusion/volume.py` | Depth maps into one surface, and a mesh out of it | 22 |
-| `fusion/coverage.py` | What was seen well, and what to go back to | 31 |
-| `scan/session.py` | A scan: settings, keyframe policy, progress, stop | 28 |
-| `scan/reconstruct.py` | Keyframes into geometry and a coverage report | 19 |
-| `telemetry/forza.py` | Decodes Forza's UDP feed, discovering its own layout | 14 |
-| `telemetry/fulllap.py` | Every Forza channel, a lap file at a time, relayed on | 11 |
-| `telemetry/kunos.py` | AC, ACC, AC EVO and AC Rally from shared memory | 9 |
-| `telemetry/rally.py` | EA SPORTS WRC, DiRT Rally 2.0 / 1 / DiRT 4 and Richard Burns Rally over UDP | 5 |
-| `telemetry/beamng.py` | BeamNG.drive through the `heat3d` protocol mod | 4 |
-| `telemetry/lapfile.py` | The `heat3d-lap` document every recorder writes | through the three above |
-| `geometry/glb.py` | Writes the viewer's GLB contract | 16, plus a round-trip through the viewer's own parser |
-| `ui/preview.py` | Depth, coverage map and health, as pictures | 23 |
-| `capture/screenmask.py` | Finds the HUD and anything bolted to the camera | 10 |
-| `pose/telemetry_pose.py` | Exact poses from Forza, aligned to capture time | 17 |
-| `fusion/texture.py` | Colour projected from the frames that saw best | 16 |
-| `ui/overlay.py` | Click-through feedback drawn over the game | — |
-| `tests/test_accuracy.py` | Ground truth: a known room, a known path | 10 |
+| Piece | What it does |
+|---|---|
+| `runtime/preflight.py` | First-run dependency check that asks before installing |
+| `runtime/device.py` | Backend ladder, and what to expect from this machine |
+| `capture/sources.py` | Live window/monitor capture and video files |
+| `depth/onnx_estimator.py` | The portable depth path the app uses |
+| `depth/estimator.py` | The PyTorch path, for conversion and scale anchoring |
+| `pose/odometry.py` | Where the camera was, with the scale chained frame to frame |
+| `fusion/volume.py` | Depth maps into one surface, and a mesh out of it |
+| `fusion/coverage.py` | What was seen well, and what to go back to |
+| `scan/session.py` | A scan: settings, keyframe policy, progress, stop |
+| `scan/reconstruct.py` | Keyframes into geometry and a coverage report |
+| `telemetry/forza.py` | Decodes Forza's UDP feed, discovering its own layout |
+| `telemetry/fulllap.py` | Every Forza channel, a lap file at a time, relayed on |
+| `telemetry/kunos.py` | AC, ACC, AC EVO and AC Rally from shared memory |
+| `telemetry/rally.py` | EA SPORTS WRC, DiRT Rally 2.0 / 1 / DiRT 4 and Richard Burns Rally over UDP |
+| `telemetry/beamng.py` | BeamNG.drive through the `heat3d` protocol mod |
+| `telemetry/lapfile.py` | The `heat3d-lap` document every recorder writes |
+| `geometry/glb.py` | Writes the viewer's GLB contract |
+| `ui/preview.py` | Depth, coverage map and health, as pictures |
+| `capture/screenmask.py` | Finds the HUD and anything bolted to the camera |
+| `pose/telemetry_pose.py` | Exact poses from Forza, aligned to capture time |
+| `fusion/texture.py` | Colour projected from the frames that saw best |
+| `ui/overlay.py` | Click-through feedback drawn over the game |
+| `hud/` | Kill feed and the player's own minimap track from a recorded video (Battlefield 6 first) |
+| `tests/test_accuracy.py` | Ground truth: a known room, a known path |
 
 ### Accuracy, measured
 
@@ -341,9 +379,14 @@ question no synthetic scene can answer.
 
 ### Known limits
 
-- **Loop closure is not a pose graph.** It stops drift compounding at a revisit;
-  it does not redistribute the correction over the frames in between, and
+- **No loop closure.** It exists in the tracker but is off and never switched
+  on, because on repetitive scenes it closes loops that are not there; drift is
+  not pulled back at a revisit. Even switched on it would not be a pose graph:
   geometry already fused stays where it was put.
+- **Colour has no exact occlusion test.** A vertex hidden behind nearer
+  geometry in a frame is skipped by a coarse depth test against the mesh's own
+  vertices, which misses an occluder the mesh does not contain (a passing car,
+  a cockpit pillar outside the HUD mask).
 - **Field of view is assumed, not measured.** It is the one number the scanner
   has to be told. Too narrow and the level reconstructs deeper than it is.
 - **Depth is estimated, not read.** The ceiling of the whole approach, and the
@@ -407,6 +450,11 @@ sounds: the converter needs PyTorch, which the scanner deliberately does not shi
 `tools/export_onnx.py` would have failed at the next line with a missing import,
 and looked like the user's fault.
 
+With more than one converted model in `models/`, the window takes the
+commercially usable `depth-small-*` (Apache-2.0) whenever it is there, whatever
+else sits beside it, and says which file it took and under which licence. A
+non-commercial Base or Large model is used only when it is the only one.
+
 By hand:
 
 ```bash
@@ -434,7 +482,16 @@ them.
 
 This needs the car to be *moving*: while it is parked every candidate reads zero
 and they all agree, which proves nothing. Detection waits rather than locking in
-a coin flip, so drive a few metres before expecting output.
+a coin flip, so drive a few metres before expecting output. (The check compares
+lengths only: the Sled velocity is in the car's own frame — x right, y up, z
+forward — not the world's, and its length is the speed either way.)
+
+Forza's world is Y-up, as the lap files keep it, and the telemetry poses are
+taken exactly as sent: a scan placed by them comes out in the game's own
+coordinates, on the same ground as the laps recorded over it. That world is
+left-handed, so the scan is too (the viewer detects a mirrored world from the
+laps). A frame captured during a gap in the feed is placed visually, carrying
+on from the last telemetry pose, until the feed answers again.
 
 ### Recording just the route
 
@@ -442,8 +499,12 @@ a coin flip, so drive a few metres before expecting output.
 .venv/Scripts/python -m heat3d_capture route -o lap     # drive, then Ctrl+C
 ```
 
-No depth model, no GPU, no capture — it listens on the telemetry port and writes
-each position as it arrives, so the file is complete at every moment. That is the
+No depth model, no GPU, no capture — it listens on the telemetry port and saves
+the route while it is being driven: every couple of seconds once something new
+has arrived (less often on a very long session, so saving never takes more than
+a twentieth of the time), and once more however it stops. Each save is written
+beside the file and then moved over it, so what is on disk is always a whole,
+readable route — after a crash, at most the last few seconds short. That is the
 point of it being separate: a scan holds the route in memory and writes it only
 if the whole run succeeds, and a lap that is lost because a later stage failed
 has to be driven again, with the game running and the right track loaded.
@@ -472,19 +533,19 @@ already repeated, and repetition is what turns a route into analysis.
 
 ```bash
 .venv/Scripts/python -m heat3d_capture laps                       # what is there
-.venv/Scripts/python -m heat3d_capture laps "Lakeside Circuit" -o races/lakeside
+.venv/Scripts/python -m heat3d_capture laps "Mapletree Test Loop" -o races/mapletree
 ```
 
-Two files come out. `lakeside.json` is the same route file as above, so the map
+Two files come out. `mapletree.json` is the same route file as above, so the map
 extractor takes it unchanged — or skip it and name the course, which reads the
 same library directly:
 
 ```bash
 cd ../3DHeat-GameFiles   # https://github.com/Holdi601/3DHeat-GameFiles
-python -m heat3d_gamefiles course "Lakeside Circuit" -o ../3DHeat-GameCapture/races/lakeside.glb
+python -m heat3d_gamefiles course "Mapletree Test Loop" -o ../3DHeat-GameCapture/races/mapletree.glb
 ```
 
-`lakeside.csv` is every sample of every lap — position,
+`mapletree.csv` is every sample of every lap — position,
 speed, throttle, brake, steer, lateral and longitudinal g, gear, standing water,
 distance along the lap and time since its start.
 
@@ -496,18 +557,19 @@ start rather than scattering them across the fortnight they were driven in.
 
 **The check that matters** is whether the extracted ground is really under the
 recorded car. Everything upstream can be wrong and still produce a handsome
-mesh — of somewhere else. Across all 39 courses of one recorded library the car
-sits a median of 0.28 to 0.47 m above the surface directly beneath it — ride
+mesh — of somewhere else. On the courses of a recorded library the car sits a
+median of a few tenths of a metre above the surface directly beneath it — ride
 height — including under and over a city's expressway decks, and there is no
 room in it for an error of even a couple of metres. `tests/test_course_ground.py`
 pins it for any exported course:
 
 ```bash
-HEAT3D_COURSE=.out/courses/lakeside_circuit .venv/Scripts/python -m pytest tests/test_course_ground.py
+HEAT3D_COURSE=.out/courses/mapletree_test_loop .venv/Scripts/python -m pytest tests/test_course_ground.py
 ```
 
-It passes on 38 of the 39. A cross-country course fails by design: the car is
-up to 26 m in the air on its jumps, over ground that is there.
+It passes on every course but the cross-country ones, which fail by design: the
+car spends a good part of the lap metres in the air on its jumps, over ground
+that is there.
 
 The course's shape *is* in the terrain — the corridor and its camber are there
 in the mesh. Kerbs, guardrails, tyre walls and expressway decks are not: they
@@ -534,7 +596,11 @@ game's port and passes every packet on unchanged: set the game to 5300 and FH
 Companion to 5301, and both record. A lap closes when the game's lap counter
 moves on, with the game's own lap time; a point-to-point race is kept as a run.
 Forza Horizon and Forza Motorsport (including the 2023 layout, with tyre wear
-and the track id) are told apart by their packet length.
+and the track id, kept as `lap.trackOrdinal`) are told apart by their packet
+length. The car's own velocity is written as `latVel`, `vertVel` and `longVel`,
+so the viewer reads the drift angle off it; `meta` says the slip channels are
+Forza's normalised kind (`peak`); `track` is null, because the game does not
+name it.
 
 The Assetto Corsa games publish their telemetry as Windows shared memory, which
 any app may read - nothing is injected into the game:
@@ -564,8 +630,11 @@ The rally games send UDP, each switched on in its own settings:
 
 `--configure` switches EA SPORTS WRC's default `wrc` packet on (the file is
 backed up first). A stage closes when the car has covered the stage's length or
-the game flags the finish; a restart abandons the partial run. Stages count as
-gravel unless `--surface tarmac` (or `snow`, `ice`, `mixed`) says otherwise. None of them sends tyre slip: the lap file
+the game flags the finish; a restart abandons the partial run. `--surface tarmac`
+(or `loose`, `snow`, `ice`, `mixed`) writes the stage's surface into each file;
+without it the file names none, and the viewer works it out — from the stage's
+or event's name, else from how the car was driven on it, and loose when nothing
+tells. None of them sends tyre slip: the lap file
 keeps each wheel's contact patch speed, and the viewer derives slip and the
 drift angle from it and the car's axes.
 

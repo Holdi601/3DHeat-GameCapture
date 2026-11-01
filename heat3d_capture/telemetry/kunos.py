@@ -41,6 +41,8 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 
+from .lapfile import clean
+
 WHEELS = ("FL", "FR", "RL", "RR")
 
 #: Physics page, offsets shared by AC (1.7+), ACC, AC EVO and AC Rally.
@@ -266,7 +268,7 @@ def document(lap: KLap, *, game: str, track: str | None, car: str | None) -> dic
         channels[name] = []
     # Steering: whatever the game's units, -1..1 by the most the lap used,
     # when that is beyond the -1..1 an input would already be in.
-    most = max((abs(f["steerRaw"]) for f in frames), default=1.0)
+    most = max((abs(f["steerRaw"]) for f in frames if math.isfinite(f["steerRaw"])), default=1.0)
     steer_scale = 1.0 / most if most > 1.05 else 1.0
     travelled = 0.0
     previous = None
@@ -276,17 +278,18 @@ def document(lap: KLap, *, game: str, track: str | None, car: str | None) -> dic
         previous = f
         channels["time"].append(round(f["time"] - t0, 4))
         channels["distance"].append(round(travelled, 3))
-        channels["steer"].append(round(f["steerRaw"] * steer_scale, 4))
+        channels["steer"].append(clean(f["steerRaw"] * steer_scale, 4))
         for name in names:
-            v = f[name]
-            channels[name].append(round(v, 5) if isinstance(v, float) else v)
+            # None for a value that is not a finite number: NaN is not JSON.
+            channels[name].append(clean(f.get(name)))
     # Suspension as 0..1 of the travel this lap used, for the car's bars.
     for wheel in WHEELS:
         travel = channels.get(f"suspensionM.{wheel}")
-        if travel:
-            lo, hi = min(travel), max(travel)
+        finite = [v for v in travel or [] if v is not None]
+        if finite:
+            lo, hi = min(finite), max(finite)
             span = hi - lo if hi > lo else 1.0
-            channels[f"suspension.{wheel}"] = [round((v - lo) / span, 4) for v in travel]
+            channels[f"suspension.{wheel}"] = [None if v is None else round((v - lo) / span, 4) for v in travel]
     seconds = lap.seconds if lap.seconds is not None else channels["time"][-1]
     return {
         "format": "heat3d-lap",

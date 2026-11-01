@@ -21,6 +21,36 @@ FOUND = sorted(MODELS.glob("depth-*.onnx"))
 needs_model = pytest.mark.skipif(not FOUND, reason="no exported model; see tools/export_onnx.py")
 
 
+class TestWhichModel:
+    """
+    The window took the first `depth-*.onnx` by name, so a non-commercial
+    `depth-base-*` won over the Apache-2.0 `depth-small-*` beside it.
+    """
+
+    def test_the_commercially_usable_size_is_chosen_whatever_the_names(self, tmp_path):
+        from heat3d_capture.depth.onnx_estimator import choose_model
+
+        for name in ("depth-base-518.onnx", "depth-large-518.onnx", "depth-small-518.onnx"):
+            (tmp_path / name).write_bytes(b"")
+        chosen, note = choose_model(tmp_path)
+        assert chosen.name == "depth-small-518.onnx"
+        assert "commercial use permitted" in note
+        assert "depth-base-518.onnx" in note, "the others present are named"
+
+    def test_a_larger_size_alone_is_used_and_its_licence_said(self, tmp_path):
+        from heat3d_capture.depth.onnx_estimator import choose_model
+
+        (tmp_path / "depth-base-518.onnx").write_bytes(b"")
+        chosen, note = choose_model(tmp_path)
+        assert chosen.name == "depth-base-518.onnx"
+        assert "non-commercial" in note
+
+    def test_none_is_none(self, tmp_path):
+        from heat3d_capture.depth.onnx_estimator import choose_model
+
+        assert choose_model(tmp_path)[0] is None
+
+
 def test_missing_model_says_how_to_make_one(tmp_path):
     with pytest.raises(FileNotFoundError, match="export_onnx"):
         OnnxDepthEstimator(tmp_path / "absent.onnx")

@@ -30,6 +30,17 @@ def _reconstruct(args: argparse.Namespace) -> int:
     print(describe_licence(args.model))
     print()
 
+    # PyTorch, VGGT and transformers are not in requirements.txt: only this
+    # verb needs them. Checked first, and installed only on a yes.
+    from .runtime.preflight import OFFLINE, ensure_console
+
+    if not ensure_console(OFFLINE):
+        print(
+            "\nThe offline path needs these; see requirements-offline.txt.",
+            file=sys.stderr,
+        )
+        return 1
+
     started = time.monotonic()
     last = {"stage": ""}
 
@@ -47,6 +58,7 @@ def _reconstruct(args: argparse.Namespace) -> int:
             args.out,
             solve_budget=args.solve_budget,
             fuse_interval=args.fuse_interval,
+            model=args.model,
             on_progress=show,
         )
     except (OSError, ValueError) as exc:
@@ -67,7 +79,8 @@ def _route(args: argparse.Namespace) -> int:
     The positions are the cheapest thing in the pipeline and the hardest to get
     again — they need the game running, the right track loaded, and someone to
     drive it. A lap held in memory and lost to a later failure is exactly what
-    this is here to stop, so the file is complete at every moment.
+    this is here to stop, so the recorder saves the file every few seconds
+    while it grows, each time whole (see `Recorder`).
     """
     import time
 
@@ -76,7 +89,7 @@ def _route(args: argparse.Namespace) -> int:
     print(f"listening on port {args.port}. Drive, then press Ctrl+C when done.")
     started = time.monotonic()
     last_report = 0.0
-    with Recorder(port=args.port) as recorder:
+    with Recorder(port=args.port, out=args.out) as recorder:
         try:
             while True:
                 recorder.poll()
@@ -236,6 +249,57 @@ def _laps(args: argparse.Namespace) -> int:
     return 0
 
 
+def _hud(args: argparse.Namespace) -> int:
+    """
+    Read a game's HUD out of the player's own recording, after the match.
+
+    The kill feed becomes timed events, the minimap the player's own track on
+    a mosaic of the level. Nothing here touches the game: it is a video file,
+    read back. See docs/hud-video.md.
+    """
+    from .hud.ocr import NoOcr
+    from .hud.run import Options, Progress, run
+
+    out = args.out or Path(args.video.stem)
+    if out.suffix.lower() in (".parquet", ".json", ".jsonl", ".png"):
+        out = out.with_suffix("")
+    opts = Options(
+        game=args.game,
+        player=args.player,
+        fps=args.fps,
+        start=args.start,
+        duration=args.seconds,
+        gpu=False if args.cpu else None,
+        metres_per_pixel=args.metres_per_pixel,
+    )
+    started = time.monotonic()
+
+    def show(p: Progress) -> None:
+        elapsed = time.monotonic() - started
+        print(f"[{elapsed:6.0f}s] {p.t:6.0f} / {p.duration:.0f} s of video  {p.note}", flush=True)
+
+    try:
+        result = run(args.video, out, opts, on_progress=show)
+    except (OSError, ValueError, NoOcr) as exc:
+        print(f"\n{exc}", file=sys.stderr)
+        return 1
+
+    s = result.summary
+    print()
+    print(f"player: {s['player'] or 'unknown'} ({s['player_from']})")
+    print(
+        f"kills {s['kills']}, deaths {s['deaths']}, K/D {s['kd'] if s['kd'] is not None else '-'}, "
+        f"{s['lives']} lives, {s['seconds_in_play']:.0f} s in play, {s['feed_lines']} kill-feed lines"
+    )
+    for m in s["maps"]:
+        north = "north up" if m["north_up"] else "north unknown (no compass agreement)"
+        print(f"  {m['table']}: {m['rows']} rows, {m['seconds_of_track']:.0f} s of track, {north}")
+    print()
+    for f in result.files:
+        print(f"wrote {f}")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         prog="heat3d_capture",
@@ -288,7 +352,10 @@ def main(argv: list[str] | None = None) -> int:
         "--surface",
         choices=["tarmac", "loose", "snow", "ice", "mixed"],
         default=None,
-        help="rally games: the stage's surface, when it is not gravel",
+        help=(
+            "rally games: the stage's surface, written into each file; without it the "
+            "file names none and the viewer works it out"
+        ),
     )
     p.set_defaults(run=_telemetry)
 
@@ -336,8 +403,43 @@ def main(argv: list[str] | None = None) -> int:
         default=0.4,
         help="seconds between frames fused into geometry (default 0.4)",
     )
-    p.add_argument("--model", default="vggt-1b", help="which weights to solve with")
+    p.add_argument(
+        "--model",
+        choices=["vggt-1b", "vggt-1b-commercial"],
+        default="vggt-1b",
+        help="which weights to solve with (default vggt-1b, non-commercial)",
+    )
     p.set_defaults(run=_reconstruct)
+
+    p = sub.add_parser(
+        "hud",
+        help="read the kill feed and the player's own minimap track out of a recording, after the match",
+    )
+    p.add_argument("video", type=Path)
+    p.add_argument(
+        "-o",
+        "--out",
+        type=Path,
+        default=None,
+        help="output path without extension; the files are <out>.parquet, .events.jsonl, .summary.json, .map.png, .map.json",
+    )
+    p.add_argument("--game", choices=["bf6"], default="bf6", help="whose HUD to read (default bf6, Battlefield 6)")
+    p.add_argument(
+        "--player",
+        default=None,
+        help="the player's name as the kill feed shows it, matched loosely; without it the squad list or the feed's own-name colour is used",
+    )
+    p.add_argument("--fps", type=float, default=5.0, help="minimap samples per second (default 5)")
+    p.add_argument("--start", type=float, default=0.0, help="seconds into the video to begin at")
+    p.add_argument("--seconds", type=float, default=None, help="how much of the video to read (default: all of it)")
+    p.add_argument(
+        "--metres-per-pixel",
+        type=float,
+        default=None,
+        help="the minimap's scale, if known: metres per minimap pixel at the usual zoom (296 per minimap at 1080p); without it positions are in those pixels",
+    )
+    p.add_argument("--cpu", action="store_true", help="decode on the CPU even when an NVIDIA card is there")
+    p.set_defaults(run=_hud)
 
     args = parser.parse_args(argv)
     # The verbs that take no video: the existence check below is about the

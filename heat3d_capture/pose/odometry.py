@@ -399,8 +399,15 @@ class VisualOdometry:
         )
         image_points = current_pixels[usable]
 
+        # A left-handed world — Forza's, carried in by telemetry poses — makes
+        # every pose in it a reflection, which PnP cannot return. Solve in the
+        # world mirrored through z and fold the mirror back in afterwards, so a
+        # telemetry gap is bridged in the game's own coordinates.
+        mirror = np.diag([1.0, 1.0, -1.0]) if np.linalg.det(reference["pose"].rotation) < 0 else None
+        solved_in = world if mirror is None else world @ mirror
+
         ok, rvec, tvec, inlier_index = cv2.solvePnPRansac(
-            world.astype(np.float64),
+            solved_in.astype(np.float64),
             image_points.astype(np.float64),
             self.k.matrix,
             None,
@@ -416,6 +423,8 @@ class VisualOdometry:
         rotation_cw, _ = cv2.Rodrigues(rvec)
         rotation = rotation_cw.T
         pose = Pose(rotation=rotation, translation=(-rotation @ tvec.reshape(3)))
+        if mirror is not None:
+            pose = Pose(rotation=mirror @ pose.rotation, translation=mirror @ pose.translation)
 
         chosen = inlier_index.reshape(-1)
         camera_points = (world[chosen] - pose.translation) @ pose.rotation

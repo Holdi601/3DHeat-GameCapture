@@ -165,3 +165,37 @@ def test_rbr_puts_up_in_y_and_speed_from_positions(tmp_path):
     # 30 m/s along y, 15 along x: about 33.5 m/s from the positions.
     assert abs(ch["speed"][10] - math.hypot(30, 15)) < 1.0
     assert ch["gear"][0] == 3
+
+
+def test_a_missing_or_non_finite_sample_is_written_as_null(tmp_path):
+    """
+    `lapfile.write` once filled a channel missing from a frame with NaN and
+    passed a non-finite value from the game through. Neither is JSON; the
+    viewer's JSON.parse refuses the whole file over one of them.
+    """
+    from heat3d_capture.telemetry.lapfile import Run, write
+
+    frames = [
+        {"time": i * 0.1, "x": float(i), "y": 0.0, "z": 0.0, "speed": 10.0, "suspensionM.FL": 0.01 * i}
+        for i in range(6)
+    ]
+    frames[2]["speed"] = float("nan")
+    frames[3]["suspensionM.FL"] = float("inf")
+    del frames[4]["speed"]
+    path = write(Run(number=1, frames=frames, complete=True), tmp_path, game="dirt-rally-2", meta={"discipline": "rally"})
+    text = path.read_text(encoding="utf-8")
+    assert "NaN" not in text and "Infinity" not in text
+    doc = json.loads(text)
+    assert doc["channels"]["speed"] == [10.0, 10.0, None, 10.0, None, 10.0]
+    assert doc["channels"]["suspension.FL"][3] is None
+    assert doc["channels"]["suspension.FL"][5] == 1.0
+
+
+def test_a_stage_names_a_surface_only_when_told_one():
+    """
+    Without --surface the file says nothing about the ground, and the viewer
+    works it out from the stage's name and how it was driven. Writing a
+    default here would override that with a guess.
+    """
+    assert "surface" not in rally.RallyRecorder("unused", game="wrc").meta
+    assert rally.RallyRecorder("unused", game="wrc", surface="tarmac").meta["surface"] == "tarmac"

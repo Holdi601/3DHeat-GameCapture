@@ -53,7 +53,8 @@ void Finish(bool complete, int raceTime) {
         + ",\"game\":\"trackmania\",\"track\":\"" + mapName.Replace("\"", "'") + "\""
         + ",\"complete\":" + (complete ? "true" : "false")
         + ",\"seconds\":" + F(raceTime / 1000.0)
-        + ",\"meta\":{\"discipline\":\"arcade\"}}";
+        // slipIndex is Trackmania's own 0..1 sliding measure: meta.slip "index".
+        + ",\"meta\":{\"slip\":\"index\",\"discipline\":\"arcade\"}}";
     string name = "run_" + Time::FormatString("%Y-%m-%d_%H-%M-%S") + (complete ? "" : "_partial") + ".csv";
     IO::File f(IO::FromStorageFolder(name), IO::FileMode::Write);
     f.Write("# " + meta + "\n" + Header() + "\n");

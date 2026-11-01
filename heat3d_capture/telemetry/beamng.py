@@ -161,11 +161,14 @@ class Recorder:
         if raw is None:
             return []
         frame = frame_from(raw)
-        # The car was reset: the clock starts again.
+        out = []
+        # The car was reset: the clock starts again. What was driven before it
+        # is kept first, as a run of its own when it is long enough, rather
+        # than thrown away with the old splitter.
         if frame["time"] < self.last_time - 0.5:
+            out += self.close()
             self.splitter = LineSplitter()
         self.last_time = frame["time"]
-        out = []
         for lap in self.splitter.feed(frame):
             out.append(self._write(Run(number=lap.number, frames=lap.frames, seconds=lap.seconds, complete=lap.complete)))
         return out

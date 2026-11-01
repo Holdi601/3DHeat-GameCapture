@@ -39,7 +39,7 @@ from ..runtime.device import available_backends, describe_expectations, select_b
 from ..scan.session import Quality, ScanProgress, ScanSession, ScanSettings
 from .hotkeys import Binding, HotkeyManager
 from .hotkeys import available as hotkeys_available
-from .preview import coverage_map, depth_to_preview, health_text, mark_weak_spots
+from .preview import coverage_map, depth_to_preview, health_text, mark_marked_spots, mark_weak_spots
 
 #: Chosen as F-keys with a modifier because games almost never bind those,
 #: and a global hotkey is taken away from the game for as long as it is held.
@@ -76,7 +76,7 @@ def build_window():  # pragma: no cover - constructed only with a display
     class Window(QtWidgets.QMainWindow):
         progressed = QtCore.Signal(object)
         previewed = QtCore.Signal(object, object)
-        mapped = QtCore.Signal(object, object)
+        mapped = QtCore.Signal(object, object, object)
         # Hotkeys arrive on their own thread; Qt widgets may only be touched
         # from the GUI thread, so the key crosses over as a signal.
         hotkeyPressed = QtCore.Signal(str)
@@ -88,10 +88,6 @@ def build_window():  # pragma: no cover - constructed only with a display
             self.session: ScanSession | None = None
             self.estimator = None
             self._last_progress: ScanProgress | None = None
-            #: Places the driver flagged by hand, which the coverage metric
-            #: cannot see: a corner taken badly, a stretch where the view was
-            #: blocked by something that has since moved.
-            self._marked: list = []
             #: How many times the overlay has failed to update. Counted rather
             #: than flagged, because one failure is a glitch and a hundred is a
             #: panel that has not told the truth since.
@@ -341,6 +337,12 @@ def build_window():  # pragma: no cover - constructed only with a display
             self.health = QtWidgets.QLabel("Not scanning.")
             self.health.setWordWrap(True)
             box.addWidget(self.health)
+            #: How the level's size was fixed, or that it was not: a scan with
+            #: no ground to measure comes out the right shape at the wrong size.
+            self.scale_note = QtWidgets.QLabel("")
+            self.scale_note.setWordWrap(True)
+            self.scale_note.setStyleSheet("color:#8b949e;font-size:11px;")
+            box.addWidget(self.scale_note)
 
             self.stats = QtWidgets.QLabel("")
             self.stats.setStyleSheet("font-family:Consolas,monospace;color:#c9d1d9;font-size:12px;")
@@ -370,9 +372,13 @@ def build_window():  # pragma: no cover - constructed only with a display
         # -- hardware ----------------------------------------------------
 
         def _check_hardware(self) -> None:
+            from ..depth.onnx_estimator import choose_model
+
             backend = select_backend()
-            models = sorted(MODELS_DIR.glob("depth-*.onnx"))
-            if not models:
+            # By licence, not by name: the commercially usable Small model is
+            # taken whenever it is there, and which one was taken is shown.
+            model, model_note = choose_model(MODELS_DIR)
+            if model is None:
                 # Telling someone to run a command is not good enough here, and
                 # the command in question is worse than most: converting the
                 # model needs PyTorch, which is deliberately *not* in this
@@ -394,7 +400,7 @@ def build_window():  # pragma: no cover - constructed only with a display
             self.verdict.setText(f"Measuring {backend.device}…")
             QtWidgets.QApplication.processEvents()
 
-            self.estimator = OnnxDepthEstimator(models[0], backend=backend)
+            self.estimator = OnnxDepthEstimator(model, backend=backend)
             fps = self.estimator.measure_throughput(frames=6)
             expectation = describe_expectations(backend, fps)
 
@@ -402,12 +408,13 @@ def build_window():  # pragma: no cover - constructed only with a display
             self.verdict.setText(
                 f"<b>{expectation.headline}</b><br>{backend.label} — {fps:.0f} views per second"
                 f"<br><span style='color:#8b949e'>{expectation.notes[-1]}</span>"
+                f"<br><span style='color:#8b949e'>Depth model: {model_note}</span>"
             )
             self.start.setEnabled(expectation.tier != "impractical")
             others = " · ".join(b.api for b in available_backends())
             setup = expectation.notes[:-1]
             self.advanced.setText(
-                f"Model: {models[0].name} · Available: {others}"
+                f"Model: {model_note} · Available: {others}"
                 + ("<br>" + "<br>".join(setup) if setup else "")
             )
 
@@ -639,14 +646,15 @@ def build_window():  # pragma: no cover - constructed only with a display
             session = self.session
             if session is None or not session.is_running():
                 return
-            positions = getattr(session, "reconstructor", None)
-            if positions is None:
+            reconstructor = getattr(session, "reconstructor", None)
+            if reconstructor is None or reconstructor.mark() is None:
+                self.hint.setText("Nothing placed yet, so there is nowhere to mark.")
                 return
-            path = positions.trajectory.positions
-            if len(path) == 0:
-                return
-            self._marked.append(path[-1].copy())
-            self.hint.setText(f"Marked {len(self._marked)} spot(s) to revisit.")
+            count = len(reconstructor.state.marked)
+            self.hint.setText(
+                f"Marked M{count}. Marked spots are on the map and saved with the level."
+            )
+            self._refresh_map()
 
         def _toggle(self) -> None:
             if self.session and self.session.is_running():
@@ -692,18 +700,27 @@ def build_window():  # pragma: no cover - constructed only with a display
                     "coverage map shows how much was actually placed.",
                 )
             else:
+                from ..scan.reconstruct import marks_path
+
+                reconstructor = self.session.reconstructor
+                marks = (
+                    f"\nThe spots you marked: {marks_path(written)}"
+                    if reconstructor is not None and reconstructor.state.marked
+                    else ""
+                )
                 QtWidgets.QMessageBox.information(
                     self,
                     "Saved",
-                    f"Written to {written}\n\nLoad it in 3DHeat through the Level panel.",
+                    f"Written to {written}{marks}\n\nLoad it in 3DHeat through the Level panel.",
                 )
 
         # -- live display ------------------------------------------------
 
         def _show_progress(self, progress: ScanProgress) -> None:
             self._last_progress = progress
-            threshold = self._quality().keyframe_change
-            self.change_bar.setValue(int(min(1.0, progress.change / threshold) * 100))
+            # Against the threshold the scan has adapted to, which is what
+            # decides whether the next frame is kept.
+            self.change_bar.setValue(int(progress.toward_next_view * 100))
 
             state = progress.reconstruction
             line = (
@@ -726,6 +743,7 @@ def build_window():  # pragma: no cover - constructed only with a display
                         f"{state.loop_closures} loops closed"
                     )
                 self.mask_note.setText(state.mask_note)
+                self.scale_note.setText(f"Size: {state.scale_note}" if state.scale_note else "")
             self.stats.setText(line)
 
             if progress.telemetry_frames:
@@ -838,11 +856,13 @@ def build_window():  # pragma: no cover - constructed only with a display
                         extent=extent,
                         size=420,
                     )
-                    result = (mark_weak_spots(image, spots, extent), spots)
+                    marked = list(reconstructor.state.marked)
+                    image = mark_marked_spots(mark_weak_spots(image, spots, extent), marked, extent)
+                    result = (image, spots, marked)
                 except Exception:
                     # A map that could not be drawn must not take the scan with
                     # it: the geometry is still being built correctly either way.
-                    result = (None, [])
+                    result = (None, [], [])
                 # Checked as late as possible, and again by the receiving slot.
                 # Emitting into a window that Qt has already torn down is an
                 # access violation, not an exception — the process simply dies,
@@ -853,7 +873,7 @@ def build_window():  # pragma: no cover - constructed only with a display
             self._map_thread = threading.Thread(target=work, daemon=True)
             self._map_thread.start()
 
-        def _show_map(self, image, spots) -> None:
+        def _show_map(self, image, spots, marked) -> None:
             self._mapping = False
             if image is None or self._closing:
                 return
@@ -867,10 +887,16 @@ def build_window():  # pragma: no cover - constructed only with a display
             self.spots.clear()
             for i, spot in enumerate(spots, start=1):
                 self.spots.addItem(f"{i}.  {spot.advice}")
-            if spots:
+            for i, where in enumerate(marked, start=1):
+                self.spots.addItem(
+                    f"M{i}.  Marked by you, at x {where[0]:.0f}, z {where[2]:.0f} m — "
+                    "drive past again."
+                )
+            if spots or marked:
                 self.spots_note.setText(
-                    "Numbered rings on the map. Worst first — the biggest patches of "
-                    "unreliable geometry."
+                    "Numbered rings on the map, worst first — the biggest patches of "
+                    "unreliable geometry. Amber squares (M) are the spots you marked; "
+                    "they are saved beside the level."
                 )
             else:
                 self.spots_note.setText(

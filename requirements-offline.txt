@@ -1,0 +1,25 @@
+# What `python -m heat3d_capture reconstruct` needs on top of requirements.txt:
+# the offline path, which solves a recording's cameras with Meta's VGGT and runs
+# depth through PyTorch. The live scanner needs none of it.
+#
+#   .venv/Scripts/python -m pip install -r requirements-offline.txt
+#   .venv/Scripts/python -m pip install --no-deps "vggt @ git+https://github.com/facebookresearch/vggt.git"
+#
+# PyTorch is not listed, for the reason requirements.txt gives: the right wheel
+# depends on the GPU and CUDA version. Install it first, from pytorch.org.
+#
+# VGGT is not on the package index, and it goes in with --no-deps because its
+# metadata pins numpy below 2, which pip would honour by downgrading the numpy
+# scipy here needs. Its real dependencies are the lines below.
+#
+# Licences: the vggt code is under Meta's "VGGT License", a research-materials
+# agreement with an acceptable-use policy (its LICENSE.txt). The weights it
+# downloads, facebook/VGGT-1B, are CC-BY-NC-4.0: non-commercial use only, and a
+# reconstruction made with them inherits that. `--model vggt-1b-commercial`
+# takes the separately licensed weights, which Meta grants per account. See
+# LICENSES.md and docs/models-and-licences.md.
+transformers>=4.40
+einops>=0.7
+safetensors>=0.4
+huggingface_hub>=0.20
+Pillow>=10.0

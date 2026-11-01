@@ -1,0 +1,12 @@
+title: 3DHeat GameCapture
+description: Lap telemetry from racing games' published interfaces, and levels reconstructed from gameplay video, for the 3DHeat viewer.
+remote_theme: just-the-docs/just-the-docs@v0.10.0
+plugins:
+  - jekyll-remote-theme
+search_enabled: true
+heading_anchors: true
+aux_links:
+  "GitHub": "https://github.com/Holdi601/3DHeat-GameCapture"
+exclude:
+  - wiki
+  - "*.py"

@@ -72,3 +72,23 @@ def test_a_lap_round_a_circle_is_written(tmp_path):
     # Centripetal acceleration from the velocity: v^2 / r sideways.
     lat = doc["channels"]["latAcc"]
     assert abs(abs(lat[len(lat) // 2]) - speed**2 / radius) < 0.5
+
+
+def test_a_reset_keeps_what_was_driven_before_it(tmp_path):
+    """
+    Resetting the car restarts its clock, and the recorder used to answer that
+    by replacing the lap splitter - and the open run in it - unwritten.
+    """
+    rec = beamng.Recorder(tmp_path)
+    out = []
+    speed = 30.0
+    # 20 s down a straight: 600 m, never back past the start, so no lap closes.
+    for k in range(400):
+        t = k * 0.05
+        out += rec.feed(packet(t=t, pos=(0.0, speed * t, 0.0), vel=(0.0, speed, 0.0), fwd=(0.0, 1.0, 0.0)))
+    assert out == []
+    # Reset: the clock is back at zero.
+    out += rec.feed(packet(t=0.0, pos=(0.0, 0.0, 0.0), vel=(0.0, 0.0, 0.0), fwd=(0.0, 1.0, 0.0)))
+    assert len(out) == 1
+    doc = json.loads(out[0].read_text())
+    assert not doc["lap"]["complete"] and doc["lap"]["metres"] > 500

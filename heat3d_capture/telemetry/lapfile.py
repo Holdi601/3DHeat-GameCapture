@@ -14,7 +14,10 @@ beyond the numbers goes in `meta`, which the viewer reads to interpret them:
 - `surface`: `tarmac`, `loose`, `snow`, `ice` or `mixed`, when known.
 
 Channels a game does not send are simply absent; the viewer derives what it
-can (drift angle, slip from wheel speeds, airborne) from what is there.
+can (drift angle, slip from wheel speeds, airborne) from what is there. A
+sample a channel has no value for - missing from that frame, or not a finite
+number - is written as `null`: `NaN` and `Infinity` are not JSON, and a
+browser's `JSON.parse` refuses the whole file over one of them.
 """
 
 from __future__ import annotations
@@ -56,6 +59,13 @@ UNITS = {
 }
 
 
+def clean(value, digits: int = 5):
+    """A sample as JSON can hold it: rounded, and None where it is not a finite number."""
+    if isinstance(value, float):
+        return round(value, digits) if math.isfinite(value) else None
+    return value
+
+
 @dataclass
 class Run:
     """One lap or stage of frames."""
@@ -94,19 +104,18 @@ def document(run: Run, *, game: str, meta: dict, track: str | None = None, car: 
         for name in names:
             if name == "distance":
                 continue
-            v = f.get(name, float("nan"))
-            channels[name].append(round(v, 5) if isinstance(v, float) and math.isfinite(v) else v)
+            channels[name].append(clean(f.get(name)))
     # Suspension as 0..1 of the travel this run used, for the car's bars and
     # for telling a wheel hanging in the air.
     for wheel in WHEELS:
         travel = channels.get(f"suspensionM.{wheel}")
         if travel and f"suspension.{wheel}" not in channels:
-            finite = [v for v in travel if isinstance(v, (int, float)) and math.isfinite(v)]
+            finite = [v for v in travel if v is not None]
             if not finite:
                 continue
             lo, hi = min(finite), max(finite)
             span = hi - lo if hi > lo else 1.0
-            channels[f"suspension.{wheel}"] = [round((v - lo) / span, 4) if math.isfinite(v) else v for v in travel]
+            channels[f"suspension.{wheel}"] = [None if v is None else round((v - lo) / span, 4) for v in travel]
     seconds = run.seconds if run.seconds is not None else channels["time"][-1]
     return {
         "format": "heat3d-lap",

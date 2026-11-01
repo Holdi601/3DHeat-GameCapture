@@ -37,6 +37,54 @@ from .estimator import DepthMap
 _PAD_VALUE = 114
 
 
+#: Converted models by size, in the order one is chosen: the one that may be
+#: used commercially first (see `estimator.COMMERCIAL_MODELS`). A size this does
+#: not know comes last.
+SIZE_ORDER = ("small", "base", "large")
+
+#: What a scan made with each size may be used for.
+SIZE_LICENCE = {
+    "small": "Apache-2.0, commercial use permitted",
+    "base": "CC-BY-NC-4.0, non-commercial use only",
+    "large": "CC-BY-NC-4.0, non-commercial use only",
+}
+
+
+def model_size(path: str | Path) -> str:
+    """`depth-small-518.onnx` -> `small`; an unrecognised name -> ``""``."""
+    parts = Path(path).stem.split("-")
+    return parts[1] if len(parts) > 1 and parts[0] == "depth" else ""
+
+
+def choose_model(folder: str | Path) -> tuple[Path | None, str]:
+    """
+    The converted depth model to scan with, and a line saying which and why.
+
+    By licence first, not by file name. Sorting the names put `depth-base-*`
+    ahead of `depth-small-*`, so a Base model converted for an experiment
+    quietly became every scan's model — and Base is non-commercial, which a
+    scan then inherits. Small is chosen whenever it is there; a larger size
+    only when it is the only one, and the line says so.
+    """
+    found = sorted(Path(folder).glob("depth-*.onnx"))
+    if not found:
+        return None, "no depth model converted yet"
+
+    def rank(path: Path) -> tuple[int, str]:
+        size = model_size(path)
+        order = SIZE_ORDER.index(size) if size in SIZE_ORDER else len(SIZE_ORDER)
+        return order, path.name
+
+    chosen = min(found, key=rank)
+    size = model_size(chosen)
+    licence = SIZE_LICENCE.get(size, "licence unknown: not one of the converted sizes")
+    note = f"{chosen.name} ({licence})"
+    others = [p.name for p in found if p != chosen]
+    if others:
+        note += f"; also present, not used: {', '.join(others)}"
+    return chosen, note
+
+
 @dataclass
 class _Letterbox:
     """How one frame was fitted into the square, so it can be undone."""

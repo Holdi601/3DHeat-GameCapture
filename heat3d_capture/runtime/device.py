@@ -208,7 +208,9 @@ class Expectation:
 #: longer to process than it took to record.
 _TIERS: list[tuple[float, str, str]] = [
     (25.0, "realtime", "Live scanning at full detail."),
-    (12.0, "workable", "Live scanning, at reduced capture resolution."),
+    # Nothing here changes the capture resolution, and it would not help: the
+    # depth model runs at its own fixed input size whatever it is handed.
+    (12.0, "workable", "Live scanning, with fewer views kept than at full speed."),
     (2.0, "slow", "Record first, reconstruct afterwards."),
     (0.0, "impractical", "This machine is too slow to scan usefully."),
 ]
@@ -244,7 +246,10 @@ def describe_expectations(backend: Backend, fps: float) -> Expectation:
     if tier == "realtime":
         notes.append("Walk at a normal pace; the overlay will keep up.")
     elif tier == "workable":
-        notes.append("Walk slowly and turn gently — fast turns will leave gaps.")
+        notes.append(
+            "Walk slowly and turn gently — fast turns will leave gaps. Draft keeps "
+            "fewer views, which helps the depth model keep up."
+        )
     elif tier == "slow":
         notes.append(
             "Record a video of the walk and reconstruct from the file afterwards. "

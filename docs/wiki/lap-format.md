@@ -1,3 +1,4 @@
+
 # The `heat3d-lap` file
 
 Every telemetry recorder in `gamecapture/` writes one file per lap or rally
@@ -123,3 +124,38 @@ The Trackmania plugin writes `heat3d-lap-csv` instead: a first line of `# `
 and a JSON object (`format`, `version`, `game`, `track`, `complete`, `seconds`,
 `meta`), a line of channel names, then one line per sample. Channel names are
 the same as above.
+
+## What each recorder actually writes
+
+The format above is the contract; the recorders fill it slightly differently, and a reader
+should tolerate all of these (checked against the code):
+
+| Recorder | `track` | `layout` | `meta` | `units` | Channels beyond the table |
+|---|---|---|---|---|---|
+| Forza (`fulllap.py`) | `null` (Forza Motorsport 2023's track number is `lap.trackOrdinal`) | the detected packet layout | `slip: peak`, `discipline: circuit` | only units of channels present | `distanceTravelled`, `currentLap`, `lapNumber`, `racePosition`, `accelX/Y/Z`, `angVelX/Y/Z`, `drivingLine`, `aiBrakeDifference`; the car-local velocity is under the canonical `latVel`, `vertVel`, `longVel` |
+| Assetto Corsa games (`kunos.py`) | from the static page, or `null` | absent | `slip: scaled`, `discipline: circuit` or `rally` | a fixed list | `slipRatioRaw.*`, `slipAngleRaw.*` |
+| Rally games (`rally.py` via `lapfile.py`) | `null` | absent | `discipline: rally`, `slip: null`, `surface` only when `--surface` was given (otherwise the viewer infers it) | only units of channels present | `stageDistance` |
+| BeamNG (`beamng.py` via `lapfile.py`) | `null` | absent | `discipline: circuit` | only units of channels present | none |
+| Trackmania plugin (CSV) | the map name | - | `slip: index`, `discipline: arcade` | - | `respawns` |
+
+`car` is the Forza car block (`carOrdinal`, `carClass`, `carPI`, `drivetrain`, `cylinders`,
+`rpmMax`, `rpmIdle`), `{"name": ...}` for the Kunos games when the static page names one, and
+`{}` otherwise. `lap.metres` is the game's distance-travelled difference for Forza and the
+summed 3D distance between samples elsewhere. Values are rounded on writing: `time` to 4
+decimals, `distance` to 3, other floats to 5. JSON is written compactly (no spaces).
+
+A sample a channel has no value for - missing from that frame, or not a finite number as the
+game sent it - is written as `null` by every recorder (`lapfile.clean`), and the suspension
+fraction derived from it is `null` too. `NaN` and `Infinity` are never written: they are not
+JSON, and a browser's `JSON.parse` refuses the whole file over one of them. A reader should
+expect `null` inside a channel's array.
+
+The Forza files carry `"game": "forza-horizon"`, `"forza-motorsport"` or `"forza"` according
+to the detected layout. The viewer's reader of FH Companion's `.tele.gz` files produces laps
+with `"game": "forza-horizon"` and `meta.slip = "peak"`; that reader is in the viewer, not
+here. iRacing laps (read from `.ibt` in the viewer) carry `"game": "iracing"`, which is not in
+the list of recorder `game` values above because no recorder writes it.
+
+See [Lap and stage splitting](lap-splitting) for how `lap.number`, `lap.seconds` and
+`lap.complete` are decided, and [Slip, drift and derived channels](slip-and-drift) for
+what the viewer derives from these channels.

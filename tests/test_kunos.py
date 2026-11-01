@@ -142,3 +142,15 @@ def test_the_lap_says_what_its_slip_means(tmp_path):
     lap = kunos.KLap(number=1, frames=list(circle_frames(laps=1.0)), complete=True)
     doc = json.loads(kunos.write(lap, tmp_path, game="acrally", track=None, car=None).read_text(encoding="utf-8"))
     assert doc["meta"] == {"slip": "scaled", "discipline": "rally"}
+
+
+def test_a_value_that_is_not_a_number_is_written_as_null(tmp_path):
+    """NaN and Infinity are not JSON: the browser's JSON.parse refuses the whole file."""
+    frames = list(circle_frames(laps=1.0))
+    frames[3] = dict(frames[3], rpm=float("nan"), **{"suspensionM.FL": float("inf")})
+    lap = kunos.KLap(number=1, frames=frames, complete=True)
+    text = kunos.write(lap, tmp_path, game="acc", track=None, car=None).read_text(encoding="utf-8")
+    doc = json.loads(text, parse_constant=lambda c: (_ for _ in ()).throw(ValueError(c)))
+    assert doc["channels"]["rpm"][3] is None
+    assert doc["channels"]["suspensionM.FL"][3] is None and doc["channels"]["suspension.FL"][3] is None
+    assert all(v is not None for i, v in enumerate(doc["channels"]["suspension.FL"]) if i != 3)

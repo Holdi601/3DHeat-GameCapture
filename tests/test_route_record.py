@@ -179,3 +179,48 @@ class TestWhatIsOnDiskIsUsable:
         low, high = empty.bounds
         assert np.array_equal(low, np.zeros(3))
         assert np.array_equal(high, np.zeros(3))
+
+
+class TestTheFileIsThereBeforeTheEnd:
+    """
+    The positions are on disk while the lap is still being driven, so a
+    recorder that dies mid-lap leaves the lap behind. They were once held in
+    memory and written only at Ctrl+C, which is the failure this exists to stop.
+    """
+
+    def test_the_route_is_on_disk_before_the_recorder_stops(self, tmp_path, port):
+        out = tmp_path / "lap"
+        recorder = Recorder(port=port, out=out, save_every=0.0)
+        recorder.__enter__()
+        try:
+            send(port, driving(40))
+            drain(recorder, 40)
+            # Still recording: nothing has called finish() or left the block.
+            # How much of it is saved depends on how long the saves took (the
+            # gap between them grows with their cost); that some is, does not.
+            assert recorder.saved > 0
+            assert len(recorder.positions) > 20
+            back = Recording.load(out)
+            assert len(back) == recorder.saved
+            data = json.loads((tmp_path / "lap.json").read_text(encoding="utf-8"))
+            assert data["samples"] == recorder.saved
+        finally:
+            recorder._listener.close()
+
+    def test_an_exception_still_leaves_the_lap(self, tmp_path, port):
+        out = tmp_path / "lap"
+        with pytest.raises(RuntimeError):
+            with Recorder(port=port, out=out, save_every=3600.0) as recorder:
+                send(port, driving(40))
+                drain(recorder, 40)
+                kept = len(recorder.positions)
+                raise RuntimeError("the program fell over")
+
+        assert len(Recording.load(out)) == kept > 20
+
+    def test_a_save_never_leaves_half_a_file(self, tmp_path):
+        route = Recording(
+            np.arange(30.0).reshape(10, 3), np.arange(10.0), np.ones(10)
+        )
+        route.save(tmp_path / "lap")
+        assert sorted(p.name for p in tmp_path.iterdir()) == ["lap.json", "lap.npz"]

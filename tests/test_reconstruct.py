@@ -200,3 +200,81 @@ class TestExport:
         assert out.exists()
         for part in parts:
             assert part.cls in ("ground", "structure", "water")
+
+
+class TestMarkedSpots:
+    """
+    The mark hotkey once stored a position that nothing ever drew, listed or
+    saved. A spot the driver marked is now on the maps and beside the level.
+    """
+
+    def test_nothing_placed_is_nowhere_to_mark(self):
+        r = Reconstructor(intrinsics(), camera_height=None)
+        assert r.mark() is None
+        assert r.state.marked == []
+
+    def test_a_mark_is_where_the_camera_is_now(self):
+        r = Reconstructor(intrinsics(), camera_height=None)
+        r.add(textured(), flat_depth())
+        here = r.mark()
+        assert here is not None
+        assert np.allclose(r.state.marked[-1], r.trajectory.positions[-1])
+
+    def test_marks_are_saved_beside_the_level_in_its_coordinates(self, tmp_path):
+        import json
+
+        from heat3d_capture.geometry.glb import METRES_TO_VIEWER
+        from heat3d_capture.scan.reconstruct import marks_path, write_marks
+
+        level = tmp_path / "scan.glb"
+        written = write_marks(level, [np.array([1.0, 2.0, -3.0]), np.array([4.0, 0.5, 6.0])])
+        assert written == marks_path(level) == tmp_path / "scan.marks.json"
+        doc = json.loads(written.read_text(encoding="utf-8"))
+        assert doc["format"] == "heat3d-scan-marks" and doc["level"] == "scan.glb"
+        assert [m["number"] for m in doc["marks"]] == [1, 2]
+        assert doc["marks"][0]["metres"] == [1.0, 2.0, -3.0]
+        assert doc["marks"][0]["position"] == [v * METRES_TO_VIEWER for v in (1.0, 2.0, -3.0)]
+
+    def test_marks_are_drawn_on_the_map(self):
+        from heat3d_capture.ui.preview import mark_marked_spots
+
+        image = np.zeros((100, 100, 3), dtype=np.uint8)
+        drawn = mark_marked_spots(image, [np.array([5.0, 0.0, 5.0])], (0.0, 10.0, 0.0, 10.0))
+        assert drawn[40:60, 40:60].any()
+        assert not image.any(), "the input is left alone"
+        assert mark_marked_spots(image, [], (0.0, 10.0, 0.0, 10.0)) is image
+
+
+class TestGroundOnALaterFrame:
+    """
+    Ground calibration was tried on the first keyframe only. When that frame
+    had no ground in view, the note stayed on "measuring the ground" for the
+    rest of the scan and the level came out at an arbitrary size.
+    """
+
+    def test_a_later_keyframe_fixes_the_size_and_says_so(self):
+        from heat3d_capture.pose.groundscale import calibrate_from_ground
+
+        k = intrinsics()
+        r = Reconstructor(k, camera_height=1.15, mask_hud=False)
+        first = flat_depth(4.0)
+        first[int(HEIGHT * 0.6) :] = 0.0  # nothing below the horizon: no ground
+        state = r.add(textured(0), first)
+        assert "still looking" in state.scale_note
+        assert r.metres_per_unit == 1.0
+
+        state = r.add(textured(20), flat_depth(4.0) * 20.0)
+        assert "found on frame 2" in state.scale_note
+        # What the first frame would have said, had it seen the ground: the
+        # wall at four of the origin's units is this many metres away.
+        expected = calibrate_from_ground(flat_depth(4.0), k, height=1.15).fit.apply(np.array([0.25]))[0] / 4.0
+        assert r.metres_per_unit == pytest.approx(expected, rel=0.05)
+
+    def test_it_gives_up_out_loud(self):
+        from heat3d_capture.pose.groundscale import GroundCalibrator
+
+        calibrator = GroundCalibrator(intrinsics(), attempts=3)
+        for _ in range(5):
+            calibrator.offer(np.zeros((HEIGHT, WIDTH), np.float32))
+        assert calibrator.gave_up and calibrator.tried == 3
+        assert "relative, not metres" in calibrator.note

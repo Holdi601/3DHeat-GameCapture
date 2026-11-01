@@ -16,11 +16,17 @@ The lap file (`heat3d-lap`)
 ---------------------------
 One JSON document per lap, channels as columns::
 
-    {"format": "heat3d-lap", "version": 1, "game": "forza",
-     "car": {...}, "lap": {"number": 3, "seconds": 52.103, "complete": true},
+    {"format": "heat3d-lap", "version": 1, "game": "forza-horizon",
+     "track": null, "car": {...},
+     "lap": {"number": 3, "seconds": 52.103, "complete": true},
+     "meta": {"slip": "peak", "discipline": "circuit"},
      "channels": {"time": [...], "distance": [...], "speed": [...],
                   "tireTemp.FL": [...], ...},
      "units": {"speed": "m/s", "tireTemp": "degC", ...}}
+
+`units` lists the channels the file has, and no others. `track` is null: Forza
+Horizon does not say where a lap is driven, and Forza Motorsport says only by a
+number, kept as `lap.trackOrdinal`.
 
 Channel names are the canonical ones (`docs/lap-format.md`), so the
 same file shape carries any game: a later Assetto Corsa or iRacing recorder
@@ -47,6 +53,7 @@ from .forza import (
     LayoutUndetermined,
     detect_layout,
 )
+from .lapfile import clean
 
 WHEELS = ("FL", "FR", "RL", "RR")
 
@@ -58,13 +65,15 @@ SLED = [
     ("rpmMax", "<f", 8),
     ("rpmIdle", "<f", 12),
     ("rpm", "<f", 16),
-    # Car-local acceleration and velocity: x right, y up, z forward.
+    # Car-local acceleration and velocity: x right, y up, z forward. The
+    # velocity goes straight under the canonical names, which is what lets the
+    # viewer read the drift angle off it rather than estimate it from the path.
     ("accelX", "<f", 20),
     ("accelY", "<f", 24),
     ("accelZ", "<f", 28),
-    ("velX", "<f", 32),
-    ("velY", "<f", 36),
-    ("velZ", "<f", 40),
+    ("latVel", "<f", 32),
+    ("vertVel", "<f", 36),
+    ("longVel", "<f", 40),
     ("angVelX", "<f", 44),
     ("angVelY", "<f", 48),
     ("angVelZ", "<f", 52),
@@ -170,6 +179,9 @@ UNITS = {
     "y": "m",
     "z": "m",
     "speed": "m/s",
+    "latVel": "m/s, car frame, to the right",
+    "longVel": "m/s, car frame, forwards",
+    "vertVel": "m/s, car frame, up",
     "rpm": "rpm",
     "power": "W",
     "torque": "N m",
@@ -219,26 +231,36 @@ class Lap:
         for name in names:
             channels.setdefault(name, [])
         for frame in self.frames:
-            channels["time"].append(round(frame["currentLap"] - start_time, 4))
-            channels["distance"].append(round(frame["distanceTravelled"] - start_distance, 3))
+            channels["time"].append(clean(frame["currentLap"] - start_time, 4))
+            channels["distance"].append(clean(frame["distanceTravelled"] - start_distance, 3))
             for name in names:
-                value = frame[name]
-                channels[name].append(round(value, 5) if isinstance(value, float) else value)
+                # None for a value that is not a finite number: NaN is not JSON.
+                channels[name].append(clean(frame[name]))
         seconds = self.seconds if self.seconds is not None else channels["time"][-1]
+        lap = {
+            "number": self.number,
+            "seconds": round(seconds, 4),
+            "complete": self.complete,
+            "metres": round(self.distance, 1),
+        }
+        if "trackOrdinal" in first:
+            lap["trackOrdinal"] = first["trackOrdinal"]
         return {
             "format": "heat3d-lap",
             "version": 1,
             "game": game,
             "layout": layout,
             "recordedAt": datetime.now().astimezone().isoformat(timespec="seconds"),
+            "track": None,
             "car": {name: first[name] for name in CAR_FIELDS},
-            "lap": {
-                "number": self.number,
-                "seconds": round(seconds, 4),
-                "complete": self.complete,
-                "metres": round(self.distance, 1),
+            "lap": lap,
+            # Forza's slip channels are normalised so that past 1 the tyre lets go.
+            "meta": {"slip": "peak", "discipline": "circuit"},
+            "units": {
+                name: unit
+                for name, unit in UNITS.items()
+                if name in channels or any(c.startswith(name + ".") for c in channels)
             },
-            "units": {name: unit for name, unit in UNITS.items()},
             "channels": channels,
         }
 

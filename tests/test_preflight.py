@@ -161,3 +161,63 @@ class TestManifests:
         for requirement in SCANNER + MODEL_EXPORT:
             assert requirement.purpose and not requirement.purpose[0].isupper()
             assert requirement.megabytes > 0
+
+
+class TestThePlatformsBuild:
+    def test_the_runtime_matches_what_requirements_txt_installs(self, monkeypatch):
+        # requirements.txt installs onnxruntime-directml on Windows only; the
+        # check offered it everywhere, where pip has no such package.
+        import importlib
+        import sys
+
+        for platform, expected in (("win32", "onnxruntime-directml"), ("linux", "onnxruntime")):
+            monkeypatch.setattr(sys, "platform", platform)
+            reloaded = importlib.reload(preflight)
+            assert reloaded.ONNXRUNTIME == expected
+            assert expected in {r.package for r in reloaded.SCANNER}
+        monkeypatch.undo()
+        importlib.reload(preflight)
+
+
+class TestTheOfflinePath:
+    def test_it_names_what_reconstruct_imports(self):
+        from heat3d_capture.runtime.preflight import OFFLINE
+
+        modules = {r.module for r in OFFLINE}
+        assert {"torch", "transformers", "vggt"} <= modules
+        for requirement in OFFLINE:
+            assert requirement.purpose and not requirement.purpose[0].isupper()
+            assert requirement.megabytes > 0
+
+    def test_vggt_comes_without_its_numpy_pin(self, monkeypatch):
+        from heat3d_capture.runtime.preflight import OFFLINE
+
+        commands = []
+
+        class Done:
+            stdout = iter(())
+
+            def wait(self):
+                return 0
+
+        def record(command, **_):
+            commands.append(command)
+            return Done()
+
+        monkeypatch.setattr(preflight.subprocess, "Popen", record)
+        ok, _ = preflight.install(OFFLINE)
+        assert ok
+        assert len(commands) == 2
+        assert "--no-deps" not in commands[0]
+        assert commands[1][-2:] == [f"vggt @ {preflight.VGGT_SOURCE}", "--no-deps"]
+
+    def test_the_offline_requirements_file_lists_the_same(self):
+        from pathlib import Path
+
+        from heat3d_capture.runtime.preflight import OFFLINE
+
+        text = (Path(__file__).resolve().parents[1] / "requirements-offline.txt").read_text(encoding="utf-8")
+        for requirement in OFFLINE:
+            if requirement.package != "torch" and not requirement.no_deps:
+                assert requirement.package in text, requirement.package
+        assert "facebookresearch/vggt" in text and "--no-deps" in text

@@ -200,3 +200,45 @@ class TestRelay:
         assert parse_forward("127.0.0.1:5301") == ("127.0.0.1", 5301)
         assert parse_forward(":5301") == ("127.0.0.1", 5301)
         assert parse_forward(None) is None
+
+
+class TestWhatTheFileSays:
+    def doc(self, **kwargs):
+        lap = Lap(number=1, frames=frames([(1, 5.0, 0.0, 100.0), (1, 6.0, 0.0, 130.0)]), seconds=51.0, complete=True)
+        return lap.document(layout="Horizon dash", **kwargs)
+
+    def test_the_car_local_velocity_is_under_the_names_the_viewer_reads(self):
+        # Data Out's velocity is the car's own (x right, y up, z forward). As
+        # velX/velY/velZ the viewer had no mapping for it and estimated drift
+        # from the path instead.
+        channels = self.doc()["channels"]
+        assert channels["latVel"][0] == pytest.approx(3.0)
+        assert channels["vertVel"][0] == pytest.approx(0.0)
+        assert channels["longVel"][0] == pytest.approx(4.0)
+        assert not {"velX", "velY", "velZ"} & set(channels)
+
+    def test_meta_and_track_are_written_like_every_other_recorder(self):
+        doc = self.doc()
+        assert doc["meta"] == {"slip": "peak", "discipline": "circuit"}
+        assert "track" in doc and doc["track"] is None
+
+    def test_units_are_only_those_of_channels_present(self):
+        doc = self.doc()
+        for name in doc["units"]:
+            assert name in doc["channels"] or any(c.startswith(name + ".") for c in doc["channels"]), name
+        assert "latVel" in doc["units"] and "tireTemp" in doc["units"]
+
+    def test_the_motorsport_track_number_is_kept(self):
+        pkt = packet(length=FM2023_LENGTH, base=FM_DASH_LENGTH - DASH_BLOCK_LENGTH)
+        layout = detect_layout([pkt])
+        lap = Lap(number=1, frames=[decode_full(pkt, layout)] * 2, complete=False)
+        assert lap.document()["lap"]["trackOrdinal"] == 860
+
+    def test_a_non_finite_value_is_written_as_null(self, tmp_path):
+        from heat3d_capture.telemetry.fulllap import write_lap
+
+        lap = Lap(number=1, frames=frames([(1, 5.0, 0.0, 100.0), (1, 6.0, 0.0, 130.0)]), seconds=51.0, complete=True)
+        lap.frames[1] = dict(lap.frames[1], boost=float("nan"))
+        text = write_lap(lap, tmp_path, layout="Horizon dash").read_text(encoding="utf-8")
+        assert "NaN" not in text
+        assert json.loads(text)["channels"]["boost"][1] is None

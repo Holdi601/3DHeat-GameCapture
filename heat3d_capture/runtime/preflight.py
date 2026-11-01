@@ -46,6 +46,10 @@ class Requirement:
     megabytes: int
     #: False when the feature degrades rather than failing without it.
     essential: bool = True
+    #: Installed without its declared dependencies. For a package whose
+    #: metadata pins something this project needs newer (VGGT asks for numpy 1,
+    #: which scipy here refuses), so pip would otherwise downgrade it.
+    no_deps: bool = False
 
     def present(self) -> bool:
         try:
@@ -56,11 +60,15 @@ class Requirement:
             return False
 
 
+#: The ONNX Runtime build for this platform, as `requirements.txt` picks it:
+#: DirectML exists only for Windows, and elsewhere pip has no such package.
+ONNXRUNTIME = "onnxruntime-directml" if sys.platform == "win32" else "onnxruntime"
+
 #: Everything the scanner needs, with the reason it needs it.
 SCANNER: list[Requirement] = [
     Requirement("numpy", "numpy", "the arithmetic everything else is built on", 20),
     Requirement("opencv-python", "cv2", "reading video files and camera frames", 40),
-    Requirement("onnxruntime-directml", "onnxruntime", "running the depth model on your graphics card", 120),
+    Requirement(ONNXRUNTIME, "onnxruntime", "running the depth model on your graphics card", 120),
     Requirement("PySide6-Essentials", "PySide6", "the window and its controls", 90),
     Requirement("scipy", "scipy", "smoothing the reconstructed surface", 45),
     Requirement("scikit-image", "skimage", "turning measurements into a 3D surface", 30),
@@ -73,6 +81,25 @@ MODEL_EXPORT: list[Requirement] = [
     Requirement("torch", "torch", "converting the depth model, one time only", 900),
     Requirement("transformers", "transformers", "loading the published depth model", 30),
     Requirement("onnxscript", "onnxscript", "writing the converted model out", 15),
+]
+
+#: Where VGGT's code is published; it is not on the package index.
+VGGT_SOURCE = "git+https://github.com/facebookresearch/vggt.git"
+
+#: What `reconstruct` needs on top of the scanner, as `requirements-offline.txt`
+#: lists it. VGGT's code is under Meta's own research licence and its published
+#: weights (`facebook/VGGT-1B`) are CC-BY-NC-4.0; the command says so before it
+#: starts (`feedforward.describe_licence`).
+OFFLINE: list[Requirement] = [
+    Requirement("torch", "torch", "running the camera solver and the depth model", 900),
+    Requirement("transformers", "transformers", "loading the published depth model", 30),
+    Requirement("einops", "einops", "the camera solver's tensor plumbing", 1),
+    Requirement("safetensors", "safetensors", "reading the camera solver's weights", 1),
+    Requirement("huggingface_hub", "huggingface_hub", "downloading the camera solver's weights", 1),
+    Requirement("Pillow", "PIL", "image handling inside the camera solver", 3),
+    Requirement(
+        f"vggt @ {VGGT_SOURCE}", "vggt", "solving every camera of a recording at once (Meta's VGGT)", 1, no_deps=True
+    ),
 ]
 
 
@@ -117,7 +144,23 @@ def install(
     if not absent:
         return True, "nothing to install"
 
-    command = [sys.executable, "-m", "pip", "install", *(r.package for r in absent)]
+    # Two runs when some must come without their dependencies: `--no-deps`
+    # applies to a whole pip command, not to one package in it.
+    groups = [[r for r in absent if not r.no_deps], [r for r in absent if r.no_deps]]
+    message = "installed"
+    for group, no_deps in zip(groups, (False, True)):
+        if not group:
+            continue
+        ok, message = _pip(group, index_url=index_url, no_deps=no_deps, on_output=on_output)
+        if not ok:
+            return False, message
+    return True, message
+
+
+def _pip(group, *, index_url, no_deps, on_output) -> tuple[bool, str]:
+    command = [sys.executable, "-m", "pip", "install", *(r.package for r in group)]
+    if no_deps:
+        command.append("--no-deps")
     if index_url:
         command += ["--index-url", index_url]
 

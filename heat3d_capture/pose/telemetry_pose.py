@@ -39,7 +39,35 @@ from .odometry import Pose
 MAX_GAP = 0.35
 
 
-def pose_from_forza(frame, *, y_up: bool = True) -> Pose:
+#: The car's axes (x right, y up, z forward) to the camera's (x right, y down,
+#: z forward, as OpenCV and `Intrinsics.unproject` have it). One axis flips.
+CAR_TO_CAMERA = np.diag([1.0, -1.0, 1.0])
+
+
+def car_rotation(yaw: float, pitch: float, roll: float) -> np.ndarray:
+    """
+    World-from-car, from Forza's attitude angles.
+
+    The senses were read off recorded laps rather than assumed: the direction
+    of travel `atan2(dx, dz)` equals the yaw, so yaw turns +z toward +x; the
+    slope climbed equals minus the pitch, so a positive pitch is nose down; and
+    the roll is positive when the right-hand suspension is the compressed one,
+    so a positive roll drops the right side.
+    """
+    cy, sy = np.cos(yaw), np.sin(yaw)
+    cp, sp = np.cos(pitch), np.sin(pitch)
+    # Negated so that the matrix below lifts the left side for a positive roll.
+    cr, sr = np.cos(-roll), np.sin(-roll)
+
+    # Yaw about up, then pitch, then roll — the order a vehicle's attitude is
+    # reported in.
+    ry = np.array([[cy, 0, sy], [0, 1, 0], [-sy, 0, cy]])
+    rp = np.array([[1, 0, 0], [0, cp, -sp], [0, sp, cp]])
+    rr = np.array([[cr, -sr, 0], [sr, cr, 0], [0, 0, 1]])
+    return ry @ rp @ rr
+
+
+def pose_from_forza(frame) -> Pose:
     """
     Turn one telemetry frame into a camera pose.
 
@@ -48,31 +76,23 @@ def pose_from_forza(frame, *, y_up: bool = True) -> Pose:
     published and guessing it would put every reconstruction a few metres behind
     itself, which is worse than the error it would fix.
 
-    `y_up` converts from the game's Z-up world into the viewer's Y-up one, which
-    is the same swap the Unreal exporter does. Reversing a handedness without
-    reversing the rotation with it would mirror the level, so the rotation is
-    built in viewer space rather than converted after the fact.
+    The position is kept exactly as the game sends it. Forza's world is already
+    Y-up (x and z across the map, y the height), which is how the lap files and
+    route files write it too, so a surface reconstructed here lands on the same
+    coordinates as the racing lines recorded over it. An earlier version swapped
+    y and z on the belief that the game was Z-up, and laid every track on its
+    side.
+
+    That world is left-handed — the car's own axes are x right, y up, z forward
+    — while the camera's are right-handed, so the rotation returned is a
+    reflection (determinant -1) rather than a rotation. That is the honest
+    matrix: it maps camera rays into the game's own coordinates, which is what
+    every use of `Pose` does with it. Interpolation (`_slerp`) is unaffected,
+    because the turn *between* two such poses is a proper rotation.
     """
-    x, y, z = frame.x, frame.y, frame.z
-    if y_up:
-        # Z-up to Y-up: the game's Z becomes the viewer's Y, and the game's Y
-        # becomes the viewer's Z.
-        position = np.array([x, z, y], dtype=np.float64)
-        yaw, pitch, roll = frame.yaw, frame.pitch, frame.roll
-    else:
-        position = np.array([x, y, z], dtype=np.float64)
-        yaw, pitch, roll = frame.yaw, frame.pitch, frame.roll
-
-    cy, sy = np.cos(yaw), np.sin(yaw)
-    cp, sp = np.cos(pitch), np.sin(pitch)
-    cr, sr = np.cos(roll), np.sin(roll)
-
-    # Yaw about up, then pitch, then roll — the order a vehicle's attitude is
-    # reported in. Composed as world-from-camera to match `Pose`.
-    ry = np.array([[cy, 0, sy], [0, 1, 0], [-sy, 0, cy]])
-    rp = np.array([[1, 0, 0], [0, cp, -sp], [0, sp, cp]])
-    rr = np.array([[cr, -sr, 0], [sr, cr, 0], [0, 0, 1]])
-    return Pose(rotation=ry @ rp @ rr, translation=position)
+    position = np.array([frame.x, frame.y, frame.z], dtype=np.float64)
+    rotation = car_rotation(frame.yaw, frame.pitch, frame.roll) @ CAR_TO_CAMERA
+    return Pose(rotation=rotation, translation=position)
 
 
 @dataclass
@@ -91,9 +111,8 @@ class TelemetryPoseTrack:
     fused. Old samples are dropped.
     """
 
-    def __init__(self, *, window: float = 30.0, y_up: bool = True):
+    def __init__(self, *, window: float = 30.0):
         self.window = window
-        self.y_up = y_up
         self._samples: list[_Sample] = []
         self._lock = threading.Lock()
         self.received = 0
@@ -105,7 +124,7 @@ class TelemetryPoseTrack:
     def add(self, frame, *, now: float | None = None) -> None:
         """Record one telemetry frame, stamped with its arrival time."""
         t = time.monotonic() if now is None else now
-        pose = pose_from_forza(frame, y_up=self.y_up)
+        pose = pose_from_forza(frame)
         with self._lock:
             self.received += 1
             self._samples.append(_Sample(t, pose, frame.speed))
@@ -125,9 +144,12 @@ class TelemetryPoseTrack:
         The pose at time `t`, interpolated. None when it cannot be known.
 
         None rather than the nearest sample: a frame captured during a gap in the
-        feed has no pose, and pretending otherwise puts its geometry somewhere
-        plausible and wrong. The reconstructor treats that as an untracked frame,
-        which is exactly what it is.
+        feed has no published pose, and pretending otherwise puts its geometry
+        somewhere plausible and wrong. The reconstructor then places that frame
+        the way it would without telemetry — visual tracking, carried on from the
+        last pose the feed gave — and is back on the feed's poses as soon as the
+        feed answers again. Only if the visual tracking also fails is the frame
+        untracked.
         """
         with self._lock:
             samples = list(self._samples)
@@ -189,10 +211,10 @@ class ForzaPoseSource:
     worked on vision alone must not be stopped because a port was busy.
     """
 
-    def __init__(self, *, port: int = 5300, host: str = "127.0.0.1", y_up: bool = True):
+    def __init__(self, *, port: int = 5300, host: str = "127.0.0.1"):
         self.port = port
         self.host = host
-        self.track = TelemetryPoseTrack(y_up=y_up)
+        self.track = TelemetryPoseTrack()
         self.error: str | None = None
         self._listener = None
         self._thread: threading.Thread | None = None

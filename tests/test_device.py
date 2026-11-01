@@ -137,6 +137,12 @@ class TestExpectations:
     def test_tiers_follow_throughput(self, fps, tier):
         assert describe_expectations(self._backend(), fps).tier == tier
 
+    def test_the_workable_tier_promises_nothing_the_window_does_not_do(self):
+        # It once said "at reduced capture resolution", and nothing reduced it.
+        expectation = describe_expectations(self._backend(), 15.0)
+        assert "resolution" not in expectation.headline
+        assert "Draft" in expectation.notes[-1]
+
     def test_tells_a_cpu_user_how_to_get_a_gpu(self, fake):
         backend = self._backend(provider=CPU, api="CPU", device="16 cores", vendor="cpu", gpu=False)
         notes = " ".join(describe_expectations(backend, 3.0).notes)

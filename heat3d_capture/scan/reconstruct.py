@@ -21,7 +21,7 @@ from ..capture.screenmask import ScreenMask
 from ..fusion.coverage import CoverageGrid, WeakSpot
 from ..fusion.texture import KeyframeStore, project_colours
 from ..fusion.volume import SurfaceVolume, mesh_to_parts
-from ..pose.groundscale import DRIVING_HEIGHT, GroundCalibrator
+from ..pose.groundscale import DRIVING_HEIGHT, GROUND_BAND, GROUND_WIDTH, GroundCalibrator
 from ..pose.odometry import Intrinsics, Trajectory, VisualOdometry
 
 #: Take every Nth pixel when back-projecting. A 960x540 frame is half a million
@@ -67,6 +67,10 @@ class ReconstructionState:
     mean_quality: float = 0.0
     trajectory_length: float = 0.0
     weak_spots: list[WeakSpot] = field(default_factory=list)
+    #: Places the driver marked by hand (the mark hotkey), as camera positions
+    #: in the scan's world, in metres. Drawn on the maps, listed, and saved with
+    #: the level (see `Reconstructor.export`).
+    marked: list[np.ndarray] = field(default_factory=list)
     last_reason: str = ""
     #: How much of the frame is being ignored as HUD or camera-mounted.
     masked_fraction: float = 0.0
@@ -132,7 +136,9 @@ class Reconstructor:
         self.flow = FlowMask() if mask_hud else None
         self._warmup: list = []
         #: Something that can answer "where was the camera at time t" exactly —
-        #: a telemetry feed. When present it replaces the visual solve entirely.
+        #: a telemetry feed. When it answers, its pose is used instead of the
+        #: visual solve; when it cannot (a gap in the feed), the frame is placed
+        #: visually, carrying on from the last pose it gave.
         self.pose_source = pose_source
         #: Frames held back to colour the finished mesh. Bounded and spread
         #: across the whole scan, not the most recent ones.
@@ -145,6 +151,11 @@ class Reconstructor:
             if camera_height is not None
             else None
         )
+        #: Metres per unit of the level as fused, applied when it is written.
+        #: 1 when the scale was fixed before the origin (the first frame had
+        #: ground to measure); otherwise the factor a later keyframe's ground
+        #: found, since everything already fused is in the first frame's unit.
+        self.metres_per_unit = 1.0
         self.state = ReconstructionState()
         #: Judges each frame as it arrives, so the overlay can say "slow down"
         #: while there is still time to slow down. Cheap: one Laplacian pass.
@@ -215,6 +226,8 @@ class Reconstructor:
         known = None
         if self.pose_source is not None and timestamp is not None:
             known = self.pose_source.at(timestamp)
+            if known is not None:
+                self.state.scale_note = "in metres, from the telemetry's positions"
 
         result = self.odometry.track(image, inverse_depth, known_pose=known, mask=mask)
         self.state.relocalisations = self.odometry.relocalisations
@@ -229,6 +242,8 @@ class Reconstructor:
         self.state.tracked += 1
         self.state.last_reason = ""
         self._advise()
+        if result.fit is not None and self.state.frames > 1:
+            self._measure_ground_later(inverse_depth, result.fit)
         if result.fit is None:
             # Located but not fusable: the camera is where the feed says, and
             # nothing in this frame can be tied to a scale yet. Not a loss, and
@@ -280,8 +295,43 @@ class Reconstructor:
         self.state.coverage_voxels = summary["voxels"]
         self.state.well_observed = summary["well_observed"]
         self.state.mean_quality = summary["mean_quality"]
-        self.state.trajectory_length = self.trajectory.length
+        self.state.trajectory_length = self.trajectory.length * self.metres_per_unit
         return self.state
+
+    def _measure_ground_later(self, inverse_depth: np.ndarray, chained) -> None:
+        """
+        Try the ground again on a later keyframe, when the first had none.
+
+        The origin is already fixed by then and everything fused is in its
+        unit, so the scale is not fed back into the chain. It is measured here
+        as metres per unit — what this frame's ground says its depth is, over
+        what the chain says it is — and applied to the whole level when it is
+        written, and to the distances shown meanwhile.
+        """
+        ground = self._ground
+        # Not with telemetry: its positions are in metres already, and each
+        # frame's depth is anchored to them (`VisualOdometry._with_known_pose`).
+        if self.pose_source is not None or ground is None or ground.settled or ground.gave_up:
+            return
+        fit = ground.offer(inverse_depth)
+        self.state.scale_note = ground.note
+        if fit is None:
+            return
+        h, w = inverse_depth.shape[:2]
+        band = inverse_depth[
+            int(h * GROUND_BAND[0]) : int(h * GROUND_BAND[1]),
+            int(w * GROUND_WIDTH[0]) : int(w * GROUND_WIDTH[1]),
+        ]
+        metres = fit.apply(band)
+        units = chained.apply(band)
+        usable = np.isfinite(metres) & np.isfinite(units) & (units > 1e-9)
+        if not usable.any():
+            return
+        self.metres_per_unit = float(np.median(metres[usable] / units[usable]))
+        self.state.scale_note = (
+            f"{ground.note}; found on frame {self.state.frames}, so the level is "
+            f"scaled by {self.metres_per_unit:.3g} when it is written"
+        )
 
     def _advise(self) -> None:
         """Refresh the live instruction. Called on every frame, tracked or not."""
@@ -304,6 +354,21 @@ class Reconstructor:
     def trajectory(self) -> Trajectory:
         return Trajectory(poses=self.odometry.poses, results=self.odometry.results)
 
+    def mark(self) -> np.ndarray | None:
+        """
+        Note where the camera is now as a place to come back to.
+
+        For what the driver noticed and the coverage metric cannot see — a
+        corner taken badly, a stretch where the view was blocked. None when no
+        frame has been placed yet, so there is nowhere to mark.
+        """
+        positions = self.trajectory.positions
+        if len(positions) == 0:
+            return None
+        here = np.array(positions[-1], dtype=np.float64)
+        self.state.marked.append(here)
+        return here
+
     def export(self, path: str | Path, *, name: str = "scan") -> Path | None:
         """
         Write the level. Returns None when there is nothing worth writing.
@@ -311,8 +376,11 @@ class Reconstructor:
         None rather than an empty file, because an empty `.glb` in the output
         folder reads as a successful scan that produced nothing, and that is a
         harder thing to debug than an honest refusal.
+
+        Spots marked by hand go beside it as `<name>.marks.json`, in the same
+        coordinates as the level (see `write_marks`).
         """
-        from ..geometry.glb import write_glb
+        from ..geometry.glb import METRES_TO_VIEWER, write_glb
 
         mesh = self.volume.to_mesh()
         if mesh.is_empty():
@@ -334,4 +402,55 @@ class Reconstructor:
         parts = mesh_to_parts(mesh, name=name, colours=colours)
         if not parts:
             return None
-        return write_glb(path, parts, generator="heat3d-capture-scan")
+        written = write_glb(
+            path,
+            parts,
+            scale=METRES_TO_VIEWER * self.metres_per_unit,
+            generator="heat3d-capture-scan",
+        )
+        if self.state.marked:
+            write_marks(written, [m * self.metres_per_unit for m in self.state.marked])
+        return written
+
+
+def marks_path(level: str | Path) -> Path:
+    """Where the hand-marked spots of a level are kept: beside it."""
+    level = Path(level)
+    return level.with_name(level.stem + ".marks.json")
+
+
+def write_marks(level: str | Path, marked) -> Path:
+    """
+    The hand-marked spots of a scan, beside its level.
+
+    Each in the level's own coordinates (the GLB's scale applied, so a mark
+    sits on the mesh it was made over) and in metres, numbered as the window
+    lists them.
+    """
+    import json
+
+    from ..geometry.glb import METRES_TO_VIEWER
+
+    path = marks_path(level)
+    marks = [
+        {
+            "number": i,
+            "position": [round(float(v) * METRES_TO_VIEWER, 3) for v in where],
+            "metres": [round(float(v), 4) for v in where],
+        }
+        for i, where in enumerate(marked, start=1)
+    ]
+    path.write_text(
+        json.dumps(
+            {
+                "format": "heat3d-scan-marks",
+                "version": 1,
+                "level": Path(level).name,
+                "scale": METRES_TO_VIEWER,
+                "marks": marks,
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    return path

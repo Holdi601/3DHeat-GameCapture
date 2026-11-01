@@ -114,11 +114,18 @@ class TestEstimatorConfig:
 
 
 # The network itself. Skipped where there is no GPU, since running this model on
-# a CPU takes long enough to look like a hang rather than a test.
-torch = pytest.importorskip("torch")
-pytestmark_gpu = pytest.mark.skipif(
-    not torch.cuda.is_available(), reason="needs a CUDA device"
-)
+# a CPU takes long enough to look like a hang rather than a test — and where
+# there is no torch at all. Only these: `importorskip` at module level used to
+# skip the whole file, the arithmetic above with it.
+def _cuda() -> bool:
+    try:
+        import torch
+    except ImportError:
+        return False
+    return bool(torch.cuda.is_available())
+
+
+pytestmark_gpu = pytest.mark.skipif(not _cuda(), reason="needs torch and a CUDA device")
 
 
 @pytestmark_gpu

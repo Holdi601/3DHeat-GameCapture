@@ -8,8 +8,8 @@ handsome mesh; what it produces is a handsome mesh of somewhere else. Nothing
 about the geometry says so. The telemetry does: the car drove on that ground, so
 the ground has to be under the car.
 
-It is also a real measurement rather than a tolerance someone picked. Across
-the 38 courses of one recorded library the car sits a median of 0.28 to 0.47 m
+It is also a real measurement rather than a tolerance someone picked. On the
+courses of a recorded library the car sits a median of a few tenths of a metre
 above the surface directly beneath it - that is ride height - and there is no
 room in it for an error of even a couple of metres, let alone the tile-sized
 ones that are easy to make. The surface is sampled from every triangle of the
@@ -17,16 +17,16 @@ export, bridges and expressway decks included, and "beneath" means the highest
 surface not above the car: under a deck, the car is on the street.
 
 A course with jumps fails the last two checks by design. On a cross-country
-course the car is up to 26 m in the air for a seventh of the lap, over
+course the car can be many metres in the air for a good part of the lap, over
 ground that is there, and positions alone cannot tell a jump from a car
 floating over a hole.
 
 Skips unless both halves are present, since they are a cut of someone's own play
 data and a cut of a game they own:
 
-    python -m heat3d_capture laps "Lakeside Circuit" -o courses/lakeside_circuit
-    python -m heat3d_gamefiles course "Lakeside Circuit" -o courses/lakeside_circuit.glb
-    HEAT3D_COURSE=courses/lakeside_circuit pytest tests/test_course_ground.py
+    python -m heat3d_capture laps "Mapletree Test Loop" -o courses/mapletree_test_loop
+    python -m heat3d_gamefiles course "Mapletree Test Loop" -o courses/mapletree_test_loop.glb
+    HEAT3D_COURSE=courses/mapletree_test_loop pytest tests/test_course_ground.py
 """
 
 from __future__ import annotations

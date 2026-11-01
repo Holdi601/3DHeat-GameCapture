@@ -20,9 +20,9 @@ background geometry is to sit behind a heatmap without competing with it. An
 atlas would be invisible there, would multiply the file size, and would need an
 unwrapper to earn none of it back.
 
-Per-vertex colour is written as glTF `COLOR_0`, which Blender and every other
-glTF tool reads, so the detail is there for anyone who wants the mesh somewhere
-that does show it. The mesh is voxel-dense, so a colour per vertex is a sample
+Per-vertex colour is written as glTF `COLOR_0`, which the viewer shows when its
+"Captured colour" switch is on (it is off by default) and which Blender and
+every other glTF tool reads. The mesh is voxel-dense, so a colour per vertex is a sample
 every few centimetres rather than a flat shade per face.
 """
 
@@ -45,8 +45,20 @@ FAR_VIEW = 35.0
 
 #: How many frames may contribute to one vertex. Blending a few suppresses
 #: per-frame exposure wobble; blending many just averages back to the blur this
-#: exists to avoid.
+#: exists to avoid. They are the best few by `_quality`, not the first few.
 MAX_VIEWS = 4
+
+#: Pixels per cell of the depth buffer the occlusion test draws the mesh into.
+#: The mesh is voxel-dense, so its vertices cover a surface without gaps at
+#: this size; a finer buffer would let farther vertices show through between
+#: the nearer ones.
+OCCLUSION_CELL = 2
+
+#: How much farther than the nearest vertex in its cell a vertex may be and
+#: still count as seen: a margin for the voxel size, and a share of the
+#: distance for a surface that slopes away within one cell.
+OCCLUSION_MARGIN = 0.3
+OCCLUSION_SLACK = 0.05
 
 
 @dataclass
@@ -68,6 +80,17 @@ def project_colours(
     """
     Colour every vertex from the frames that saw it best.
 
+    "Best" is ranked: each view a vertex has is scored by how square-on and how
+    near it was (`_quality`), and the `MAX_VIEWS` highest-scoring ones are
+    blended, weighted by that score. The frames' order does not matter — an
+    earlier version took the first four that qualified, so a vertex glimpsed
+    early at a poor angle kept that colour however well it was seen later.
+
+    A view in which the vertex was hidden counts for nothing. Each frame draws
+    the mesh's own vertices into a coarse depth buffer, and a vertex well behind
+    the nearest one at its pixel was behind something in that frame — a wall
+    between the camera and the road beyond — so the pixel there shows the wall.
+
     Returns (N,3) float32 in 0..1. Vertices no frame saw keep `fallback` — the
     voxel-averaged colour from fusion — rather than going black, because a black
     patch reads as a hole in the geometry rather than as missing colour.
@@ -76,11 +99,10 @@ def project_colours(
     normals = np.asarray(normals, dtype=np.float64).reshape(-1, 3)
     count = len(vertices)
 
-    total = np.zeros((count, 3), dtype=np.float64)
-    weight = np.zeros(count, dtype=np.float64)
-    # How many frames have already contributed, so the best few win rather than
-    # every frame that can see the vertex at all.
-    used = np.zeros(count, dtype=np.int32)
+    # The best few views of each vertex so far: their scores and colours. A
+    # new view replaces the weakest of them when it scores higher.
+    best = np.zeros((count, MAX_VIEWS), dtype=np.float64)
+    colour = np.zeros((count, MAX_VIEWS, 3), dtype=np.float64)
 
     for keyframe in keyframes:
         pose = keyframe.pose
@@ -116,8 +138,9 @@ def project_colours(
             & np.isfinite(facing)
             & (facing > MAX_OBLIQUITY)
             & (distance < FAR_VIEW)
-            & (used < MAX_VIEWS)
         )
+        if usable.any():
+            usable &= _unoccluded(pixels, z, inside, (height, width))
         if not usable.any():
             continue
 
@@ -125,21 +148,59 @@ def project_colours(
         cols = np.clip(np.round(pixels[usable, 0]).astype(int), 0, width - 1)
         sampled = image[rows, cols].astype(np.float64) / 255.0
 
-        # Weighted so a head-on close view dominates a glancing distant one,
-        # rather than all views counting alike.
-        w = facing[usable] * (1.0 - distance[usable] / FAR_VIEW)
-        total[usable] += sampled * w[:, None]
-        weight[usable] += w
-        used[usable] += 1
+        score = _quality(facing[usable], distance[usable])
+        index = np.flatnonzero(usable)
+        weakest = np.argmin(best[index], axis=1)
+        better = score > best[index, weakest]
+        index, weakest = index[better], weakest[better]
+        best[index, weakest] = score[better]
+        colour[index, weakest] = sampled[better]
 
+    weight = best.sum(axis=1)
     coloured = weight > 1e-9
     out = np.full((count, 3), 0.5, dtype=np.float32)
     if fallback is not None:
         fallback = np.asarray(fallback, dtype=np.float32).reshape(-1, 3)
         if len(fallback) == count:
             out = fallback.copy()
-    out[coloured] = (total[coloured] / weight[coloured, None]).astype(np.float32)
+    blended = np.einsum("nv,nvc->nc", best[coloured], colour[coloured])
+    out[coloured] = (blended / weight[coloured, None]).astype(np.float32)
     return np.clip(out, 0.0, 1.0)
+
+
+def _quality(facing: np.ndarray, distance: np.ndarray) -> np.ndarray:
+    """
+    How good a view of a vertex is: head-on and near beats glancing and far.
+
+    Both the ranking and the blend weight, so the views kept are the ones that
+    would have dominated the blend anyway.
+    """
+    return facing * (1.0 - distance / FAR_VIEW)
+
+
+def _unoccluded(
+    pixels: np.ndarray, z: np.ndarray, inside: np.ndarray, shape: tuple[int, int]
+) -> np.ndarray:
+    """
+    Which vertices are not behind another part of the mesh in this frame.
+
+    The vertices in view are drawn into a depth buffer of `OCCLUSION_CELL`
+    pixel cells, keeping the nearest per cell; a vertex is seen when it is no
+    farther than that, give or take the margin. Vertices out of view come back
+    False.
+    """
+    height, width = shape
+    cell = OCCLUSION_CELL
+    rows = np.zeros(len(z), dtype=np.int64)
+    cols = np.zeros(len(z), dtype=np.int64)
+    rows[inside] = np.clip(pixels[inside, 1] // cell, 0, (height - 1) // cell).astype(np.int64)
+    cols[inside] = np.clip(pixels[inside, 0] // cell, 0, (width - 1) // cell).astype(np.int64)
+    nearest = np.full(((height - 1) // cell + 1, (width - 1) // cell + 1), np.inf)
+    np.minimum.at(nearest, (rows[inside], cols[inside]), z[inside])
+    seen = np.zeros(len(z), dtype=bool)
+    front = nearest[rows[inside], cols[inside]]
+    seen[inside] = z[inside] <= front * (1.0 + OCCLUSION_SLACK) + OCCLUSION_MARGIN
+    return seen
 
 
 class KeyframeStore:

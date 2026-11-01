@@ -33,26 +33,71 @@ class FakeFrame:
 
 
 class TestConversion:
-    def test_position_is_carried_through(self):
-        pose = pose_from_forza(FakeFrame(x=10.0, y=-4.0, z=2.5), y_up=False)
+    def test_the_position_is_the_games_own(self):
+        # Forza is Y-up already, and the lap files keep y as the height. The
+        # surface has to land on the same coordinates as the laps driven over
+        # it; an earlier version swapped y and z and laid the track on its side.
+        pose = pose_from_forza(FakeFrame(x=10.0, y=-4.0, z=2.5))
         assert pose.translation == pytest.approx([10.0, -4.0, 2.5])
 
-    def test_z_up_becomes_y_up(self):
-        # The game's Z is height; the viewer's Y is. Getting this wrong lays a
-        # track on its side.
-        pose = pose_from_forza(FakeFrame(x=1.0, y=2.0, z=3.0), y_up=True)
-        assert pose.translation == pytest.approx([1.0, 3.0, 2.0])
-
-    def test_the_rotation_stays_a_rotation(self):
-        # Orthonormal, determinant +1. A handedness flip applied to the position
-        # but not to the rotation would mirror the level.
+    def test_the_matrix_is_orthonormal_and_carries_the_mirror(self):
+        # Forza's world is left-handed and the camera's is not, so the honest
+        # matrix is a reflection: orthonormal, determinant -1.
         pose = pose_from_forza(FakeFrame(yaw=0.6, pitch=-0.2, roll=0.1))
         r = pose.rotation
         assert r @ r.T == pytest.approx(np.eye(3), abs=1e-9)
-        assert np.linalg.det(r) == pytest.approx(1.0)
+        assert np.linalg.det(r) == pytest.approx(-1.0)
 
-    def test_no_rotation_is_the_identity(self):
-        assert pose_from_forza(FakeFrame()).rotation == pytest.approx(np.eye(3))
+    def test_level_and_heading_along_z_the_camera_looks_along_z(self):
+        r = pose_from_forza(FakeFrame()).rotation
+        assert r[:, 2] == pytest.approx([0.0, 0.0, 1.0])  # forward
+        assert r[:, 0] == pytest.approx([1.0, 0.0, 0.0])  # right
+        # The camera's y is down the picture, and down is minus the height:
+        # the road below the horizon is fused below the car, not above it.
+        assert r[:, 1] == pytest.approx([0.0, -1.0, 0.0])
+
+    def test_yaw_is_the_direction_of_travel(self):
+        # Measured on recorded laps: atan2(dx, dz) of the path equals the yaw.
+        yaw = 0.8
+        forward = pose_from_forza(FakeFrame(yaw=yaw)).rotation[:, 2]
+        assert np.arctan2(forward[0], forward[2]) == pytest.approx(yaw)
+
+    def test_a_positive_pitch_is_nose_down(self):
+        # Measured: the slope climbed is minus the pitch.
+        forward = pose_from_forza(FakeFrame(pitch=0.2)).rotation[:, 2]
+        assert forward[1] == pytest.approx(-np.sin(0.2))
+
+    def test_a_positive_roll_drops_the_right_side(self):
+        # Measured: the roll is positive when the right-hand suspension is the
+        # compressed one.
+        right = pose_from_forza(FakeFrame(roll=0.1)).rotation[:, 0]
+        assert right[1] == pytest.approx(-np.sin(0.1))
+
+
+class TestAGapInTheFeed:
+    def test_vision_carries_on_in_the_games_own_coordinates(self):
+        """
+        Telemetry poses are reflections, and PnP only ever returns rotations.
+        Without folding the mirror back in, the first frame of a gap was placed
+        sixteen metres out and every frame after it followed.
+        """
+        from heat3d_capture.pose.odometry import Pose, VisualOdometry
+
+        from .scene import render, walk
+
+        k = Intrinsics.from_fov(320, 240, 80.0)
+        flip = np.diag([1.0, -1.0, 1.0])
+        truth = [Pose(f.pose.rotation @ flip, f.pose.translation) for f in walk(k, steps=30)]
+        vo = VisualOdometry(k)
+        for i, pose in enumerate(truth[:12]):
+            frame = render(pose, k)
+            inverse = (1.0 / np.maximum(frame.depth, 1e-3)).astype(np.float32)
+            # The feed answers for eight frames, then goes quiet.
+            result = vo.track(frame.image, inverse, known_pose=pose if i < 8 else None)
+            assert result.tracked
+            if i >= 8:
+                assert np.linalg.norm(result.pose.translation - pose.translation) < 0.2
+                assert np.linalg.det(result.pose.rotation) == pytest.approx(-1.0)
 
 
 class TestTrack:
@@ -89,13 +134,14 @@ class TestTrack:
     def test_interpolated_rotations_stay_rotations(self):
         # Blending two rotation matrices elementwise does not give a rotation —
         # it shrinks toward the mean, and a non-orthonormal matrix skews every
-        # point that frame contributes.
+        # point that frame contributes. (Determinant -1: the game's world is
+        # left-handed, see `pose_from_forza`.)
         track = TelemetryPoseTrack()
         track.add(FakeFrame(yaw=0.0), now=0.0)
         track.add(FakeFrame(yaw=1.4), now=0.1)
         r = track.at(0.05).rotation
         assert r @ r.T == pytest.approx(np.eye(3), abs=1e-9)
-        assert np.linalg.det(r) == pytest.approx(1.0)
+        assert np.linalg.det(r) == pytest.approx(-1.0)
 
     def test_rotation_interpolation_goes_halfway(self):
         track = TelemetryPoseTrack()

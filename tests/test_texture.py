@@ -92,6 +92,44 @@ class TestProjection:
         assert out.min() >= 0.0 and out.max() <= 1.0
 
 
+class TestTheBestViewsWin:
+    def _frame(self, colour, position, k):
+        image = np.zeros((k.height, k.width, 3), dtype=np.uint8)
+        image[:, :] = colour
+        target = np.array([0.0, 0.0, 4.0])
+        forward = target - position
+        forward /= np.linalg.norm(forward)
+        right = np.cross([0.0, 1.0, 0.0], forward)
+        right /= np.linalg.norm(right)
+        down = np.cross(forward, right)
+        return Keyframe(image=image, pose=Pose(np.stack([right, down, forward], axis=1), position))
+
+    def test_the_order_of_the_frames_does_not_decide(self):
+        # A glancing, distant view first, then four head-on near ones. Taking
+        # the first four that qualified kept the glancing one's colour in.
+        k = Intrinsics.from_fov(64, 64, 90.0)
+        poor = self._frame((250, 0, 0), np.array([-14.0, 0.0, 4.0 - 6.0]), k)
+        good = [self._frame((0, 0, 250), np.array([dx, 0.0, 0.0]), k) for dx in (-0.2, -0.1, 0.1, 0.2)]
+        vertices = np.array([[0.0, 0.0, 4.0]])
+        normals = np.array([[0.0, 0.0, -1.0]])
+        out = project_colours(vertices, normals, [poor, *good], k)
+        assert out[0] == pytest.approx([0.0, 0.0, 250 / 255], abs=0.01)
+
+    def test_a_vertex_hidden_behind_another_is_not_coloured_by_it(self):
+        # A wall at 2 m in front of a surface at 6 m, on the same line of sight:
+        # the pixel there shows the wall, not what is behind it.
+        k = Intrinsics.from_fov(64, 64, 90.0)
+        image = np.zeros((64, 64, 3), dtype=np.uint8)
+        image[:, :] = (200, 40, 40)
+        frame = Keyframe(image=image, pose=Pose(np.eye(3), np.zeros(3)))
+        vertices = np.array([[0.0, 0.0, 2.0], [0.0, 0.0, 6.0]])
+        normals = np.array([[0.0, 0.0, -1.0], [0.0, 0.0, -1.0]])
+        fallback = np.array([[0.1, 0.9, 0.2], [0.1, 0.9, 0.2]], dtype=np.float32)
+        out = project_colours(vertices, normals, [frame], k, fallback=fallback)
+        assert out[0] == pytest.approx([200 / 255, 40 / 255, 40 / 255], abs=0.02)
+        assert out[1] == pytest.approx([0.1, 0.9, 0.2])
+
+
 class TestKeyframeStore:
     def test_keeps_everything_below_the_limit(self):
         store = KeyframeStore(limit=10)

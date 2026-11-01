@@ -115,6 +115,25 @@ class TestKeyframes:
         session = self._run([solid(100) for _ in range(12)])
         assert session.progress.frames_seen == 12
 
+    def test_the_walk_speed_bar_is_measured_against_the_adapted_threshold(self):
+        # A slow, steady drift: tiny changes, far below the preset's starting
+        # threshold. Once the scan has adapted, a bar against the preset's value
+        # would sit near empty while frames were in fact being kept.
+        images = [solid(100 + (i % 3)) for i in range(80)]
+        session = self._run(images)
+        progress = session.progress
+        assert 0 < progress.threshold < session.settings.quality.keyframe_change
+        assert progress.toward_next_view == pytest.approx(
+            min(1.0, progress.change / progress.threshold)
+        )
+
+    def test_the_bar_is_empty_rather_than_undefined_before_a_threshold(self):
+        from heat3d_capture.scan.session import ScanProgress
+
+        assert ScanProgress(change=0.4).toward_next_view == 0.0
+        assert ScanProgress(change=0.4, threshold=0.1).toward_next_view == 1.0
+        assert ScanProgress(change=0.05, threshold=0.1).toward_next_view == pytest.approx(0.5)
+
 
 class TestLimits:
     def test_stops_at_the_keyframe_cap(self):

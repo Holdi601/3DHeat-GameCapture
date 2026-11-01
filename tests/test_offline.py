@@ -250,3 +250,43 @@ class TestTheWholeRun:
 
         assert result.closure > 0.5
         assert any("does not close" in n for n in result.notes), result.notes
+
+
+def test_the_model_asked_for_is_the_model_loaded(monkeypatch):
+    """
+    `--model` once changed only the licence line printed before the run, and
+    the solve loaded the default weights whatever was asked for. Someone who
+    has the commercial weights and names them has to get them.
+    """
+    import heat3d_capture.pose.vggt_model as vggt_model
+
+    loaded: list[str] = []
+    truth = circuit(30)
+
+    class Recording(FakeRunner):
+        def __init__(self, model: str = "vggt-1b", **_):
+            super().__init__(truth)
+            loaded.append(model)
+
+    monkeypatch.setattr(vggt_model, "VggtRunner", Recording)
+    solve_track([None] * 30, model="vggt-1b-commercial", window=12, overlap=5)
+    assert loaded == ["vggt-1b-commercial"]
+
+
+def test_the_command_line_hands_the_model_to_the_run(monkeypatch, tmp_path):
+    import heat3d_capture.scan.offline as offline
+    from heat3d_capture.__main__ import main
+
+    seen: dict = {}
+
+    def fake_run(video, out, **kwargs):
+        seen.update(kwargs)
+        raise ValueError("stop here")
+
+    monkeypatch.setattr(offline, "reconstruct_video", fake_run)
+    # Not the dependency check under test: on a machine without VGGT it asks.
+    monkeypatch.setattr("heat3d_capture.runtime.preflight.ensure_console", lambda *_a, **_k: True)
+    video = tmp_path / "lap.mp4"
+    video.write_bytes(b"")
+    main(["reconstruct", str(video), "-o", str(tmp_path / "lap.glb"), "--model", "vggt-1b-commercial"])
+    assert seen["model"] == "vggt-1b-commercial"

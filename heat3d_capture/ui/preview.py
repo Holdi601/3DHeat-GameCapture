@@ -146,6 +146,38 @@ def mark_weak_spots(
     return out
 
 
+def mark_marked_spots(
+    image: np.ndarray,
+    marked,
+    extent: tuple[float, float, float, float] | None,
+) -> np.ndarray:
+    """
+    Draw the spots the driver marked by hand, as amber squares labelled M1, M2…
+
+    Apart from the numbered rings on purpose: those are what the coverage
+    metric found, these are what the driver noticed, and the list beside the
+    map names them the same way.
+    """
+    import cv2
+
+    if not marked or extent is None:
+        return image
+    size = image.shape[0]
+    min_x, max_x, min_z, max_z = extent
+    span_x = max(max_x - min_x, 1e-6)
+    span_z = max(max_z - min_z, 1e-6)
+    out = image.copy()
+    amber = (210, 153, 34)
+    for i, where in enumerate(marked, start=1):
+        x = int(np.clip((where[0] - min_x) / span_x, 0, 1) * (size - 1))
+        z = int(np.clip((where[2] - min_z) / span_z, 0, 1) * (size - 1))
+        cv2.rectangle(out, (x - 6, z - 6), (x + 6, z + 6), amber, 2, cv2.LINE_AA)
+        cv2.putText(
+            out, f"M{i}", (x + 9, z + 4), cv2.FONT_HERSHEY_SIMPLEX, 0.42, amber, 1, cv2.LINE_AA
+        )
+    return out
+
+
 def health_text(state) -> tuple[str, str]:
     """
     A one-line verdict on the reconstruction, and a colour for it.

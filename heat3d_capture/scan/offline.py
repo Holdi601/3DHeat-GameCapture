@@ -30,7 +30,7 @@ from typing import Callable
 
 import numpy as np
 
-from ..pose.feedforward import WINDOW, OVERLAP, Track, plan_windows, stitch
+from ..pose.feedforward import DEFAULT_MODEL, WINDOW, OVERLAP, Track, plan_windows, stitch
 from ..pose.feedforward_source import FeedForwardPoses
 from ..pose.odometry import Intrinsics
 from ..pose.solveprep import learn_camera_mask, plan_by_motion
@@ -157,6 +157,7 @@ def solve_track(
     runner=None,
     window: int = WINDOW,
     overlap: int = OVERLAP,
+    model: str = DEFAULT_MODEL,
     on_progress: Callable[[OfflineProgress], None] | None = None,
 ) -> Track:
     """
@@ -164,12 +165,13 @@ def solve_track(
 
     `runner` is injected so this can be exercised with a stand-in: loading VGGT
     costs several gigabytes and a GPU, and the stitching logic — which is where
-    the mistakes are — needs neither.
+    the mistakes are — needs neither. `model` is the key in `MODELS` of the
+    weights the default runner loads, and means nothing when a runner is given.
     """
     if runner is None:
         from ..pose.vggt_model import VggtRunner
 
-        runner = VggtRunner()
+        runner = VggtRunner(model)
 
     if len(frames) > MAX_SOLVE_FRAMES:
         raise ValueError(
@@ -198,6 +200,7 @@ def reconstruct_video(
     solve_budget: int = SOLVE_BUDGET,
     fuse_interval: float = FUSE_INTERVAL,
     runner=None,
+    model: str = DEFAULT_MODEL,
     depth=None,
     on_progress: Callable[[OfflineProgress], None] | None = None,
 ) -> OfflineResult:
@@ -246,7 +249,7 @@ def reconstruct_video(
     report("planning", note=f"{len(solve_times)} frames spaced by motion")
     solve_frames = frames_at(video, solve_times)
 
-    track = solve_track(solve_frames, runner=runner, on_progress=on_progress)
+    track = solve_track(solve_frames, runner=runner, model=model, on_progress=on_progress)
     source = FeedForwardPoses(track, [solve_times[i] for i in track.frames])
 
     notes = [mask_note]

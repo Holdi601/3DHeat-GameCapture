@@ -141,6 +141,9 @@ class ScanProgress:
     fps: float = 0.0
     #: Fraction of the last frame that changed; how close to keeping the next one.
     change: float = 0.0
+    #: The change a frame needs to be kept, as the scan has adapted it to this
+    #: scene. Starts at the preset's value and follows recent frames after that.
+    threshold: float = 0.0
     telemetry_frames: int = 0
     message: str = ""
     #: Live reconstruction figures, when reconstruction is on.
@@ -149,6 +152,19 @@ class ScanProgress:
     @property
     def keyframe_rate(self) -> float:
         return self.keyframes / self.elapsed if self.elapsed > 0 else 0.0
+
+    @property
+    def toward_next_view(self) -> float:
+        """
+        How close the picture is to being kept, 0..1: the walk-speed bar.
+
+        Against the threshold in use, not the preset's starting one. The two
+        differ by an order of magnitude once the scan has adapted, and a bar
+        measured against the wrong one sits empty or full whatever the walk.
+        """
+        if self.threshold <= 0:
+            return 0.0
+        return max(0.0, min(1.0, self.change / self.threshold))
 
 
 def picture_change(a: np.ndarray, b: np.ndarray, *, grid: int = 16, mask=None) -> float:
@@ -342,6 +358,7 @@ class ScanSession:
                     # Never zero: a perfectly still scene would otherwise keep
                     # every frame of nothing.
                     threshold = max(adapted, 1e-4)
+                self.progress.threshold = threshold
 
                 if change >= threshold or last_kept is None:
                     self._keep(frame, recent)

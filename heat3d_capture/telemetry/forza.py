@@ -60,7 +60,7 @@ _TIMESTAMP_MS = 4
 _ENGINE_MAX_RPM = 8
 _ENGINE_IDLE_RPM = 12
 _CURRENT_ENGINE_RPM = 16
-_VELOCITY = 32  # three floats, world metres per second
+_VELOCITY = 32  # three floats, metres per second, car-local: x right, y up, z forward
 _YAW = 56  # yaw, pitch, roll: three floats, radians
 
 # --- Dash block, offsets relative to the block's own start.
@@ -99,7 +99,9 @@ class ForzaFrame:
     roll: float
     #: Scalar speed, metres per second.
     speed: float
-    #: World velocity, metres per second.
+    #: Velocity in the car's own frame (x right, y up, z forward), metres per
+    #: second — not the world's. Its length is the speed either way, which is
+    #: all `detect_layout` relies on.
     vx: float
     vy: float
     vz: float

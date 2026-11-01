@@ -59,6 +59,13 @@ MAX_SCATTER = 0.60
 #: within 6% across three minutes of driving.
 CALIBRATION_FRAMES = 1
 
+#: Frames offered before giving up on finding flat ground. The first is tried
+#: before the scan's origin is fixed; when it has no usable ground (a wall, a
+#: crest, a menu fading out) the following keyframes are tried, and a scale
+#: found on one of them is applied to the whole level afterwards (see
+#: `Reconstructor`).
+GROUND_ATTEMPTS = 30
+
 
 @dataclass
 class GroundScale:
@@ -153,9 +160,11 @@ class GroundCalibrator:
     robust and free, since the frames are arriving anyway.
     """
 
-    def __init__(self, k: Intrinsics, *, height: float = DRIVING_HEIGHT):
+    def __init__(self, k: Intrinsics, *, height: float = DRIVING_HEIGHT, attempts: int = GROUND_ATTEMPTS):
         self.k = k
         self.height = height
+        self.attempts = attempts
+        self.tried = 0
         self._scales: list[float] = []
         self._scatters: list[float] = []
         self.note = "measuring the ground"
@@ -164,15 +173,34 @@ class GroundCalibrator:
     def settled(self) -> bool:
         return len(self._scales) >= CALIBRATION_FRAMES
 
+    @property
+    def gave_up(self) -> bool:
+        """Every attempt spent without finding ground to measure from."""
+        return not self.settled and self.tried >= self.attempts
+
     def offer(self, inverse_depth: np.ndarray) -> AffineFit | None:
         """Feed one frame. Returns the fit once enough have been seen."""
         if self.settled:
             return self._result()
+        if self.gave_up:
+            return None
+        self.tried += 1
         estimate = calibrate_from_ground(inverse_depth, self.k, height=self.height)
         if estimate is not None and estimate.trustworthy:
             self._scales.append(estimate.fit.scale)
             self._scatters.append(estimate.scatter)
-        return self._result() if self.settled else None
+        if self.settled:
+            return self._result()
+        # Said, rather than left on "measuring": a note that never changes
+        # reads as a calibration still in progress for the whole scan.
+        if self.gave_up:
+            self.note = (
+                f"no usable ground in the first {self.tried} frames — "
+                "sizes are relative, not metres"
+            )
+        else:
+            self.note = f"no flat ground in view yet — still looking ({self.tried} frames tried)"
+        return None
 
     def _result(self) -> AffineFit | None:
         if not self._scales:

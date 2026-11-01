@@ -3,17 +3,18 @@ Reading a library of recorded laps, as FH Companion keeps it.
 
 The scanner records telemetry live. This reads telemetry someone already has —
 a folder per course under `%LOCALAPPDATA%/FHCompanion/laps`, a file per lap,
-each holding the whole lap at about one sample every five metres. On the machine
-this was written against that is 40 courses and 859 laps, and it is a far better
-starting point than a fresh drive: the laps are already there, they are already
-repeated, and repetition is what turns a route into analysis.
+each holding the whole lap at about one sample every five metres. A library
+that has been in use for a while holds dozens of courses and hundreds of laps,
+and it is a far better starting point than a fresh drive: the laps are already
+there, they are already repeated, and repetition is what turns a route into
+analysis.
 
 Why it belongs next to the map extractor
 ----------------------------------------
 Every sample carries the game's own world coordinates, so a course's laps say
 exactly which stretch of map to cut out of the shipped archive — and once cut,
-the geometry and the driving are in the same frame with nothing to align. Lakeside
-Circuit's 46 laps sit a median of 0.36 m above the extracted ground, which is
+the geometry and the driving are in the same frame with nothing to align. A
+course's laps sit a fraction of a metre above the extracted ground, which is
 the car's ride height and not an error.
 
 What a lap carries
@@ -23,8 +24,8 @@ three inputs (throttle, brake, steer), lateral and longitudinal g, gear, clutch,
 handbrake, standing water, distance along the course and time since the start.
 Fifteen fields, present in every lap file sampled.
 
-The folder name carries the course's start and finish, rounded — `Lakeside Circuit
-(course_2800_5000_to_2775_5000)`. `course.json` beside it has them unrounded,
+The folder name carries the course's start and finish, rounded — `Mapletree Test Loop
+(course_1200_3400_to_1175_3400)`. `course.json` beside it has them unrounded,
 along with the lap count and the shortest and longest lap seen. Both are read;
 the folder name is the fallback, because a course that has only ever been driven
 once may not have the file.
@@ -190,7 +191,7 @@ class Course:
                     "samples": len(points),
                     "bounds": {"min": low.tolist(), "max": high.tolist()},
                     # The fastest lap rather than all of them: the file is a
-                    # route, and 46 overlaid laps is a smear rather than a line.
+                    # route, and dozens of overlaid laps are a smear rather than a line.
                     "positions": (self.best.positions if self.best is not None else points).tolist(),
                 },
                 indent=2,
@@ -213,7 +214,7 @@ class Course:
         names = list(SAMPLE_FIELDS.values())
         # Positions get fixed decimals, everything else significant figures.
         # Four significant figures is plenty for a throttle position and ruinous
-        # for a coordinate: a car at x=2784.97 writes as 2785, the whole course
+        # for a coordinate: a car at x=1184.97 writes as 1185, the whole course
         # snaps to a one-metre grid, and a racing line drawn from it has stairs
         # in it. Milimetres cost three characters.
         precise = {"x", "y", "z", "metres", "elapsed"}
@@ -342,7 +343,7 @@ def find_course(name: str, root: str | Path | None = None) -> Path:
     A course folder by name, matched loosely.
 
     Loosely because the folder name has the start and finish coordinates glued
-    on - nobody is going to type `Lakeside Circuit (course_2800_5000_to_2775_5000)`.
+    on - nobody is going to type `Mapletree Test Loop (course_1200_3400_to_1175_3400)`.
     """
     wanted = name.strip().lower()
     folders = courses(root)
