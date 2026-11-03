@@ -564,8 +564,11 @@ class FeedReader:
         # line that squash to similar pictures still differ.
         return np.append(sig.ravel() / n, (x1 - x0) / (y1 - y0))
 
-    def read(self, image: np.ndarray) -> list[Text]:
+    def read(self, image: np.ndarray, keep=None) -> list[Text]:
+        """The lines in `image`; with `keep`, only the boxes `keep(box)` is true for are read at all."""
         boxes = self.reader.detect(image)
+        if keep is not None:
+            boxes = [b for b in boxes if keep(b)]
         sigs = [self._signature(image, b) for b in boxes]
         todo: list[int] = []
         for i, (b, sig) in enumerate(zip(boxes, sigs)):

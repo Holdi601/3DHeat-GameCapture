@@ -1,15 +1,17 @@
 """
-One recording in, the player's track and the kill feed out.
+One recording in, the player's track, their own actions and the kill feed out.
 
 The work runs in three lanes at once, because each waits on something
 different: ffmpeg decodes in its own process; one thread registers minimaps
 (OpenCV, which lets go of Python's lock while it works); one thread reads text
 (ONNX Runtime, likewise). The main thread only hands samples out.
 
-Afterwards the pieces are put together: in-play stretches become lives, a
-kill-feed line naming the player as victim is a death, as killer a kill; the
-compass turns the mosaic north up; and everything is written out (see
-`output.py`).
+Afterwards the pieces are put together: in-play stretches become lives; the
+points popup gives the player's own actions (`points.py`) and the down and
+deploy screens their deaths and revives (`screens.py`), each placed where the
+player was; the kill feed is kept beside them, and stands in for a death the
+screens did not show; the compass turns the mosaic north up; and everything
+is written out (see `output.py`).
 """
 
 from __future__ import annotations
@@ -27,9 +29,11 @@ from typing import Any, Callable
 import numpy as np
 
 from . import compass as compass_mod
+from . import points as points_mod
+from . import screens
 from .killfeed import FRIENDLY, NEUTRAL, SQUAD, Feed, FeedEvent, FeedReader, Gate, parse_rows
-from .minimap import MinimapTracker, TrackPoint
-from .ocr import Reader, clean_name, similarity
+from .minimap import MinimapTracker, TrackPoint, key_present
+from .ocr import Reader, Text, clean_name, similarity
 from .output import heading_vector, map_anchors, write_json, write_jsonl, write_map, write_table
 from .profiles import PROFILES, Profile
 from .video import probe, samples
@@ -40,6 +44,8 @@ NAME_MATCH = 0.75
 DEATH_GAP = 6.0
 #: How long after a feed death the player may stay on screen (downed, kill cam) before it counts as a revive.
 DOWNED = 40.0
+#: A kill-feed line about the player this close to one of their own events (seconds) is the same happening.
+CONFIRM = 3.0
 
 
 @dataclass
@@ -50,6 +56,8 @@ class Options:
     feed_fps: float = 2.5
     compass_every: float = 3.0
     squad_every: float = 15.0
+    #: How often the points popup and the death screens are read (samples per second; half that while no popup is up).
+    points_fps: float = 2.5
     start: float = 0.0
     duration: float | None = None
     gpu: bool | None = None
@@ -71,6 +79,17 @@ class Progress:
 class Result:
     files: list[Path] = field(default_factory=list)
     summary: dict[str, Any] = field(default_factory=dict)
+    #: The raw reads behind the player's own events, for checking them.
+    own: Any = None
+
+
+@dataclass
+class OwnReads:
+    """What was read for the player's own actions: every popup read, and every reading of the death screens."""
+
+    popups: list[points_mod.PopupRead] = field(default_factory=list)
+    #: (time, set of screens.DOWN / CARD / DEPLOY) per reading.
+    screens: list[tuple[float, set[str]]] = field(default_factory=list)
 
 
 def _is_me(name: str, player: str | None) -> bool:
@@ -154,12 +173,15 @@ def run(video: Path, out: Path, opts: Options, on_progress: Callable[[Progress],
     feed_reader = FeedReader(reader)
     feed_region = profile.region("feed")
     strips = [profile.region(n) for n in ("compass", "compass_sight")]
+    names = {r.name for r in profile.regions}
+    has_own = profile.popup is not None and {"points", "down", "card"} <= names
 
     play: list[tuple[float, bool]] = []
     bearings: list[compass_mod.Bearing] = []
     squad_reads: list[str] = []
     errors: list[BaseException] = []
     counters = Counter()
+    own_lane = OwnLane(reader, profile, counters) if has_own else None
 
     map_q: queue.Queue = queue.Queue(maxsize=64)
     text_q: queue.Queue = queue.Queue(maxsize=64)
@@ -211,6 +233,8 @@ def run(video: Path, out: Path, opts: Options, on_progress: Callable[[Progress],
                     name = _squad_own_row(reader, payload)
                     if name:
                         squad_reads.append(name)
+                elif kind == "own":
+                    own_lane.take(t, *payload)
         except BaseException as exc:  # pragma: no cover - surfaced below
             errors.append(exc)
 
@@ -222,6 +246,7 @@ def run(video: Path, out: Path, opts: Options, on_progress: Callable[[Progress],
     feed_step = max(1, round(opts.fps / opts.feed_fps))
     compass_step = max(1, round(opts.fps * opts.compass_every))
     squad_step = max(1, round(opts.fps * opts.squad_every))
+    own_step = max(1, round(opts.fps / opts.points_fps))
     last_note = 0.0
     try:
         for s in samples(video, profile, fps=opts.fps, start=opts.start, duration=duration, gpu=opts.gpu):
@@ -234,6 +259,10 @@ def run(video: Path, out: Path, opts: Options, on_progress: Callable[[Progress],
                 text_q.put(("compass", s.t, [s.regions["compass"].copy(), s.regions["compass_sight"].copy()]))
             if s.index % squad_step == 0:
                 text_q.put(("squad", s.t, s.regions["squad"].copy()))
+            if own_lane is not None and s.index % own_step == 0:
+                out_of_play = profile.map_key is None or not key_present(s.regions["minimap"], profile.map_key)
+                text_q.put(("own", s.t, (s.regions["points"].copy(), s.regions["down"].copy(),
+                                         s.regions["card"].copy(), out_of_play)))
             now = time.monotonic()
             if on_progress and now - last_note >= 5.0:
                 last_note = now
@@ -253,11 +282,99 @@ def run(video: Path, out: Path, opts: Options, on_progress: Callable[[Progress],
         on_progress(Progress(duration, duration, f"read in {elapsed:.0f} s; putting it together"))
 
     events = feed.finish(min_seen=opts.min_seen)
-    return assemble(
+    result = assemble(
         video, out, opts, profile, tracker, sorted(play), events, bearings, squad_reads,
+        own=own_lane.reads if own_lane is not None else None,
         timing={"seconds": round(elapsed, 1), "video_seconds": round(duration, 1), **counters,
-                "feed lines read": feed_reader.read_lines, "feed lines reused": feed_reader.reused_lines},
+                "feed lines read": feed_reader.read_lines, "feed lines reused": feed_reader.reused_lines,
+                **({"own lines read": own_lane.lines.read_lines, "own lines reused": own_lane.lines.reused_lines}
+                   if own_lane is not None else {})},
     )
+    result.own = own_lane.reads if own_lane is not None else None
+    return result
+
+
+class OwnLane:
+    """
+    The player's own reads, in the text lane: the points popup, the down screen's
+    words and the bottom-right corner, stacked into one picture and read with one
+    pass of the OCR (each pass has a cost of its own, whatever its size).
+
+    With no popup up, every other sample is held back unread; when the next one
+    shows a popup, the held one is read first, so a popup's start is still found
+    to the sample. The corner is read only when the player is out of play (a kill
+    cam, the deploy screen) or was just seen down: in play it holds the ammo count.
+    """
+
+    def __init__(self, reader: Reader, profile: Profile, counters: Counter):
+        self.reader = reader
+        self.lines = FeedReader(reader)
+        self.layout = profile.popup
+        self.region = profile.region("points")
+        self.counters = counters
+        self.reads = OwnReads()
+        self.active = False
+        self.held: tuple | None = None
+        self.down_until = -1e9
+        box = self.region.box
+        self.keep_popup = _popup_filter(self.layout, box.x, box.y, self.region.scale)
+
+    def take(self, t: float, popup: np.ndarray, down: np.ndarray, card: np.ndarray, out_of_play: bool) -> None:
+        if not self.active and self.held is None:
+            self.held = (t, popup, down, card, out_of_play)
+            return
+        held, self.held = self.held, None
+        found, kinds = self._read(t, popup, down, card, out_of_play)
+        if not found.empty and held is not None and not self.active:
+            early, early_kinds = self._read(*held)
+            self.reads.popups.append(early)
+            self.reads.screens.append((held[0], early_kinds))
+        self.reads.popups.append(found)
+        self.reads.screens.append((t, kinds))
+        self.active = not found.empty
+
+    def _read(self, t: float, popup: np.ndarray, down: np.ndarray, card: np.ndarray, out_of_play: bool):
+        self.counters["own reads"] += 1
+        with_card = out_of_play or t <= self.down_until
+        parts = [popup, down] + ([card] if with_card else [])
+        h = sum(p.shape[0] for p in parts)
+        w = max(p.shape[1] for p in parts)
+        sheet = np.zeros((h, w, 3), np.uint8)
+        y = 0
+        tops = []
+        for p in parts:
+            sheet[y : y + p.shape[0], : p.shape[1]] = p
+            tops.append(y)
+            y += p.shape[0]
+        ph = popup.shape[0]
+        texts = self.lines.read(sheet, keep=lambda b: b.cy >= ph or self.keep_popup(b))
+        mine = [b for b in texts if b.cy < ph]
+        rest = [b.text for b in texts if b.cy >= ph]
+        box, scale = self.region.box, self.region.scale
+        mine = points_mod.split_at_total(
+            popup, mine, self.reader.recognise, origin=(box.x, box.y), scale=scale, layout=self.layout,
+        )
+        found = points_mod.parse(t, popup, mine, origin=(box.x, box.y), scale=scale, layout=self.layout)
+        kinds = screens.kinds(rest)
+        if kinds & {screens.DOWN, screens.CARD}:
+            self.down_until = t + 3.0
+        return found, kinds
+
+
+def _popup_filter(layout: points_mod.Layout, ox: float, oy: float, scale: float) -> Callable[[Text], bool]:
+    """Which lines the OCR finds in the popup's crop are worth reading: those on one of its rows."""
+
+    def keep(b: Text) -> bool:
+        x0, x1, cy = ox + b.x0 / scale, ox + b.x1 / scale, oy + b.cy / scale
+        if x1 < layout.left or x0 > layout.right + 120:
+            return False
+        if layout.title[0] <= cy <= layout.title[1]:
+            return 500 <= x1 <= layout.right + 40
+        if layout.number[0] <= cy <= layout.number[1] and x1 > layout.number_x:
+            return True
+        return layout.tags[0] <= cy <= layout.tags[1] and x1 <= layout.right + 40
+
+    return keep
 
 
 # ---------------------------------------------------------------- assembly
@@ -337,7 +454,7 @@ class _Frame:
 def assemble(
     video: Path, out: Path, opts: Options, profile: Profile, tracker: MinimapTracker,
     play: list[tuple[float, bool]], events: list[FeedEvent], bearings: list[compass_mod.Bearing],
-    squad_reads: list[str], *, timing: dict[str, Any],
+    squad_reads: list[str], *, timing: dict[str, Any], own: OwnReads | None = None,
 ) -> Result:
     result = Result()
     step = 1.0 / opts.fps
@@ -384,7 +501,44 @@ def assemble(
 
     intervals = _play_intervals(play, step)
     kinds = [(e, _event_kind(e, player)) for e in events]
-    deaths = [e.t for e, k in kinds if k in ("death", "suicide")]
+
+    # The player's own actions (the points popup) and deaths (the down and deploy screens).
+    actions: list[points_mod.PointEvent] = []
+    weak_kills: list[points_mod.PointEvent] = []
+    totals: list[int] = []
+    n_popups = 0
+    eps: list[screens.Episode] = []
+    if own is not None:
+        popups = points_mod.Popups()
+        for read in own.popups:
+            popups.add(read)
+        found = popups.finish(weak=True)
+        actions = [a for a in found if not a.weak]
+        # A kill tag read in one sample only stands when the feed has a line for it.
+        weak_kills = [a for a in found if a.weak and a.event == "kill"]
+        totals = [v for v in (popups.total(p) for p in popups.popups) if v is not None]
+        n_popups = len(popups.popups)
+        eps = screens.episodes(own.screens)
+        screens.outcomes(eps, own.screens, intervals)
+    # With nothing at all from them (a game or HUD without the popup), the kill feed's lines stay the events.
+    primary = "points" if (actions or eps) else "feed"
+
+    # Each episode with the feed's line about it: the time and the killer's name come from there when it has one.
+    feed_used: set[int] = set()
+    downs: list[dict[str, Any]] = []
+    for ep in eps:
+        fi = next((i for i, (e, k) in enumerate(kinds) if k in ("death", "suicide") and i not in feed_used
+                   and ep.start - CONFIRM <= e.t <= ep.end + 1.0), None)
+        if fi is not None:
+            feed_used.add(fi)
+        line = kinds[fi][0] if fi is not None else None
+        t0 = min(line.t, ep.start) if line is not None else max(0.0, ep.start - 1.0 / opts.points_fps)
+        downs.append({"t": t0, "episode": ep, "line": line})
+    # Feed deaths with no screen to say so (the screens were missed, or a game without them).
+    feed_only = [e.t for i, (e, k) in enumerate(kinds) if k in ("death", "suicide") and i not in feed_used]
+    deaths = sorted([d["t"] for d in downs if d["episode"].outcome in ("death", "unknown")] + feed_only)
+    # From a death to the end of its screens the player is dead, even where the minimap shows (down).
+    dead_spans = [(d["t"], d["episode"].end + 1.0) for d in downs if d["episode"].outcome in ("death", "unknown")]
 
     def life_of(t: float) -> int | None:
         for n, (a, b) in enumerate(intervals):
@@ -394,18 +548,27 @@ def assemble(
 
     # How each in-play stretch begins: the clip's own start, a spawn after a death
     # or a long gap, or a resumption after a short pause (the big map opened).
+    # A stretch that begins while the player is dead (still down after a gap) begins no life.
     starts: list[str] = []
     lives: list[int] = []
+    dead: set[int] = set()
     life = 0
+    life_from = intervals[0][0] if intervals else 0.0
     for n, (a, b) in enumerate(intervals):
         if n == 0:
             starts.append("start" if a - opts.start <= 2 * step + 1.0 else "spawn")
             lives.append(life)
             continue
+        if any(d < a <= e for d, e in dead_spans):
+            dead.add(n)
+            starts.append("")
+            lives.append(life)
+            continue
         gap_from = intervals[n - 1][1]
-        died = any(gap_from - DOWNED <= d <= a for d in deaths)
+        died = any(max(gap_from - DOWNED, life_from) < d <= a for d in deaths)
         if died or a - gap_from >= DEATH_GAP:
             life += 1
+            life_from = a
             starts.append("spawn")
         else:
             starts.append("")
@@ -419,11 +582,11 @@ def assemble(
     placed_by_time = sorted(track, key=lambda p: p.t)
     ptimes = np.array([p.t for p in placed_by_time])
 
-    def nearest(t: float, *, before: bool = False, within: float = 3.0) -> TrackPoint | None:
+    def nearest(t: float, *, before: bool = False, after: bool = False, within: float = 3.0) -> TrackPoint | None:
         if not len(ptimes):
             return None
         j = int(np.searchsorted(ptimes, t, side="right"))
-        cands = [j - 1] if before else [j - 1, j]
+        cands = [j - 1] if before else ([j] if after else [j - 1, j])
         best = None
         for k in cands:
             if 0 <= k < len(placed_by_time) and abs(placed_by_time[k].t - t) <= within:
@@ -448,19 +611,31 @@ def assemble(
         r.update({k: v for k, v in extra.items() if v is not None})
         return r
 
+    def place(t: float, event: str, *, before: bool = False, after: bool = False, **extra: Any) -> dict[str, Any] | None:
+        """A row for an event of the player's at `t`, where they were then; None when no position is near."""
+        p = nearest(t, before=before, after=after)
+        if p is None or p.island not in frames:
+            return None
+        r = row_at(p, event, life_of(p.t), **extra)
+        if r is not None:
+            r["time"] = round(t, 3)
+            rows_by_island[p.island].append(r)
+        return r
+
     # A death ends the life's route there; what follows on screen before the
-    # player leaves play (downed, kill cam) is not walking, unless they get up again.
+    # player leaves play (down, kill cam) is not walking. A feed death the
+    # screens did not show is judged as before: still in play long after it,
+    # the player was revived.
     cut: list[tuple[float, float]] = []
     revives: list[float] = []
     for d in deaths:
         n = life_of(d)
         if n is None:
             continue
-        end = intervals[n][1]
-        if end - d <= DOWNED:
+        end = max([intervals[n][1]] + [e for t, e in dead_spans if t == d])
+        if d not in feed_only or end - d <= DOWNED:
             cut.append((d, end + step))
         else:
-            # Still in play long after: revived. The route picks up a few seconds on.
             revives.append(d + 2.0)
     revive_at = set()
     for r_t in revives:
@@ -478,42 +653,114 @@ def assemble(
             if starts[n]:
                 event = starts[n]
         elif j in revive_at:
-            event = "revive"
-        r = row_at(p, event, n)
+            event = "revived"
+        r = row_at(p, event, n, source="feed" if event == "revived" else None)
         if r is not None:
             rows_by_island[p.island].append(r)
 
-    # The feed: every line to the jsonl; the player's own as rows where they were.
-    feed_rows = []
+    def where(r: dict[str, Any] | None, doc: dict[str, Any]) -> None:
+        if r is not None:
+            doc["x"], doc["y"] = r["x"], r["y"]
+            if len(keep) > 1:
+                doc["map"] = next((k + 1 for k, i in enumerate(keep) if r in rows_by_island[i]), None)
+
+    jsonl: list[dict[str, Any]] = []
     counts = Counter()
-    for e, kind in kinds:
+
+    # The death screens: deaths, and downs that ended in a revive.
+    for d in downs:
+        ep, line = d["episode"], d["line"]
+        feed_extra = {"killer": line.killer or None, "weapon": line.weapon or None,
+                      "headshot": line.marker == "skull", "confirmed": "feed"} if line is not None else {}
+        doc = {"time": round(d["t"], 2), "source": "screen", "until": round(ep.end, 2),
+               "screens": sorted(ep.kinds), "outcome": ep.outcome, "killer": line.killer if line is not None else None}
+        if ep.outcome == "death":
+            where(place(d["t"], "death", before=True, source="screen", **feed_extra), doc)
+            doc["event"] = "death"
+            counts["death"] += 1
+        else:
+            where(place(d["t"], "downed", before=True, source="screen", **feed_extra), doc)
+            doc["event"] = "downed"
+            counts["downed"] += 1
+            if ep.outcome == "revived" and ep.back is not None:
+                back = {"time": round(ep.back, 2), "source": "screen", "event": "revived"}
+                where(place(ep.back, "revived", after=True, source="screen"), back)
+                jsonl.append(back)
+                counts["revived"] += 1
+        jsonl.append(doc)
+
+    # The points popup: every action, where the player was.
+    feed_kills = [i for i, (e, k) in enumerate(kinds) if k in ("kill", "teamkill", "squadwipe")]
+    kept: list[points_mod.PointEvent] = []
+    for a in actions + weak_kills:
+        extra: dict[str, Any] = {"source": "points", "text": a.text, "points": a.points,
+                                 "shared": a.shared if a.shared > 1 else None,
+                                 "subject": a.name or None, "subject_side": a.side or None,
+                                 "headshot": True if a.text == "HEADSHOT" else None}
+        if a.event == "kill":
+            # The feed's line for the same kill: its victim, weapon and marker.
+            best = None
+            for i in feed_kills:
+                e = kinds[i][0]
+                if i in feed_used or abs(e.t - a.t) > CONFIRM:
+                    continue
+                score = similarity(e.victim, a.name) if a.name else 0.5
+                if best is None or score > best[0]:
+                    best = (score, i)
+            if best is not None and (not a.name or best[0] >= 0.6):
+                feed_used.add(best[1])
+                e = kinds[best[1]][0]
+                extra.update(victim=e.victim or None, weapon=e.weapon or None,
+                             headshot=a.text == "HEADSHOT" or e.marker == "skull", marker=e.marker or None,
+                             confirmed="feed")
+            elif a.name:
+                extra["victim"] = a.name
+        if a.weak and not extra.get("confirmed"):
+            continue
+        kept.append(a)
+        doc = {"time": round(a.t, 2), "source": "points", "event": a.event, "text": a.text, "points": a.points,
+               "shared": a.shared, "subject": a.name, "subject_side": a.side, "popup": a.popup, "seen": a.seen,
+               "headshot": a.text == "HEADSHOT" if a.event == "kill" else None}
+        if extra.get("confirmed"):
+            doc["confirmed"] = "feed"
+        where(place(a.t, a.event, **extra), doc)
+        jsonl.append(doc)
+        counts[a.event] += 1
+
+    # The feed: every line to the jsonl; the player's own as rows where they were.
+    feed_counts = Counter()
+    for i, (e, kind) in enumerate(kinds):
         me = "killer" if _is_me(e.killer, player) else ("victim" if _is_me(e.victim, player) else None)
         doc = {
-            "time": round(e.t, 2), "last": round(e.last, 2),
+            "time": round(e.t, 2), "last": round(e.last, 2), "source": "feed",
             "kind": kind if me else ("squadwipe" if "squadwipe" in kind else ("kill" if e.killer else "death")),
             "killer": e.killer, "victim": e.victim,
             "killer_side": e.side("killer"), "victim_side": e.side("victim"),
             "weapon": e.weapon, "marker": e.marker, "headshot": e.marker == "skull",
             "seen": e.seen, "me": me,
         }
-        p = nearest(e.t, before=(kind == "death")) if me else None
-        if p is not None and p.island in frames:
-            n = life_of(p.t)
-            r = row_at(p, kind, n, killer=e.killer, victim=e.victim, weapon=e.weapon or None,
-                       headshot=e.marker == "skull", marker=e.marker or None)
-            if r is not None:
-                r["time"] = round(e.t, 3)
-                rows_by_island[p.island].append(r)
-                doc["x"], doc["y"] = r["x"], r["y"]
-                if len(keep) > 1:
-                    doc["map"] = keep.index(p.island) + 1
-        feed_rows.append(doc)
         if me:
-            counts[kind] += 1
+            feed_counts[kind] += 1
+            if primary == "feed":
+                event = kind
+            elif kind in ("death", "suicide") and i not in feed_used:
+                # A death only the feed showed: it ends the route like a screen death.
+                event = kind
+                counts["death"] += 1
+            else:
+                # Named so the viewer's line-heat guess takes none of them for a route's end.
+                event = f"{kind}_feed"
+            doc["matched"] = i in feed_used
+            where(place(e.t, event, before=(kind == "death"), source="feed", killer=e.killer, victim=e.victim,
+                        weapon=e.weapon or None, headshot=e.marker == "skull", marker=e.marker or None), doc)
+        jsonl.append(doc)
 
-    # Lives that ended with no feed line to say how: the route still ends.
+    # Lives that ended with nothing to say how: the route still ends.
     for n, (a, b) in enumerate(intervals):
-        if n + 1 < len(intervals) and starts[n + 1] == "spawn" and not any(a <= d <= b + step for d in deaths):
+        # Killed outright, the player leaves play a moment before the death screen shows.
+        if n in dead or not (n + 1 < len(intervals) and starts[n + 1] == "spawn"):
+            continue
+        if not any(a <= d <= b + 3.0 for d in deaths):
             p = nearest(b, before=True, within=2 * step + 0.5)
             if p is not None:
                 r = row_at(p, "end", n)
@@ -543,7 +790,8 @@ def assemble(
             entry["image"] = png.name
         maps.append(entry)
 
-    events_path = write_jsonl(folder / f"{stem}.events.jsonl", feed_rows)
+    jsonl.sort(key=lambda d: d["time"])
+    events_path = write_jsonl(folder / f"{stem}.events.jsonl", jsonl)
     result.files.append(events_path)
 
     alive = sum(b - a + step for a, b in intervals)
@@ -556,21 +804,49 @@ def assemble(
             if prev is not None and p.t - prev[0] <= 2 * step + 1e-6 and life_of(p.t) == life_of(prev[0]):
                 distance += math.hypot(q[0] - prev[1][0], q[1] - prev[1][1])
             prev = (p.t, q)
-    kills = counts["kill"]
-    deaths_n = counts["death"] + counts["suicide"]
+    if primary == "points":
+        kills = counts["kill"]
+        deaths_n = counts["death"]
+    else:
+        kills = feed_counts["kill"]
+        deaths_n = feed_counts["death"] + feed_counts["suicide"]
     summary = {
         "format": "heat3d-hud-summary",
-        "version": 1,
+        "version": 2,
         "game": profile.title,
         "video": video.name,
         "player": player,
         "player_from": how,
+        "own_events_from": (
+            "the points popup (actions) and the down and deploy screens (deaths), the kill feed confirming"
+            if primary == "points" else "the kill feed (no points popup or death screen was read)"
+        ),
         "kills": kills,
         "deaths": deaths_n,
         "kd": round(kills / deaths_n, 2) if deaths_n else None,
-        "teamkills": counts["teamkill"],
-        "suicides": counts["suicide"],
-        "squad_wipes": counts["squadwipe"],
+        "headshots": sum(1 for a in kept if a.event == "kill" and a.text == "HEADSHOT"),
+        "assists": counts["assist"] + counts["kill_assist"],
+        "revives": counts["reviving"],
+        "revived": counts["revived"],
+        "downed": len(eps),
+        "captures": counts["capture"],
+        "neutralizes": counts["neutralize"],
+        "resupplies": counts["resupply"],
+        "heals": counts["heal"],
+        "repairs": counts["repair"],
+        "vehicles_destroyed": counts["vehicle_destroyed"],
+        "score": sum(totals) if totals else None,
+        "actions": dict(sorted(Counter(a.event for a in kept).items())),
+        "popups": n_popups,
+        "deaths_from_feed_only": len(feed_only) if primary == "points" else None,
+        "feed": {
+            "kills": feed_counts["kill"],
+            "deaths": feed_counts["death"] + feed_counts["suicide"],
+            "kills_matched_to_popup": sum(1 for i in feed_used if kinds[i][1] in ("kill", "teamkill", "squadwipe")),
+        },
+        "teamkills": feed_counts["teamkill"],
+        "suicides": feed_counts["suicide"],
+        "squad_wipes": counts["squad_wipe"] if primary == "points" else feed_counts["squadwipe"],
         "lives": (max(lives) + 1) if lives else 0,
         "seconds_in_play": round(alive, 1),
         "distance": round(distance, 1),
@@ -587,7 +863,7 @@ def assemble(
             "islands_written": len(keep),
         },
         "assumptions": {
-            "headshot": "the skull marker before a victim's name is taken to mean a headshot",
+            "headshot": "on feed rows, the skull marker before a victim's name is taken to mean a headshot",
             "units": "positions are minimap pixels unless --metres-per-pixel is given",
         },
         "compass_reads": len(bearings),

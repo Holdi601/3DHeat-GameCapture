@@ -253,9 +253,10 @@ def _hud(args: argparse.Namespace) -> int:
     """
     Read a game's HUD out of the player's own recording, after the match.
 
-    The kill feed becomes timed events, the minimap the player's own track on
-    a mosaic of the level. Nothing here touches the game: it is a video file,
-    read back. See docs/hud-video.md.
+    The points popup becomes the player's own actions, the down and deploy
+    screens their deaths, the minimap their track on a mosaic of the level, and
+    the kill feed timed events beside them. Nothing here touches the game: it
+    is a video file, read back. See docs/hud-video.md.
     """
     from .hud.ocr import NoOcr
     from .hud.run import Options, Progress, run
@@ -291,12 +292,164 @@ def _hud(args: argparse.Namespace) -> int:
         f"kills {s['kills']}, deaths {s['deaths']}, K/D {s['kd'] if s['kd'] is not None else '-'}, "
         f"{s['lives']} lives, {s['seconds_in_play']:.0f} s in play, {s['feed_lines']} kill-feed lines"
     )
+    print(f"own events from {s['own_events_from']}")
+    if s["actions"]:
+        print(
+            f"assists {s['assists']}, revives {s['revives']}, revived {s['revived']}, captures {s['captures']}, "
+            f"score {s['score'] if s['score'] is not None else '-'} in {s['popups']} popups"
+        )
+        print("actions: " + ", ".join(f"{k} {v}" for k, v in s["actions"].items()))
     for m in s["maps"]:
         north = "north up" if m["north_up"] else "north unknown (no compass agreement)"
         print(f"  {m['table']}: {m['rows']} rows, {m['seconds_of_track']:.0f} s of track, {north}")
     print()
     for f in result.files:
         print(f"wrote {f}")
+    return 0
+
+
+def _locate_game(args: argparse.Namespace):
+    """The game profile, with whatever the command line overrides."""
+    from .locate.camera import hfov_from_vertical
+    from .locate.profiles import parse_box, profile
+
+    game = profile(args.game)
+    vfov, vehicle_vfov = args.vfov, getattr(args, "vehicle_vfov", None)
+    if args.game == "bf6" and not (args.fov or vfov) and args.action != "eval":
+        # The player's own field of view, from the game's settings file (read only).
+        from .locate.profiles import settings_fov
+
+        found = settings_fov(args.settings)
+        if "vfov" in found:
+            vfov = found["vfov"]
+            vehicle_vfov = vehicle_vfov or found.get("vehicle_vfov")
+            print(f"field of view from {found['file']}: {vfov:g} vertical, vehicles {found.get('vehicle_vfov', '-')}")
+    hfov = args.fov or (hfov_from_vertical(vfov, 16 / 9) if vfov else None)
+    hud = tuple(game.hud) + tuple(parse_box(b) for b in args.mask or [])
+    if args.no_hud_mask:
+        hud = tuple(parse_box(b) for b in args.mask or [])
+    return game.with_overrides(
+        hfov=hfov,
+        vehicle_hfov=hfov_from_vertical(vehicle_vfov, 16 / 9) if vehicle_vfov else None,
+        eye_heights=tuple(args.eye) if args.eye else None,
+        max_speed=args.max_speed,
+        hud=hud,
+    )
+
+
+def _locate(args: argparse.Namespace) -> int:
+    """
+    Where each frame of a recording was taken, from the picture against the
+    level's own geometry: `build` renders and indexes a level once, `frames`
+    locates a recording against it, `eval` compares a result with known
+    poses. See docs/locate.md.
+    """
+    try:
+        game = _locate_game(args)
+    except ValueError as exc:
+        print(exc, file=sys.stderr)
+        return 2
+    started = time.monotonic()
+
+    if args.action == "build":
+        from .locate.database import BuildOptions, build
+        from .locate.render import Light
+
+        options = BuildOptions(
+            spacing=args.spacing,
+            yaw_step=args.yaw_step,
+            pitches=tuple(args.pitch),
+            positions=str(args.positions) if args.positions else None,
+            box=tuple(args.box) if args.box else None,
+            places=args.places,
+            head=str(args.head) if args.head else None,
+        )
+        light = Light(textured=not args.untextured, shadows=args.shadows)
+
+        def say(text: str) -> None:
+            print(f"[{time.monotonic() - started:6.0f}s] {text}", flush=True)
+
+        try:
+            build(args.level, args.out, game, options, light=light, on_progress=say)
+        except (OSError, ValueError) as exc:
+            print(f"\n{exc}", file=sys.stderr)
+            return 1
+        return 0
+
+    if args.action == "train":
+        from .locate import poses as places_of
+        from .locate.level import load
+        from .locate.train import TrainOptions, real_pairs, train
+
+        level = load(args.level)
+        box = tuple(args.box) if args.box else None
+        places, cars = places_of.places(level, args.spacing / level.unit_metres, args.places, box=box)
+        real = [pair for table, video in (args.real or []) for pair in real_pairs(table, video, game, least=args.real_confidence)]
+        print(f"{len(places):,} training places for players, {0 if cars is None else len(cars):,} for vehicles, {len(real)} real frames", flush=True)
+        train(args.level, places, game, args.out, TrainOptions(steps=args.steps), real=real or None, vehicle_places=cars,
+              on_progress=lambda text: print(f"[{time.monotonic() - started:6.0f}s] {text}", flush=True))
+        print(f"wrote {args.out}")
+        return 0
+
+    if args.action == "frames":
+        from .locate.run import Options, Progress, locate_frames
+
+        if not args.source.exists():
+            print(f"no such file or folder: {args.source}", file=sys.stderr)
+            return 2
+        out = args.out or Path(args.source.stem + ".locate")
+        options = Options(
+            fps=args.fps,
+            start=args.start,
+            seconds=args.seconds,
+            width=args.width,
+            hfov=game.hfov,
+            shortlist=args.shortlist,
+            normalisation=args.normalise,
+            minimap=str(args.minimap) if args.minimap else None,
+            prior_radius=args.prior_radius,
+            anchor=str(args.minimap_anchor) if args.minimap_anchor else None,
+            level_search=not args.no_level_search,
+            lives=str(args.lives) if args.lives else None,
+            level=str(args.level) if args.level else None,
+            check_every=args.check_every,
+            sequence=not args.no_sequence,
+            fit_fov=args.fit_fov,
+            zoomed=not args.no_zoomed,
+            checks=not args.no_checks,
+        )
+
+        def show(p: Progress) -> None:
+            print(f"[{time.monotonic() - started:6.0f}s] {p.t:7.1f} s  {p.note}", flush=True)
+
+        try:
+            files, summary = locate_frames(args.source, args.db, out, game, options, on_progress=show)
+        except (OSError, ValueError) as exc:
+            print(f"\n{exc}", file=sys.stderr)
+            return 1
+        print()
+        by = summary["by_source"]
+        print(
+            f"{summary['frames']} frames: {by['visual']} placed from the picture, {by['minimap']} from the minimap, "
+            f"{by['none']} not placed; {summary['outliers']} visual fixes voted out; {summary['lives']} lives; "
+            f"{summary['seconds_per_frame']:.2f} s a frame"
+        )
+        for f in files:
+            print(f"wrote {f}")
+        return 0
+
+    from .locate.evaluate import compare, read_poses
+
+    located = read_poses(str(args.located))
+    truth = read_poses(str(args.truth))
+    try:
+        result = compare(located, truth, args.offset, args.unit_metres)
+    except ValueError as exc:
+        print(exc, file=sys.stderr)
+        return 1
+    import json
+
+    print(json.dumps(result, indent=2))
     return 0
 
 
@@ -413,7 +566,7 @@ def main(argv: list[str] | None = None) -> int:
 
     p = sub.add_parser(
         "hud",
-        help="read the kill feed and the player's own minimap track out of a recording, after the match",
+        help="read the player's own actions, deaths and minimap track, and the kill feed, out of a recording, after the match",
     )
     p.add_argument("video", type=Path)
     p.add_argument(
@@ -441,10 +594,130 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--cpu", action="store_true", help="decode on the CPU even when an NVIDIA card is there")
     p.set_defaults(run=_hud)
 
+    p = sub.add_parser(
+        "locate",
+        help="where each frame of a recording was taken, from the picture against the level's geometry",
+    )
+    actions = p.add_subparsers(dest="action", required=True)
+    build = actions.add_parser("build", help="render a level from every place a player can stand, and index it")
+    build.add_argument("level", type=Path, help="the level's .glb (or .gltf), textured, in the viewer's frame")
+    build.add_argument("-o", "--out", type=Path, required=True, help="the database folder to write")
+    build.add_argument("--spacing", type=float, default=2.5, help="metres between the places views are taken from (default 2.5)")
+    build.add_argument("--yaw-step", type=float, default=30.0, help="degrees between the views' directions (default 30)")
+    build.add_argument("--pitch", type=float, nargs="+", default=[0.0], help="pitches to render at, degrees up (default 0)")
+    build.add_argument(
+        "--positions",
+        type=Path,
+        default=None,
+        help="a table (Parquet or CSV with x, y, z in the level's frame, at the feet) to take places from instead of every floor",
+    )
+    build.add_argument("--untextured", action="store_true", help="render shape and light only (a level whose textures are missing)")
+    build.add_argument("--shadows", action="store_true", help="cast the sun's shadows in the renders (the level's own sun when it names one)")
+    build.add_argument(
+        "--places",
+        choices=["auto", "nav", "ground", "floors"],
+        default="auto",
+        help="where views are taken from: nav (players on the navigation mesh, vehicles on the ground), ground, floors (every upward face); auto (default): nav when the level has one",
+    )
+    build.add_argument("--head", type=Path, default=None, help="a per-map head from `locate train` for the descriptors")
+    build.add_argument(
+        "--box",
+        type=float,
+        nargs=4,
+        metavar=("X0", "Z0", "X1", "Z1"),
+        default=None,
+        help="only places inside this box, in the level's units: the part of the level anyone plays in",
+    )
+    frames = actions.add_parser("frames", help="locate the frames of a recording (or a folder of pictures)")
+    frames.add_argument("source", type=Path, help="a video, a picture, or a folder of pictures")
+    frames.add_argument("--db", type=Path, required=True, help="the database `locate build` wrote")
+    frames.add_argument("-o", "--out", type=Path, default=None, help="output path without extension (default <source>.locate)")
+    frames.add_argument("--level", type=Path, default=None, help="the level's .glb, if it moved since the database was built")
+    frames.add_argument("--fps", type=float, default=2.0, help="frames located per second of video (default 2)")
+    frames.add_argument("--start", type=float, default=0.0, help="seconds into the video to begin at")
+    frames.add_argument("--seconds", type=float, default=None, help="how much of the video to read (default: all of it)")
+    frames.add_argument("--width", type=int, default=960, help="the width frames are matched at (default 960)")
+    frames.add_argument("--shortlist", type=int, default=8, help="database views tried per frame (default 8)")
+    frames.add_argument("--normalise", choices=["none", "clahe", "gray"], default="none", help="light normalisation before matching (default none)")
+    frames.add_argument("--minimap", type=Path, default=None, help="the `hud` verb's table: the fallback where the picture gives no fix")
+    frames.add_argument(
+        "--prior-radius",
+        type=float,
+        default=None,
+        help="optional speed-up: search only database views this many metres from the minimap's position (needs --minimap)",
+    )
+    frames.add_argument(
+        "--minimap-anchor",
+        type=Path,
+        default=None,
+        help="a JSON file tying the minimap to the level (scale, rotation, shift, its measured error; docs/locate.md): the minimap becomes a search prior from the first frame (needs --minimap)",
+    )
+    frames.add_argument(
+        "--lives",
+        type=Path,
+        default=None,
+        help="the `hud` verb's table whose deaths, spawns and revives say when the player was in play (default: the --minimap table); positions jump only across a death",
+    )
+    frames.add_argument(
+        "--no-level-search",
+        action="store_true",
+        help="with a prior: when the search near it finds nothing, do not search the whole level as well",
+    )
+    frames.add_argument(
+        "--check-every",
+        type=int,
+        default=0,
+        help="every N located frames, write <out>.check/<frame>.jpg: the frame beside the level rendered at its fix, the frame's edges drawn over it",
+    )
+    frames.add_argument("--no-sequence", action="store_true", help="decide every frame on its own, not along the run")
+    frames.add_argument("--no-zoomed", action="store_true", help="do not solve zoomed views (scopes, sights) from their neighbours' fixes")
+    frames.add_argument("--no-checks", action="store_true", help="do not write a check picture for every visual fix (<out>.check)")
+    frames.add_argument(
+        "--fit-fov",
+        action="store_true",
+        help="after the run, fit the field of view to the strongest fixes (per view) and report it in the summary, for the next run's --fov",
+    )
+    trainer = actions.add_parser("train", help="train a per-map place model on renders of the level (and frames already located)")
+    trainer.add_argument("level", type=Path, help="the level's .glb")
+    trainer.add_argument("-o", "--out", type=Path, required=True, help="the head file to write (.pt)")
+    trainer.add_argument("--spacing", type=float, default=4.0, help="metres between the floor points training views are taken from (default 4)")
+    trainer.add_argument("--box", type=float, nargs=4, metavar=("X0", "Z0", "X1", "Z1"), default=None, help="only this part of the level")
+    trainer.add_argument("--places", choices=["auto", "nav", "ground", "floors"], default="auto", help="where training views are taken from (as for build)")
+    trainer.add_argument("--steps", type=int, default=600, help="training steps (default 600)")
+    trainer.add_argument(
+        "--real",
+        nargs=2,
+        action="append",
+        metavar=("TABLE", "VIDEO"),
+        default=None,
+        help="a `locate frames` table and its recording: its confident fixes join as real pairs (repeatable)",
+    )
+    trainer.add_argument("--real-confidence", type=float, default=0.85, help="the confidence a fix needs to join as a real pair (default 0.85)")
+    evaluate = actions.add_parser("eval", help="compare a located table with known camera poses")
+    evaluate.add_argument("located", type=Path, help="the table `locate frames` wrote")
+    evaluate.add_argument("--truth", type=Path, required=True, help="a table of time, x, y, z, yaw, pitch in the level's frame")
+    evaluate.add_argument("--offset", type=float, default=None, help="truth time = video time + this (default: searched for)")
+    evaluate.add_argument("--unit-metres", type=float, default=1.0, help="metres per level unit, for the errors (default 1)")
+    for q in (build, frames, evaluate, trainer):
+        q.add_argument("--game", choices=["bf6", "generic"], default="bf6", help="the game's profile (default bf6)")
+        q.add_argument("--eye", type=float, nargs="+", default=None, help="eye heights above the floor, metres, standing first")
+        q.add_argument("--fov", type=float, default=None, help="horizontal field of view of the recording, degrees")
+        q.add_argument("--vfov", type=float, default=None, help="or the vertical one (Battlefield's slider), for a 16:9 recording")
+        q.add_argument("--vehicle-vfov", type=float, default=None, help="the vertical field of view of vehicle cameras (Battlefield's vehicle slider)")
+        q.add_argument(
+            "--settings",
+            default=None,
+            help="bf6: the game's settings file to read the field of view from (default: the newest under Documents/Battlefield 6/settings); used when no --fov/--vfov is given",
+        )
+        q.add_argument("--max-speed", type=float, default=None, help="metres a second a player can move, for the outlier vote")
+        q.add_argument("--mask", action="append", default=None, help="another screen box that is not the level: x,y,w,h on 1920x1080; repeatable")
+        q.add_argument("--no-hud-mask", action="store_true", help="drop the profile's HUD boxes (keep only --mask ones)")
+    p.set_defaults(run=_locate)
+
     args = parser.parse_args(argv)
     # The verbs that take no video: the existence check below is about the
     # recording a reconstruction reads, and these do not read one.
-    if args.verb in ("route", "laps", "telemetry"):
+    if args.verb in ("route", "laps", "telemetry", "locate"):
         return args.run(args)
     if not args.video.exists():
         print(f"no such file: {args.video}", file=sys.stderr)

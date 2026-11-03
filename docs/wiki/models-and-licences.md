@@ -40,6 +40,17 @@ command prints the licence line before it starts. Reconstruction from video is t
 project a player would run, and non-commercial terms fit that; for commercial work an engine export
 or the game-file exporter is the route, and both are exact anyway.
 
+## Locating frames - `locate`
+
+| Model | Licence | Role |
+|---|---|---|
+| DINOv2 ViT-B/14 (`facebook/dinov2-base`) | Apache-2.0 | finds the renders that show the same place |
+| ALIKED `aliked-n16` | BSD-3-Clause | keypoints and descriptors |
+| LightGlue (ALIKED variant) | Apache-2.0 | matches them |
+
+All three permit commercial use, and are fetched on first use. SuperPoint, LightGlue's usual
+partner, is not used: its weights are non-commercial. See [Locating frames in a level](locate).
+
 ## Python packages
 
 | Package | Licence | Role |
@@ -53,6 +64,8 @@ or the game-file exporter is the route, and both are exact anyway.
 | torch, transformers, onnxscript | BSD-3-Clause / Apache-2.0 | one-off model conversion; the offline path |
 | einops, safetensors, huggingface_hub, Pillow | MIT / Apache-2.0 / Apache-2.0 / MIT-CMU | the offline path (`requirements-offline.txt`) |
 | vggt | Meta's "VGGT License" (research-materials agreement with an acceptable-use policy) | the offline path; installed from GitHub with `--no-deps` |
+| moderngl, glcontext | MIT | `locate`: rendering the level offscreen (`requirements-locate.txt`) |
+| kornia, kornia-rs | Apache-2.0 | `locate`: keypoints and matching |
 
 **PySide6 has conditions.** LGPL-3.0 permits proprietary and commercial use provided Qt stays a
 *replaceable* library. It is used here as an ordinary dynamically linked import, which satisfies

@@ -230,3 +230,135 @@ def test_a_single_sample_jump_is_dropped_and_a_turn_is_not():
     assert dropped == 1
     assert all(abs(p.t - 1.0) > 1e-9 for p in kept)
     assert len(kept) == len(pts) - 1
+
+
+# ---------------------------------------------------------------- the player's own events
+
+
+@pytest.fixture(scope="module")
+def own_match(tmp_path_factory):
+    """The same two lives, now with the points popup and the death screens read as well."""
+    from heat3d_capture.hud import screens
+    from heat3d_capture.hud.points import PopupRead, Tag
+    from heat3d_capture.hud.run import OwnReads
+
+    world = hs.level()
+    life1 = hs.walk(world, (900, 1200), [(0, 180), (90, 150)])
+    life2 = hs.walk(world, (1000, 1150), [(180, 120), (-90, 120)])
+    tracker = MinimapTracker(hs.PLAYER, hs.KEY)
+    play, bearings = [], []
+    own = OwnReads()
+    t = 0.0
+    for v in life1:
+        play.append((t, True))
+        tracker.add(t, v.image)
+        bearings.append(Bearing(t=t, heading=v.heading, scale=3.0, labels=3))
+        t += 0.2
+    death_t = round(t - 1.0, 1)
+    gap_start = t
+    for _ in range(50):
+        play.append((t, False))
+        tracker.break_track()
+        tracker.out_of_play += 1
+        t += 0.2
+    life2_start = t
+    for v in life2:
+        play.append((t, True))
+        tracker.add(t, v.image)
+        t += 0.2
+    down_t = round(life2_start + 3.0, 1)
+
+    def popup(at, tags, total, name="", side=""):
+        own.popups.append(PopupRead(t=at, tags=[Tag(*g) for g in tags], total=total, name=name, side=side))
+
+    # A headshot kill (the game shows HEADSHOT in place of KILL), then a revive given; the first also in the feed.
+    for k in range(4):
+        popup(3.0 + 0.4 * k, [("kill", "HEADSHOT", 1)], 150, "Someone_Else", "enemy")
+    for k in range(3):
+        popup(6.0 + 0.4 * k, [("reviving", "REVIVE", 1)], 80, "Made_Up_Mate", "friendly")
+    # Two kill tags read in one sample each: one the feed vouches for, one it does not.
+    popup(8.0, [("kill", "KILL", 1)], 100, "Weak_Foe", "enemy")
+    popup(20.0, [("kill", "KILL", 1)], 100)
+    # Down at the end of the first life, then the deploy screen; down in the second, then revived.
+    k = 0.0
+    while k < 30.0:
+        now = round(k, 1)
+        kinds: set[str] = set()
+        if death_t <= now <= death_t + 1.6:
+            kinds = {screens.DOWN, screens.CARD}
+        elif gap_start + 2.0 <= now <= gap_start + 6.0:
+            kinds = {screens.DEPLOY}
+        elif down_t <= now <= down_t + 2.4:
+            kinds = {screens.DOWN}
+        own.screens.append((now, kinds))
+        k += 0.8
+    feed = Feed()
+    for when, row in (
+        (3.2, Row(0, ME, "Someone_Else", SQUAD, ENEMY)),
+        (8.0, Row(0, ME, "Weak_Foe", SQUAD, ENEMY)),
+        (death_t, Row(0, "Rival_Player", ME, ENEMY, SQUAD, marker="arrow")),
+        (5.0, Row(0, "Third_Party", "Fourth_One", FRIENDLY, ENEMY)),
+    ):
+        feed.add(when, [row])
+        feed.add(when + 0.4, [row])
+    out = tmp_path_factory.mktemp("hud_own") / "match"
+    video = out.parent / "made_up_clip.mp4"
+    assemble(video, out, Options(player=ME), BF6, tracker, play, feed.finish(), bearings, [], timing={}, own=own)
+    return out, death_t, down_t
+
+
+def test_own_actions_are_the_events_and_the_feed_confirms(own_match):
+    out, death_t, down_t = own_match
+    _, rows = table(out)
+    by = Counter((r["event"], r.get("source")) for r in rows)
+    assert by[("kill", "points")] == 2 and by[("reviving", "points")] == 1
+    assert by[("death", "screen")] == 1 and by[("downed", "screen")] == 1 and by[("revived", "screen")] == 1
+    # The feed's own lines stay, under their own names, so nothing is counted twice.
+    assert by[("kill_feed", "feed")] == 2 and by[("death_feed", "feed")] == 1
+    assert not [r for r in rows if r["event"] == "kill" and r.get("source") == "feed"]
+    assert sorted(r["time"] for r in rows if r["event"] == "kill") == [pytest.approx(3.0), pytest.approx(8.0)]
+    kill = next(r for r in rows if r["event"] == "kill")
+    assert kill["time"] == pytest.approx(3.0) and kill["victim"] == "Someone_Else" and kill["subject"] == "Someone_Else"
+    assert kill["points"] == 150 and kill["text"] == "HEADSHOT" and kill["headshot"] is True
+    death = next(r for r in rows if r["event"] == "death")
+    assert death["killer"] == "Rival_Player" and death["session"] == "made_up_clip#01"
+    assert death["time"] == pytest.approx(death_t)
+    # The route ends at the death; the revive does not end the second life.
+    assert not [r for r in rows if r["session"] == "made_up_clip#01" and r["time"] > death_t + 1e-3]
+    assert {r["session"] for r in rows if r["event"] in ("downed", "revived")} == {"made_up_clip#02"}
+    revived = next(r for r in rows if r["event"] == "revived")
+    assert revived["time"] > down_t + 2.0
+    assert sorted({r["session"] for r in rows}) == ["made_up_clip#01", "made_up_clip#02"]
+
+
+def test_own_summary_and_events_file(own_match):
+    out, _, _ = own_match
+    s = json.loads((out.parent / "match.summary.json").read_text(encoding="utf-8"))
+    assert (s["kills"], s["deaths"], s["headshots"], s["revives"], s["revived"], s["downed"]) == (2, 1, 1, 1, 1, 2)
+    assert s["lives"] == 2 and s["score"] == 230 and s["popups"] == 4
+    assert s["feed"]["kills_matched_to_popup"] == 2 and s["deaths_from_feed_only"] == 0
+    assert s["own_events_from"].startswith("the points popup")
+    lines = [json.loads(x) for x in (out.parent / "match.events.jsonl").read_text(encoding="utf-8").splitlines()]
+    assert [x["time"] for x in lines] == sorted(x["time"] for x in lines)
+    sources = Counter(x["source"] for x in lines)
+    assert sources == {"points": 3, "screen": 3, "feed": 4}
+    assert all("x" in x for x in lines if x["source"] in ("points", "screen"))
+
+
+@pytest.mark.skipif(shutil.which("ffmpeg") is None, reason="needs ffmpeg")
+def test_a_whole_run_goes_through(tmp_path):
+    # Wiring only: a test picture with no HUD on it, read end to end.
+    pytest.importorskip("rapidocr_onnxruntime")
+    from heat3d_capture.hud.run import run
+
+    clip = tmp_path / "made_up.mp4"
+    subprocess.run(
+        ["ffmpeg", "-v", "error", "-f", "lavfi", "-i", "testsrc=size=1280x720:rate=30:duration=2",
+         "-pix_fmt", "yuv420p", str(clip)],
+        check=True,
+    )
+    result = run(clip, tmp_path / "out", Options(player=ME, gpu=False))
+    s = result.summary
+    assert s["own_events_from"].startswith("the kill feed") and s["kills"] == 0
+    assert result.own is not None and result.own.screens
+    assert (tmp_path / "out.summary.json").exists()

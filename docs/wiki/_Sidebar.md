@@ -28,3 +28,4 @@
 - [Updates](updates)
 - [Development](development)
 - [Reading HUD from video](hud-video)
+- [Locating frames in a level](locate)

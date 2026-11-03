@@ -198,3 +198,67 @@ def feed_row(killer: str, victim: str, killer_colour, victim_colour, *, width: i
         (vx - 2, base - vh - 4, vx + vw + 2, base + 6, victim),
     ]
     return img, boxes
+
+
+#: The points popup's crop, as the BF6 profile cuts it: its top left on the
+#: reference screen and its scale (crop pixels per reference pixel).
+POPUP_ORIGIN = (240.0, 624.0)
+POPUP_SCALE = 1.5
+GREY = (225, 228, 230)
+
+
+def popup(tags: list[str], total: int | None, *, name: str = "", name_colour=ORANGE, title: str = "",
+          icons: int = 1, background=(70, 64, 58), noise: int = 0) -> tuple[np.ndarray, list[tuple[float, float, float, float, str]]]:
+    """
+    A points popup in the game's style, made up: a title in a light box, a row of
+    round icons and the total, a coloured name, boxed tags right-aligned under it.
+
+    Drawn at the profile's crop size and place; returns the picture and the text
+    boxes an OCR would find (crop pixels: x0, y0, x1, y1, text).
+    """
+    import cv2
+
+    rng = np.random.default_rng(noise)
+    w, h = int(680 * POPUP_SCALE), int(172 * POPUP_SCALE)
+    img = np.zeros((h, w, 3), np.uint8)
+    img[:] = background
+    if noise:
+        img = np.clip(img.astype(np.int16) + rng.integers(-noise, noise + 1, img.shape), 0, 255).astype(np.uint8)
+
+    def at(x: float, y: float) -> tuple[int, int]:
+        return int((x - POPUP_ORIGIN[0]) * POPUP_SCALE), int((y - POPUP_ORIGIN[1]) * POPUP_SCALE)
+
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    boxes = []
+    if title:
+        (tw, th), _ = cv2.getTextSize(title, font, 0.7, 2)
+        x1, yc = at(658, 646)
+        cv2.rectangle(img, (x1 - tw - 12, yc - th // 2 - 8), (x1, yc + th // 2 + 8), (215, 215, 215), -1)
+        cv2.putText(img, title, (x1 - tw - 6, yc + th // 2), font, 0.7, (40, 40, 40), 2, cv2.LINE_AA)
+        boxes.append((x1 - tw - 8, yc - th // 2 - 4, x1 - 4, yc + th // 2 + 4, title))
+    if total is not None:
+        x, yc = at(762, 704)
+        text = str(total)
+        (tw, th), _ = cv2.getTextSize(text, font, 1.2, 3)
+        cv2.putText(img, text, (x, yc + th // 2), font, 1.2, GREY, 3, cv2.LINE_AA)
+        boxes.append((x - 2, yc - th // 2 - 4, x + tw + 2, yc + th // 2 + 4, text))
+        for k in range(icons):
+            cx, _ = at(735 - 34 * k, 704)
+            cv2.circle(img, (cx, yc), 18, GREY, -1, cv2.LINE_AA)
+            cv2.circle(img, (cx - 6, yc - 3), 4, background, -1)
+            cv2.circle(img, (cx + 6, yc - 3), 4, background, -1)
+    row = 738
+    if name:
+        (tw, th), _ = cv2.getTextSize(name, font, 0.75, 2)
+        x1, yc = at(748, 738)
+        cv2.putText(img, name, (x1 - tw, yc + th // 2), font, 0.75, name_colour, 2, cv2.LINE_AA)
+        boxes.append((x1 - tw - 2, yc - th // 2 - 4, x1 + 2, yc + th // 2 + 4, name))
+        row = 768
+    x1, yc = at(750, row)
+    for tag in reversed(tags):
+        (tw, th), _ = cv2.getTextSize(tag, font, 0.65, 1)
+        cv2.rectangle(img, (x1 - tw - 14, yc - th // 2 - 9), (x1, yc + th // 2 + 9), (200, 200, 200), 1)
+        cv2.putText(img, tag, (x1 - tw - 7, yc + th // 2), font, 0.65, GREY, 1, cv2.LINE_AA)
+        boxes.append((x1 - tw - 9, yc - th // 2 - 4, x1 - 5, yc + th // 2 + 4, tag))
+        x1 -= tw + 22
+    return img, boxes

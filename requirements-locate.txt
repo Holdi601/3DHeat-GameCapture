@@ -1,0 +1,23 @@
+# What `python -m heat3d_capture locate` needs on top of requirements.txt:
+# placing the frames of a recording in a level by matching them against
+# renders of the level's own geometry (docs/locate.md).
+#
+#   .venv/Scripts/python -m pip install -r requirements-locate.txt
+#
+# PyTorch is not listed, for the reason requirements.txt gives: the right wheel
+# depends on the GPU and CUDA version. Install it first, from pytorch.org.
+#
+# Licences (see LICENSES.md): moderngl and glcontext MIT; kornia and kornia-rs
+# Apache-2.0; transformers and huggingface_hub Apache-2.0. The weights fetched
+# on first use: DINOv2 (facebook/dinov2-base) Apache-2.0, ALIKED BSD-3-Clause,
+# LightGlue (ALIKED variant) Apache-2.0. All of them permit commercial use.
+# SuperPoint is deliberately not used: its weights are non-commercial.
+
+# Offscreen OpenGL rendering of the level, no window needed.
+moderngl>=5.10
+# ALIKED keypoints and LightGlue matching.
+kornia>=0.8.2
+# DINOv2, the global descriptor.
+transformers>=4.40
+huggingface_hub>=0.20
+safetensors>=0.4

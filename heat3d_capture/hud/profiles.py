@@ -12,6 +12,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
+from .points import Layout as PopupLayout
+
 #: The screen every profile's boxes are measured on.
 REFERENCE = (1920, 1080)
 
@@ -72,6 +74,8 @@ class Profile:
     compass_letters: dict[str, float] = field(default_factory=lambda: {"N": 0.0, "E": 90.0, "S": 180.0, "W": 270.0})
     #: Where the compass strip's heading mark is, in reference x.
     compass_mark: float = 960.0
+    #: The rows of the points popup (region "points"); None when the game has none.
+    popup: PopupLayout | None = None
 
     def region(self, name: str) -> Region:
         for r in self.regions:
@@ -84,7 +88,12 @@ class Profile:
 # bottom left (player-centred, rotating with the view, the view cone always
 # pointing up), the kill feed in the top right growing upwards from its newest
 # row, the compass top centre - at the top of the screen on foot and in third
-# person, lower down while looking through a vehicle's sight.
+# person, lower down while looking through a vehicle's sight. The points popup
+# sits left of and below the crosshair, its total starting at x 760 and its
+# tags right-aligned to x 750, in every view (on foot, in a vehicle, through a
+# sight). The down screen's words are under the centre; the killer card's
+# DAMAGE LOG / PLAYER CARD line and the deploy screen's DEPLOY button share the
+# bottom right.
 BF6 = Profile(
     name="bf6",
     title="Battlefield 6",
@@ -94,12 +103,16 @@ BF6 = Profile(
         Region("compass", Box(620, 10, 680, 48), 1.5),
         Region("compass_sight", Box(620, 204, 680, 46), 1.5),
         Region("squad", Box(336, 820, 240, 230), 1.0),
+        Region("points", Box(240, 624, 680, 172), 1.5),
+        Region("down", Box(600, 786, 720, 104), 1.0),
+        Region("card", Box(1580, 996, 250, 56), 1.5),
     ),
     player=(0.5, 0.497),
     map_key=(14 / 296, 269 / 296, 20 / 296, 22 / 296),
     feed_pitch=30.0,
     feed_text=14.0,
     feed_right=1884.0,
+    popup=PopupLayout(),
 )
 
 PROFILES = {p.name: p for p in (BF6,)}

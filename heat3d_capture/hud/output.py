@@ -2,8 +2,10 @@
 What a HUD run writes: the table the viewer opens, the feed as lines, a summary, the mosaic.
 
     <name>.parquet        the player's track and their events, 3DHeat format
-    <name>.events.jsonl   every kill-feed line, everyone's, with its time
-    <name>.summary.json   kills, deaths, time alive, distance; what was and was not found
+    <name>.events.jsonl   the player's own actions and deaths, and every kill-feed line,
+                          everyone's, with its time
+    <name>.summary.json   kills, deaths, assists, revives, score, time alive, distance;
+                          what was and was not found
     <name>.map.png        the mosaic of the minimap, north up when the compass allowed
     <name>.map.json       where that picture lies in the table's coordinates: the two
                           anchors the viewer's Map image panel asks for
@@ -27,7 +29,7 @@ import numpy as np
 #: Columns in this order; anything else a row carries follows.
 COLUMNS = (
     "time", "event", "x", "y", "z", "player", "team", "session", "heading", "dir_x", "dir_y", "dir_z",
-    "killer", "victim", "weapon", "headshot", "marker",
+    "source", "text", "points", "subject", "killer", "victim", "weapon", "headshot", "marker",
 )
 
 
@@ -73,7 +75,10 @@ def write_table(path: Path, rows: list[dict[str, Any]], *, game: str, scale: flo
             "dirX": "dir_x",
             "dirY": "dir_y",
             "dirZ": "dir_z",
-            "extra": [c for c in ("event", "killer", "victim", "weapon", "marker", "headshot") if c in names],
+            "extra": [
+                c for c in ("event", "source", "text", "points", "subject", "killer", "victim", "weapon", "marker", "headshot")
+                if c in names
+            ],
         },
     }
     meta = dict(table.schema.metadata or {})

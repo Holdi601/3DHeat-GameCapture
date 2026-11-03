@@ -310,8 +310,10 @@ rather than hidden, so a track that is not a straight line has an explanation.
 ## Reading the HUD of a recording
 
 `hud` reads a game's HUD out of the player's own recording after the match: the
-kill feed as timed events, and the player's own track from the minimap, as a
-3DHeat table with the minimap stitched into a map image to lay under it. Nothing
+player's own actions from the points popup (kills, assists, revives, captures...),
+their deaths from the down and deploy screens, the kill feed as timed events, and
+the player's own track from the minimap, as a 3DHeat table with the minimap
+stitched into a map image to lay under it. Nothing
 touches the game; only the player's own position is derived. Battlefield 6 is the
 first profile.
 
@@ -321,6 +323,22 @@ first profile.
 
 Every option, the method, measured accuracy and limits:
 [Reading HUD from video](https://holdi601.github.io/3DHeat-GameCapture/hud-video.html).
+
+## Locating frames in a level
+
+`locate` works out where each frame of the player's own recording was taken - the
+camera's position and view direction - by matching the picture against renders of
+the level's own geometry, for games that keep no demo or replay of where the player
+was. Battlefield 6 is the first. The minimap track from `hud` is only a fallback,
+and every row says which of the two placed it.
+
+```
+.venv/Scripts/python -m heat3d_capture locate build level.glb -o level.db
+.venv/Scripts/python -m heat3d_capture locate frames "<recording>.mp4" --db level.db -o out/match
+```
+
+Every option, the method, measured accuracy and limits:
+[Locating frames in a level](https://holdi601.github.io/3DHeat-GameCapture/locate.html).
 
 ## State
 
@@ -353,7 +371,8 @@ special handling.
 | `pose/telemetry_pose.py` | Exact poses from Forza, aligned to capture time |
 | `fusion/texture.py` | Colour projected from the frames that saw best |
 | `ui/overlay.py` | Click-through feedback drawn over the game |
-| `hud/` | Kill feed and the player's own minimap track from a recorded video (Battlefield 6 first) |
+| `hud/` | The player's own actions (points popup), deaths, minimap track and the kill feed from a recorded video (Battlefield 6 first) |
+| `locate/` | Where each frame of a recording was taken, against renders of the level |
 | `tests/test_accuracy.py` | Ground truth: a known room, a known path |
 
 ### Accuracy, measured

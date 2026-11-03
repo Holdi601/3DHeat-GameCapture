@@ -31,6 +31,8 @@ source is what counts, not this file.
 | torch, transformers, onnxscript | BSD-3-Clause / Apache-2.0 | Model conversion, and the offline `reconstruct` path (`requirements-offline.txt`); not needed by the scanner |
 | einops, safetensors, huggingface_hub, Pillow | MIT / Apache-2.0 / Apache-2.0 / MIT-CMU | Offline `reconstruct` path only |
 | **vggt** (the model code, from Meta's GitHub) | **VGGT License** (Meta research-materials agreement, with an acceptable-use policy; read off the installed package's `LICENSE.txt`) | Offline `reconstruct` path only; its weights are licensed separately, below |
+| moderngl, glcontext | MIT | The `locate` verb's offscreen renderer (`requirements-locate.txt`) |
+| kornia, kornia-rs | Apache-2.0 | The `locate` verb: ALIKED keypoints, LightGlue matching |
 
 **PySide6 is the one with conditions.** LGPL-3.0 permits use in proprietary
 software, including commercially, provided Qt stays a *replaceable* library: it is
@@ -84,6 +86,27 @@ commercial work should use an engine export or the game-file exporter, both of
 which are exact anyway.
 
 ---
+
+### Locating frames in a level - the `locate` verb
+
+The models `locate` runs are fetched on first use, from the sources below, and
+none of them restricts commercial use. Read off the model cards and the original
+repositories in November 2026.
+
+| Model | Licence | Source |
+|---|---|---|
+| DINOv2 ViT-B/14 (`facebook/dinov2-base`), the global descriptor | Apache-2.0 | Hugging Face model card |
+| ALIKED (`aliked-n16`), keypoints and descriptors | BSD-3-Clause | the original repository, Shiaoming/ALIKED; mirrored at `kornia/aliked` |
+| LightGlue, ALIKED variant, the matcher | Apache-2.0 | cvg/LightGlue; mirrored at `kornia/lightglue` |
+
+Two alternatives were left out on purpose, because their terms would pass on to
+every result: the SuperPoint weights (non-commercial, Magic Leap's licence), the
+usual partner of LightGlue, and ACE / scene-coordinate regression code under
+non-commercial licences.
+
+What `locate` renders is the level the user exported from their own copy of the
+game; that file, the database built from it and the renders are the user's to keep
+local, like any other export (see below).
 
 ## How geometry is obtained, and what that obliges
 
@@ -151,6 +174,8 @@ and no design choice here discharges it.
 
 - [Depth Anything V2 model cards](https://huggingface.co/depth-anything) — licence per size
 - [facebook/VGGT-1B](https://huggingface.co/facebook/VGGT-1B) — CC-BY-NC-4.0
+- [facebook/dinov2-base](https://huggingface.co/facebook/dinov2-base) — Apache-2.0
+- [ALIKED](https://github.com/Shiaoming/ALIKED) — BSD-3-Clause; [LightGlue](https://github.com/cvg/LightGlue) — Apache-2.0
 - [ReShade — PCGamingWiki](https://www.pcgamingwiki.com/wiki/ReShade) — anti-cheat position
 - [ReShade forum, depth buffer detection](https://reshade.me/forum/general-discussion/4083-depth-buffer-detection-modifications?start=1200) — multiplayer depth disabling
 - [Reverse engineering and the law](https://ipwatchdog.com/2021/03/27/reverse-engineering-law-understand-restrictions-minimize-risks/) — EULA and DMCA position

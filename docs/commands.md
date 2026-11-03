@@ -17,6 +17,7 @@ All commands run from the repository folder, with the project's environment:
 | [`telemetry`](#telemetry) | Records every channel, a lap file per lap, for the Race tab |
 | [`laps`](#laps) | Reads an FH Companion lap library and writes one course's route and samples |
 | [`reconstruct`](#reconstruct) | Solves a recording offline and writes a `.glb` |
+| [`locate`](#locate) | Where each frame of a recording was taken, against renders of the level |
 | [`python -m heat3d_capture.ui`](#the-scan-window) | The scan window |
 | [`python -m heat3d_update`](#updates) | Checks for and applies an update |
 | [`python tools/export_onnx.py`](#the-model-converter) | Converts the depth model to ONNX |
@@ -188,6 +189,22 @@ It prints the model's licence line first, then each stage (`masking`, `planning`
 `fusing`, `exporting`) with elapsed seconds and progress, and finally a summary: cameras
 solved, closure error, worst seam, notes, and the file written. The exit code is 0 only if a
 file was written.
+
+## locate
+
+```bash
+python -m heat3d_capture locate build level.glb -o level.db [--game bf6] [--spacing 2.5] [--shadows]
+python -m heat3d_capture locate frames recording.mp4 --db level.db -o out/match [--fps 2] [--minimap match.parquet]
+python -m heat3d_capture locate eval out/match.parquet --truth poses.parquet [--offset S] [--unit-metres 1]
+python -m heat3d_capture locate train level.glb -o level.head.pt [--ground-only] [--real out/match.parquet recording.mp4]
+```
+
+`build` renders a level from every place a player can stand and indexes the renders; `frames`
+places each sampled frame of a recording against it, from the picture, with the `hud` verb's
+minimap track as the fallback; `eval` compares a result with known camera poses; `train` trains a
+per-map place model on renders of the level (and on frames a run already located), for `build --head`. Needs PyTorch
+and `requirements-locate.txt`. Every option, the outputs and the method:
+[Locating frames in a level](locate.md).
 
 ## The scan window
 
