@@ -154,3 +154,23 @@ def test_a_value_that_is_not_a_number_is_written_as_null(tmp_path):
     assert doc["channels"]["rpm"][3] is None
     assert doc["channels"]["suspensionM.FL"][3] is None and doc["channels"]["suspension.FL"][3] is None
     assert all(v is not None for i, v in enumerate(doc["channels"]["suspension.FL"]) if i != 3)
+
+
+def test_a_lap_file_holds_everything_the_page_decode_read():
+    import struct as _struct
+
+    import pytest
+
+    page = bytearray(kunos.PHYSICS_SIZE)
+    _struct.pack_into("<i", page, 0, 77)
+    _struct.pack_into("<f", page, 24, 0.25)
+    _struct.pack_into("<3f", page, 32, 1.0, 2.0, 3.0)
+    _struct.pack_into("<3f", page, 296, 0.1, 0.2, 0.3)
+    _struct.pack_into("<4f", page, 56, 0.5, 0.6, 0.7, 0.8)
+    for w in range(4):
+        _struct.pack_into("<3f", page, kunos.TYRE_CONTACT_POINT + 12 * w, 10.0 + w, 1.0, 20.0)
+    frame = kunos.frame_from(kunos.decode_physics(bytes(page)), 0.0, "acc")
+    assert frame["packetId"] == 77 and frame["steerAngle"] == 0.25
+    assert (frame["worldVelX"], frame["worldVelY"], frame["worldVelZ"]) == (1.0, 2.0, 3.0)
+    assert frame["angVelX"] == pytest.approx(0.1) and frame["angVelZ"] == pytest.approx(0.3)
+    assert frame["wheelSlip.RR"] == pytest.approx(0.8) and frame["contactX.RR"] == 13.0

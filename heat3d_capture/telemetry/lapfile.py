@@ -24,6 +24,8 @@ from __future__ import annotations
 
 import json
 import math
+import struct
+import time
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
@@ -146,3 +148,166 @@ def write(run: Run, folder: str | Path, *, game: str, meta: dict, track: str | N
 
 def dot(a: tuple[float, float, float], b: tuple[float, float, float]) -> float:
     return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]
+
+
+# ---------------------------------------------------------------- everything received
+
+#: 3DHeat's converter rule, which the raw sidecar follows.
+RULE = "https://github.com/Holdi601/3DHeat/blob/main/docs/converters.md"
+_FRAME = struct.Struct("<II")
+
+
+class RawLog:
+    """
+    Everything a recorder receives, kept whole beside its lap files.
+
+    A lap file holds the channels the decoder understands, for the laps it
+    closed; the game sends more than that - packets in the menus and between
+    laps, bytes nobody has named, pages the decoder reads only in part. 3DHeat's
+    converter rule (docs/converters.md in the viewer's repository) keeps all of
+    it: every packet or page is framed into `<name>.raw.bin` the moment it
+    arrives, so a crash loses nothing, and `close()` turns that into
+    `<name>.raw.parquet` (zstd; columns `time`, `ms`, `type`, `used`,
+    `payload`, `text`, as the watcher's `heat.raw.parquet`) when pyarrow is
+    installed - without it the `.raw.bin` stays, readable by `read_frames`.
+    `<name>.summary.json` gets the self-check: per `type`, how many items were
+    seen, how many also went into lap files (`used`), and `lost`, which is 0.
+
+    `type` is the source's own word for an item (a packet's format, a shared
+    memory page's name); `used` says the decoder turned it into a lap's frame.
+    """
+
+    def __init__(self, folder: str | Path, name: str, *, game: str = ""):
+        self.folder = Path(folder)
+        self.folder.mkdir(parents=True, exist_ok=True)
+        self.name = name
+        self.game = game
+        self.counts: dict[str, list[int]] = {}
+        self.started = time.time()
+        self._mono = time.monotonic()
+        self._file = (self.folder / f"{name}.raw.bin").open("ab")
+        self._flushed = self._mono
+
+    @property
+    def bin_path(self) -> Path:
+        return self.folder / f"{self.name}.raw.bin"
+
+    def keep(self, type: str, payload: bytes | None = None, *, used: bool = False, text: str | None = None) -> None:
+        """One item, whole."""
+        if self._file is None:
+            return
+        now = time.monotonic()
+        head = {"time": round(now - self._mono, 4), "ms": int(time.time() * 1000), "type": str(type), "used": bool(used)}
+        if text is not None:
+            head["text"] = text
+        h = json.dumps(head, separators=(",", ":")).encode("utf-8")
+        body = bytes(payload) if payload is not None else b""
+        self._file.write(_FRAME.pack(len(h), len(body)))
+        self._file.write(h)
+        self._file.write(body)
+        c = self.counts.setdefault(head["type"], [0, 0])
+        c[0] += 1
+        c[1] += int(bool(used))
+        if now - self._flushed >= 2.0:
+            self._flushed = now
+            self._file.flush()
+
+    def completeness(self) -> dict:
+        types = {
+            k: {"seen": n, "decoded": 0, "partial": used, "raw": n - used, "lost": 0}
+            for k, (n, used) in sorted(self.counts.items())
+        }
+        return {"rule": RULE, "sidecars": [f"{self.name}.raw.parquet"], "types": types, "lost": 0}
+
+    def close(self) -> Path | None:
+        """The sidecar and its summary; returns the sidecar (None when nothing arrived)."""
+        if self._file is None:
+            return None
+        self._file.close()
+        self._file = None
+        if not self.counts:
+            self.bin_path.unlink(missing_ok=True)
+            return None
+        out: Path = self.bin_path
+        try:
+            out = write_parquet(self.bin_path, self.folder / f"{self.name}.raw.parquet")
+        except ImportError:
+            pass
+        summary = {
+            "format": "heat3d-raw-summary",
+            "version": 1,
+            "game": self.game,
+            "started": datetime.fromtimestamp(self.started).astimezone().isoformat(timespec="seconds"),
+            "sidecar": out.name,
+            "selfCheck": {"completeness": self.completeness()},
+        }
+        if out.suffix != ".parquet":
+            summary["selfCheck"]["completeness"]["sidecars"] = [out.name]
+        (self.folder / f"{self.name}.summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
+        return out
+
+    def __enter__(self) -> "RawLog":
+        return self
+
+    def __exit__(self, *_exc: object) -> None:
+        self.close()
+
+
+def read_frames(path: str | Path):
+    """A `.raw.bin`'s items as (head, payload), in order; a frame cut short by a crash ends it."""
+    with Path(path).open("rb") as f:
+        while True:
+            frame = f.read(_FRAME.size)
+            if len(frame) < _FRAME.size:
+                return
+            nh, nb = _FRAME.unpack(frame)
+            h = f.read(nh)
+            body = f.read(nb)
+            if len(h) < nh or len(body) < nb:
+                return
+            try:
+                head = json.loads(h)
+            except ValueError:
+                return
+            yield head, body
+
+
+def write_parquet(source: str | Path, target: str | Path, *, batch_bytes: int = 64 << 20) -> Path:
+    """A `.raw.bin` as Parquet (zstd), a row group every `batch_bytes`; the `.raw.bin` is removed after."""
+    import pyarrow as pa
+    import pyarrow.parquet as pq
+
+    source, target = Path(source), Path(target)
+    schema = pa.schema(
+        [("time", pa.float64()), ("ms", pa.int64()), ("type", pa.dictionary(pa.int32(), pa.string())),
+         ("used", pa.bool_()), ("payload", pa.binary()), ("text", pa.string())],
+        metadata={b"heat3d": json.dumps({"version": 1, "kind": "heat3d-raw", "rule": RULE}).encode("utf-8")},
+    )
+    tmp = target.with_name(target.name + ".tmp")
+
+    def table(cols: dict) -> "pa.Table":
+        return pa.Table.from_arrays(
+            [pa.array(cols["time"], pa.float64()), pa.array(cols["ms"], pa.int64()),
+             pa.array(cols["type"], pa.string()).dictionary_encode().cast(schema.field("type").type),
+             pa.array(cols["used"], pa.bool_()), pa.array(cols["payload"], pa.binary()),
+             pa.array(cols["text"], pa.string())],
+            schema=schema,
+        )
+
+    with pq.ParquetWriter(tmp, schema, compression="zstd") as writer:
+        cols: dict[str, list] = {k: [] for k in schema.names}
+        size = 0
+        for head, body in read_frames(source):
+            for k in ("time", "ms", "type", "used", "text"):
+                cols[k].append(head.get(k))
+            cols["payload"].append(body)
+            size += len(body) + 64
+            if size >= batch_bytes:
+                writer.write_table(table(cols))
+                cols = {k: [] for k in schema.names}
+                size = 0
+        if cols["time"]:
+            writer.write_table(table(cols))
+    tmp.replace(target)
+    source.unlink(missing_ok=True)
+    return target

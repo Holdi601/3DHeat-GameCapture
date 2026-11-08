@@ -199,3 +199,33 @@ def test_a_stage_names_a_surface_only_when_told_one():
     """
     assert "surface" not in rally.RallyRecorder("unused", game="wrc").meta
     assert rally.RallyRecorder("unused", game="wrc", surface="tarmac").meta["surface"] == "tarmac"
+
+
+def test_every_packet_is_kept_whole_beside_the_stages(tmp_path):
+    """3DHeat's converter rule: what the game sends is kept, whether or not it became a stage."""
+    import pyarrow.parquet as pq
+
+    rec = rally.RallyRecorder(tmp_path, game="wrc")
+    waiting = wrc_packet(t=0.0, x=0.0, speed=0.0)  # the clock not yet running
+    driving = [wrc_packet(t=k * 0.1, x=k * 2.0, speed=20.0) for k in range(1, 20)]
+    other = b"\x05" * 64
+    for packet in (waiting, *driving, other):
+        rec.feed(packet)
+    rec.close()
+    (sidecar,) = tmp_path.glob("*.raw.parquet")
+    t = pq.read_table(sidecar).to_pydict()
+    assert t["payload"] == [waiting, *driving, other]
+    assert t["type"] == ["session_update"] * 20 + ["wrc 64-byte"]
+    assert t["used"] == [False] + [True] * 19 + [False]
+    (summary,) = tmp_path.glob("*.summary.json")
+    assert json.loads(summary.read_text(encoding="utf-8"))["selfCheck"]["completeness"]["lost"] == 0
+
+
+def test_a_stage_file_holds_everything_the_packet_decode_read():
+    frame = rally.frame_wrc(rally.decode_wrc(wrc_packet(t=12.5, x=3.0, speed=20.0)))
+    assert frame["gameTime"] == 12.5 and frame["packetUid"] == 1250
+    assert {"hubVel.FL", "worldVelZ", "forwardZ", "leftX", "upY", "rpmMax", "stageLength"} <= set(frame)
+    dirt = rally.frame_dirt([float(i) for i in range(66)])
+    # The floats with a settled name under it, every other one by its index.
+    assert dirt["totalTime"] == 0.0 and dirt["lastLapTime"] == 62.0 and dirt["suspensionVel.FL"] == 23.0
+    assert rally.DR_UNNAMED and all(dirt[f"float{i}"] == float(i) for i in rally.DR_UNNAMED)

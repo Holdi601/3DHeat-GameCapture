@@ -84,8 +84,12 @@ Writes `<db>/db.json` (what it was built from and with) and `<db>/views.npz` (po
 | `-o`, `--out` | `<source>.locate` | Output path without extension. |
 | `--fps` | 2 | Frames located per second of video. |
 | `--start`, `--seconds` | all | The part of the video to read. |
-| `--width` | 960 | The width frames are matched at. |
-| `--shortlist` | 8 | Database views tried per frame. |
+| `--width` | 1280 | The width frames are matched at. |
+| `--shortlist` | 8 | Database views tried per frame near a prior or a fix. |
+| `--search-shortlist` | 16 | With no prior: database views tried per frame ([searched together](#with-no-prior-frames-searched-together)). |
+| `--no-search` | off | With no prior: search each frame on its own and believe its fix without its neighbours. |
+| `--checkpoint` | none | Keep the run's state here and carry on from it if it is there. |
+| `--stop-file`, `--stop-process` | none | Stop by itself, state saved, exit code 75, when this file exists or a process runs whose name starts with this (checked before every frame; may be repeated), so that a long run frees the machine for a game. The same command carries on. |
 | `--normalise` | none | Light normalisation before matching: `clahe`, `gray`. |
 | `--minimap` | none | The `hud` verb's table: the **fallback** for frames the picture cannot place. |
 | `--prior-radius` | none | **Optional speed-up**, off by default: search only database views this many metres from the minimap's position (needs `--minimap`). |
@@ -100,6 +104,28 @@ Writes `<db>/db.json` (what it was built from and with) and `<db>/views.npz` (po
 | `--game`, `--eye`, `--fov`, `--vfov`, `--mask`, `--no-hud-mask`, `--max-speed` | the profile's | As above; `--mask x,y,w,h` adds a screen box (on a 1920x1080 screen) that is not the level. |
 | `--vehicle-vfov` | the profile's | The vertical field of view of vehicle cameras (Battlefield's vehicle slider). |
 | `--settings` | the newest settings file | `bf6`: the game's settings file the fields of view are read from (read only) when no `--fov`/`--vfov` is given; by default the newest `PROFSAVE*_profile` under `Documents/Battlefield 6/settings`. It holds the settings as they are now, which may not be how an older recording was made. |
+
+### `locate refmap <level> <deploy screen> -o <refmap>`
+
+Places the game's own map on the level: the reference the minimap is read against
+([the minimap, read against the level](#the-minimap-read-against-the-level)). `<deploy screen>` is
+a picture of the deploy screen showing the whole map, or a recording with `--at <seconds>` at such
+a moment; the profile's map box is cut out of it (`--whole-picture` keeps all of it). Writes
+`<refmap>.png` (the map resampled onto the level's own frame, `--mpp` metres a pixel, default 0.5),
+`<refmap>.valid.png` (where it is the map, not a marker or label) and `<refmap>.json` (the frame and
+the calibration, with how far the map's tiles were from it). `--topdown <prefix>` keeps the level
+rendered from above for the next run (`--topdown-mpp`, default 0.656 m; `--box` limits it).
+
+### `locate minimap <recording> --refmap <refmap> -o <table>.parquet`
+
+Reads the recording's minimap against the reference map, frame by frame (`--fps`, default 2):
+position, heading and zoom of every minimap that matches, in the level's frame, written as a
+minimap table with an anchor beside it (`<table>.anchor.json`) that `locate frames` takes as
+`--minimap <table>.parquet --minimap-anchor <table>.anchor.json`. With the `hud` verb's table
+(`--hud`) its lives are carried over; with an anchor for that table too (`--hud-anchor`) the first
+search is round where it puts the player, and where no minimap matches the HUD's own track fills
+in, moved onto the nearest reference-map fixes (`--hud-fill`, seconds, default 120; 0 turns it off).
+The table's `source` says which (`refmap`, `hud`).
 
 ### `locate eval <out>.parquet --truth <poses>`
 
@@ -254,6 +280,26 @@ is one vehicle type: a car or a helicopter rides its camera differently. A minim
 it - one of its pixels is about two thirds of a metre, and too few vehicle fixes had a minimap
 beside them to fit an offset to.
 
+### With no prior: frames searched together
+
+One frame's global descriptor against a whole level is a weak signal, and one frame's inliers do
+not tell a right place from a look-alike. So with no prior the frames of a recording are described
+first and searched together (`search.py`), and a fix is believed only with the frames around it:
+
+- **Shortlist.** Each view's similarities are measured against its own mean and spread over the
+  recording, so that a view resembling every frame stops winning everywhere. Each frame scores the
+  cells of a 24 m grid by the rank of their best view; the best path through the cells along each
+  life, within what the player can cover between frames, gives a belief per cell, and the best view
+  of each cell, best believed first, is one list. Plain retrieval is the other, and the two are
+  taken in turn: measuring views against the recording punishes a place the player hardly leaves,
+  which is where plain retrieval does well.
+- **Believing.** A candidate counts only if its inliers cover at least 12% of an 8 x 8 grid over the
+  frame: a look-alike is a repeated object, a stack of containers, with hundreds of inliers on a
+  few cells of the frame. A fix is believed when it lies on the best path through the counting
+  candidates (below) with at least two neighbours within 6 s that agree with it. A frame out of
+  play is not searched at all.
+- **Growing.** Only what is believed is grown from, and a grown fix must cover the frame in the same way.
+
 ### Along the run
 
 Each frame keeps every physically possible pose it found, one per place (`candidates`), not just
@@ -310,6 +356,42 @@ beside it the level rendered at the fix's camera with the frame's edges drawn ov
 Where they line up, the fix is right. Written after the sequence and the track have decided, so
 the pictures are exactly the rows the table calls visual. Off with `--no-checks`.
 
+### The minimap, read against the level
+
+A minimap stitched into one mosaic (the `hud` verb's) is not flat: its scale drifts with the zoom
+each minimap was registered at, a place seen twice can be drawn twice, and each clip's mosaic is
+its own. A similarity fitted to a few fixes then holds near them and is tens of metres off away
+from them. So the minimap is placed by the level itself, in two steps, and nothing is stitched:
+
+- **The reference map** (`locate refmap`). The deploy screen draws the whole map north up, flat, at
+  one scale. The level rendered from straight above shows the same things standing up from the
+  ground (tanks, buildings, walls): on the level, their height over the ground 15 m round; on the
+  map, what is drawn lighter than the ground round it. The map is laid on the level by normalised
+  cross-correlation of the two over scale and a small turn, refined by matching tiles of it one by
+  one, and last by all of the map at once round that answer (a few dozen tiles leave the scale
+  loose by a percent, metres at the map's ends). The result is one similarity, map pixel to level.
+- **The minimap, frame by frame** (`locate minimap`). Each sampled minimap - the HUD reader's crop
+  and overlay mask - is matched (SIFT) to the reference map round where the player last was, or
+  anywhere when nowhere is known, and a similarity (turn, zoom, shift) is fitted. The player's point
+  carried through it is the position, the minimap's up (the view cone) the heading, its scale the
+  zoom - measured, not assumed.
+- **Where it does not match.** The deploy screen draws nothing outside the play area; a minimap
+  that shows mostly what lies outside it - a player at the edge of the map - has nothing to match.
+  There the HUD's own track stands in, moved by the offset the nearest reference-map fixes measured
+  (`--hud-fill`); it is as good as the mosaic is near those fixes.
+
+On the test level (Battlefield 6, ten clips) the minimap read this way was 3.2 m (median) and
+6.5 m (90th percentile) from 960 confident picture fixes of seven clips - the same inside the area
+the old fitted anchor had fixes in (2.9 / 6.2 m) as outside it (3.4 / 6.6 m), where the anchor was
+10.7 / 24.5 m off. Of those fixes 5 were more than 15 m from it, against 117 for the anchor. The
+fixes still sat about 2.5 m west of it on average: what is left of the reference map's placement.
+The minimap's zoom, measured on every matched minimap, was the same in every view: 0.68 m of the
+level a pixel of a 1080p minimap on foot, in a vehicle and through a sight (10th-90th percentile
+0.65-0.73) - the minimap does not zoom out in vehicles; the varying zoom the mosaic showed was the
+mosaic's own drift. On the held-out clip, with this as the prior, the run placed 117 frames from
+the picture against 50 with the fitted anchor, its own corrections fell from 9.5 m to 2.5 m, and it
+ran a third faster (the disc is smaller).
+
 ### The minimap as a search prior
 
 The `hud` verb's minimap track says, for most frames of play, roughly where the player is and which
@@ -332,7 +414,13 @@ search to a small part of it; the pose itself still comes from the picture, by t
   views within the disc tried (30 m plus the anchor's 90th-percentile error).
 - **Corrected as the run goes.** Every confident fix near the prior says how far off the anchor is
   there; the median of those within 2 minutes corrects the prior, and their spread (at least 5 m)
-  replaces the anchor's error in the disc's radius.
+  replaces the anchor's error in the disc's radius - up to 10 m: fixes that disagree more say the
+  minimap is off with place, not that anything 50 m away will do. With no fix within 2 minutes the
+  prior is not corrected at all (the error elsewhere in the clip says nothing about here).
+- **Anchors with a grid.** An anchor may also carry `grid`: level x and z on a regular grid over
+  the clip's minimap units, read bilinearly; inside it the grid places the point, outside it the
+  similarity. A `locate minimap` table's anchor is the identity (its table is in the level's frame
+  already).
 - **Weak fits.** With a prior, a fit that is weak (25 inliers or more, but not confident enough on
   its own) and lies within the disc is kept - with its lower confidence - for the sequence and the
   track to judge, not dropped: smoke, rubble and destroyed walls leave real frames fewer matches.

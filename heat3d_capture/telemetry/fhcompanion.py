@@ -102,8 +102,13 @@ class Lap:
     source: Path
     #: (n, 3) world metres, in the game's own frame.
     positions: np.ndarray
-    #: Every other per-sample field, by its output name.
+    #: Every other per-sample field, by its output name; a field the list above
+    #: does not name is kept too, under the file's own name for it.
     channels: dict[str, np.ndarray] = field(default_factory=dict)
+    #: Everything else the file says about the lap, as it says it - the car's
+    #: name, drivetrain and power, the mode, the tune, how wet it was - so
+    #: nothing the file holds is left behind (3DHeat's converter rule).
+    info: dict = field(default_factory=dict)
 
     def __len__(self) -> int:
         return len(self.positions)
@@ -123,6 +128,10 @@ class Course:
     laps: list[Lap] = field(default_factory=list)
     start: tuple[float, float] | None = None
     finish: tuple[float, float] | None = None
+    #: Lap files that could not be read, by path relative to the course folder.
+    unreadable: list[str] = field(default_factory=list)
+    #: course.json as it was, when there is one.
+    info: dict = field(default_factory=dict)
 
     def __len__(self) -> int:
         return len(self.laps)
@@ -193,6 +202,15 @@ class Course:
                     # The fastest lap rather than all of them: the file is a
                     # route, and dozens of overlaid laps are a smear rather than a line.
                     "positions": (self.best.positions if self.best is not None else points).tolist(),
+                    # What the library says beyond the samples (which are in the
+                    # CSV): course.json, and every lap file's own fields.
+                    "courseInfo": self.info,
+                    "lapInfo": [
+                        {"file": lap.source.relative_to(self.folder).as_posix() if lap.source.is_relative_to(self.folder)
+                         else lap.source.name, **lap.info}
+                        for lap in self.laps
+                    ],
+                    "unreadable": self.unreadable,
                 },
                 indent=2,
             ),
@@ -212,6 +230,9 @@ class Course:
         """
         path = Path(path).with_suffix(".csv")
         names = list(SAMPLE_FIELDS.values())
+        # Sample fields the list does not name, if any lap file has them, as columns of their own.
+        for lap in self.laps:
+            names += [n for n in lap.channels if n not in names]
         # Positions get fixed decimals, everything else significant figures.
         # Four significant figures is plenty for a throttle position and ruinous
         # for a coordinate: a car at x=1184.97 writes as 1185, the whole course
@@ -269,7 +290,14 @@ def read_lap(path: str | Path) -> Lap:
         columns[name] = np.array(
             [s.get(source, 0.0) for s in samples], dtype=np.float64
         )
+    # A field a later FH Companion adds: kept under its own name when it is a number.
+    for key in {k for s in samples for k in s} - set(SAMPLE_FIELDS):
+        values = [s.get(key) for s in samples]
+        if all(v is None or (isinstance(v, (int, float)) and not isinstance(v, bool)) for v in values):
+            columns[key] = np.array([np.nan if v is None else v for v in values], dtype=np.float64)
     positions = np.stack([columns["x"], columns["y"], columns["z"]], axis=1)
+    info = {k: v for k, v in document.items() if k != "Lap"}
+    info.update({k: v for k, v in body.items() if k != "samples"})
     return Lap(
         course=body.get("track") or document.get("Course") or path.parent.name,
         car_class=str(document.get("Class") or ""),
@@ -282,6 +310,7 @@ def read_lap(path: str | Path) -> Lap:
         source=path,
         positions=positions,
         channels=columns,
+        info=info,
     )
 
 
@@ -303,6 +332,7 @@ def read_course(folder: str | Path) -> Course:
     if found:
         name = found.group("name")
     meta = folder / "course.json"
+    info: dict = {}
     if meta.exists():
         try:
             info = json.loads(meta.read_text(encoding="utf-8-sig"))
@@ -318,16 +348,19 @@ def read_course(folder: str | Path) -> Course:
         start, finish = (numbers[0], numbers[1]), (numbers[2], numbers[3])
 
     laps: list[Lap] = []
+    unreadable: list[str] = []
     for path in sorted(folder.rglob("*.json")):
         if path.name == "course.json":
             continue
         try:
             laps.append(read_lap(path))
         except (ValueError, KeyError, json.JSONDecodeError):
-            # One unreadable lap out of hundreds must not cost the course.
+            # One unreadable lap out of hundreds must not cost the course; it is named, not hidden.
+            unreadable.append(path.relative_to(folder).as_posix())
             continue
     laps.sort(key=lambda lap: lap.recorded_at)
-    return Course(name=name, folder=folder, laps=laps, start=start, finish=finish)
+    return Course(name=name, folder=folder, laps=laps, start=start, finish=finish, unreadable=unreadable,
+                  info=info if isinstance(info, dict) else {})
 
 
 def courses(root: str | Path | None = None) -> list[Path]:

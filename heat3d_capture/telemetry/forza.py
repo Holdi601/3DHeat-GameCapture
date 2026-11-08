@@ -53,6 +53,21 @@ FH_DASH_LENGTH = 324
 
 #: The dash block, from `PositionX` to the last byte of the packet.
 DASH_BLOCK_LENGTH = 79
+#: Forza Motorsport (2023): the dash packet with tyre wear and the track id after it.
+FM2023_LENGTH = FM_DASH_LENGTH + 20
+
+#: Each known length's name, the `type` a packet is kept under in a raw sidecar.
+KINDS = {
+    SLED_LENGTH: "sled",
+    FM_DASH_LENGTH: "dash",
+    FH_DASH_LENGTH: "dash-horizon",
+    FM2023_LENGTH: "dash-fm2023",
+}
+
+
+def packet_kind(packet: bytes) -> str:
+    """What a packet is, by its length: `sled`, `dash`, `dash-horizon`, `dash-fm2023`, else `<n>-byte`."""
+    return KINDS.get(len(packet), f"{len(packet)}-byte")
 
 # --- Sled block, absolute offsets. Stable across all variants.
 _IS_RACE_ON = 0

@@ -49,6 +49,8 @@ MIN_INLIERS = 25
 PIXELS = 4.0
 #: Matches on static parts of the level enough to solve on without the destructible ones.
 STATIC_ENOUGH = 40
+#: ALIKED's detection threshold (its default is much higher).
+KEYPOINT_THRESHOLD = 0.001
 #: The confidence a fix needs to be `ok`. On the bench (docs/locate.md),
 #: fixes from 0.85 up were right 97.5-99% of the time; between 0.7 and 0.85,
 #: on a database of every floor, about half. A frame left out is filled by
@@ -77,6 +79,8 @@ class Fix:
     tried: int = 0
     #: Fraction of an 8 x 8 grid over the frame that has inliers: matches all on one patch are weak evidence.
     spread: float = 0.0
+    #: The inliers' far distance from the camera over their near one (90th over 10th percentile): near 1, they all lie on one surface.
+    depth_range: float = 0.0
     seconds: float = 0.0
     note: str = ""
     #: Every solve tried: retrieval rank, inliers, position, height over the floor, possible or not.
@@ -93,6 +97,10 @@ class Candidate:
     pitch: float
     inliers: int
     rmse: float
+    #: Fraction of an 8 x 8 grid over the frame that has inliers (`Fix.spread`).
+    spread: float = 0.0
+    #: How far apart in depth its inliers lie (`Fix.depth_range`).
+    depth_range: float = 0.0
 
 
 @dataclass
@@ -128,12 +136,12 @@ class Locator:
         db: Database,
         level: Level | None = None,
         *,
-        width: int = 960,
+        width: int = 1280,
         hfov: float | None = None,
         shortlist: int = 8,
         light: Light | None = None,
         normalisation: str = "none",
-        max_keypoints: int = 2048,
+        max_keypoints: int = 8192,
         refine: int = 2,
         enough: int = 250,
     ):
@@ -147,10 +155,18 @@ class Locator:
         self.normalisation = normalisation
         self.refine = refine
         self.enough = enough
+        #: Called between the renders of a frame, to let a long job stop within seconds: it may raise.
+        self.between = None
         self.renderer = Renderer(self.level, width, int(round(width * 9 / 16)))
         self.describe = GlobalDescriptor(db.meta["descriptor"]["model"], head=db.meta["descriptor"].get("head"))
-        self.matcher = LocalMatcher(max_keypoints)
+        # Many weak keypoints, not a few strong ones: on a real frame most of the strong ones are on
+        # the HUD and the player's vehicle, and what frame and render share is faint (measured on
+        # frames of the test level: inliers at the right pose rose sevenfold).
+        self.matcher = LocalMatcher(max_keypoints, threshold=KEYPOINT_THRESHOLD, detected=2 * max_keypoints)
         self._place = db.views.position[:, [0, 2]]
+        #: Which database views are vehicle cameras (they are the last eye of a database that has them).
+        eye = db.views.eye
+        self._vehicle_views = eye == eye.max() if db.meta.get("vehicle_places") else None
         spacing = float(db.meta.get("options", {}).get("spacing", 2.5)) / self.unit
         #: Two fixes further apart than this are different places.
         self.apart = max(3.0 / self.unit, 1.5 * spacing)
@@ -166,9 +182,11 @@ class Locator:
 
     # -- retrieval ---------------------------------------------------------
 
-    def candidates(self, q: np.ndarray, near: np.ndarray | None = None, radius: float | None = None) -> list[int]:
-        """The shortlist for a frame's global descriptor `q`."""
+    def candidates(self, q: np.ndarray, near: np.ndarray | None = None, radius: float | None = None, view: str | None = None) -> list[int]:
+        """The shortlist for a frame's global descriptor `q`; of a frame of class `view`, among the views taken from such a camera."""
         sims = self.db.descriptors @ q
+        if view is not None and self._vehicle_views is not None:
+            sims = np.where(self._vehicle_views == (view == "vehicle"), sims, -np.inf)
         if near is not None and radius:
             far = np.linalg.norm(self._place - np.asarray(near, float)[[0, 2]], axis=1) > radius
             sims = np.where(far, -np.inf, sims)
@@ -274,6 +292,7 @@ class Locator:
         seeds: list[Pose] | None = None,
         hfov: float | None = None,
         highest: float | None = None,
+        view: str | None = None,
     ) -> Fix:
         """
         `rgb`: the frame, uint8 RGB, any size; `mask`: True where it shows the
@@ -282,7 +301,8 @@ class Locator:
         be, level units, when not a player's eye. `near`, `radius`: consider
         only database views that close. `seeds`: poses to start from instead
         of database views (a prior that says where and which way); the fix is
-        judged by the same rules either way.
+        judged by the same rules either way. `view`: the frame's class (views.py),
+        which limits the search to database views from that kind of camera.
         """
         saved = self.hfov, self.above_floor
         if hfov:
@@ -290,11 +310,11 @@ class Locator:
         if highest:
             self.above_floor = (self.above_floor[0], highest)
         try:
-            return self._locate(rgb, mask, near, radius, seeds)
+            return self._locate(rgb, mask, near, radius, seeds, view)
         finally:
             self.hfov, self.above_floor = saved
 
-    def _locate(self, rgb: np.ndarray, mask: np.ndarray | None, near: np.ndarray | None, radius: float | None, seeds: list[Pose] | None = None) -> Fix:
+    def _locate(self, rgb: np.ndarray, mask: np.ndarray | None, near: np.ndarray | None, radius: float | None, seeds: list[Pose] | None = None, view: str | None = None) -> Fix:
         import cv2
 
         started = time.monotonic()
@@ -314,7 +334,7 @@ class Locator:
             pose_of = lambda i: seeds[i]
         else:
             described = self.describe([rgb], [mask])[0]
-            shortlist = self.candidates(described, near, radius)
+            shortlist = self.candidates(described, near, radius, view)
             pose_of = self.db.views.pose
         if not shortlist:
             return Fix(False, None, note="no database view near the prior", seconds=time.monotonic() - started)
@@ -324,6 +344,8 @@ class Locator:
 
         solves: list[tuple[int, _Solve]] = []
         for rank, i in enumerate(shortlist):
+            if self.between:
+                self.between()
             r = self.renderer.render(pose_of(i), self.hfov, self.light)
             s = self._solve(query, r, K, (w, h))
             if s is not None:
@@ -360,6 +382,8 @@ class Locator:
                 break
             if any(np.linalg.norm(s.position - c.position) <= self.apart for _, c in contenders):
                 continue
+            if self.between:
+                self.between()
             contenders.append((rank, self._refine(query, s, K, (w, h))))
         if not contenders:
             contenders = [possible[0]]
@@ -379,7 +403,7 @@ class Locator:
             if c.inliers < MIN_INLIERS // 2 or any(np.linalg.norm(c.position - k.position) <= self.apart for k in candidates):
                 continue
             cy, cp, _ = angles(c.rotation)
-            candidates.append(Candidate(c.position.copy(), cy, cp, c.inliers, c.rmse))
+            candidates.append(Candidate(c.position.copy(), cy, cp, c.inliers, c.rmse, _spread(c.pixels, w, h), _depth_range(c.points, c.position)))
         yaw, pitch, roll = angles(best.rotation)
         spread = _spread(best.pixels, w, h)
         conf = confidence(best.inliers, runner_up, best.rmse, self.noise)
@@ -406,6 +430,7 @@ class Locator:
             runner_up=runner_up,
             tried=tried,
             spread=spread,
+            depth_range=_depth_range(best.points, best.position),
             seconds=time.monotonic() - started,
             note=note,
             solves=tried_log,
@@ -591,6 +616,13 @@ def _spread(pixels: np.ndarray | None, w: int, h: int, cells: int = 8) -> float:
     gx = np.clip((pixels[:, 0] / w * cells).astype(int), 0, cells - 1)
     gy = np.clip((pixels[:, 1] / h * cells).astype(int), 0, cells - 1)
     return len(set(zip(gx.tolist(), gy.tolist()))) / float(cells * cells)
+
+
+def _depth_range(points: np.ndarray | None, position: np.ndarray) -> float:
+    if points is None or not len(points):
+        return 0.0
+    near, far = np.percentile(np.linalg.norm(points - position, axis=1), [10, 90])
+    return float(far / max(near, 1e-3))
 
 
 def _project(points: np.ndarray, K: np.ndarray, pose: Pose) -> np.ndarray:

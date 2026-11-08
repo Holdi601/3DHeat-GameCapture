@@ -48,6 +48,7 @@ the same length, one entry per sample.
 | `meta` | how to read the numbers; see below |
 | `units` | the unit of each channel present, for a reader that does not know the table below |
 | `channels` | the samples |
+| `unparsed` | Forza only, when the packet has bytes no field names: `ranges` (their `[start, end)` byte offsets in the packet) and `hex` (per sample, those bytes as hex), so the file alone holds the whole packet |
 
 `game` is one of `forza-horizon`, `forza-motorsport`, `forza` (packet layout
 not told apart), `assetto-corsa`, `assetto-corsa-competizione`,
@@ -137,10 +138,10 @@ should tolerate all of these (checked against the code):
 
 | Recorder | `track` | `layout` | `meta` | `units` | Channels beyond the table |
 |---|---|---|---|---|---|
-| Forza (`fulllap.py`) | `null` (Forza Motorsport 2023's track number is `lap.trackOrdinal`) | the detected packet layout | `slip: peak`, `discipline: circuit` | only units of channels present | `distanceTravelled`, `currentLap`, `lapNumber`, `racePosition`, `accelX/Y/Z`, `angVelX/Y/Z`, `drivingLine`, `aiBrakeDifference`; the car-local velocity is under the canonical `latVel`, `vertVel`, `longVel` |
-| Assetto Corsa games (`kunos.py`) | from the static page, or `null` | absent | `slip: scaled`, `discipline: circuit` or `rally` | a fixed list | `slipRatioRaw.*`, `slipAngleRaw.*` |
-| Rally games (`rally.py` via `lapfile.py`) | `null` | absent | `discipline: rally`, `slip: null`, `surface` only when `--surface` was given (otherwise the viewer infers it) | only units of channels present | `stageDistance` |
-| BeamNG (`beamng.py` via `lapfile.py`) | `null` | absent | `discipline: circuit` | only units of channels present | none |
+| Forza (`fulllap.py`) | `null` (Forza Motorsport 2023's track number is `lap.trackOrdinal`) | the detected packet layout | `slip: peak`, `discipline: circuit` | only units of channels present | `distanceTravelled`, `currentLap`, `lapNumber`, `racePosition`, `accelX/Y/Z`, `angVelX/Y/Z`, `drivingLine`, `aiBrakeDifference`, the game's clock `timestampMs`, `raceTime`, `bestLap`, `lastLap`; the car-local velocity is under the canonical `latVel`, `vertVel`, `longVel`; `unparsed` beside the channels |
+| Assetto Corsa games (`kunos.py`) | from the static page, or `null` | absent | `slip: scaled`, `discipline: circuit` or `rally` | a fixed list | `slipRatioRaw.*`, `slipAngleRaw.*`, `packetId`, `steerAngle` (as sent), `worldVelX/Y/Z`, `angVelX`, `angVelZ`, `tcActing`, `absActing`, `wheelSlip.*`, `contactX/Y/Z.*` |
+| Rally games (`rally.py` via `lapfile.py`) | `null` | absent | `discipline: rally`, `slip: null`, `surface` only when `--surface` was given (otherwise the viewer infers it) | only units of channels present | `stageDistance`; WRC `gameTime`, `gameDelta`, `packetUid`, `gearIndex`, `transmissionSpeed`, `rpmMax`, `rpmIdle`, `stageLength`, `hubVel.*`, `worldVel/worldAcc/left/forward/up` `X/Y/Z`; DiRT `totalTime`, `lapNumber`, `lapsCompleted`, `totalLaps`, `stageLength`, `lastLapTime`, `suspensionVel.*`, `worldVel/side/forward` `X/Y/Z`, `float<i>` for the floats without a settled name; RBR `attitudeX/Y/Z`, `totalSteps`, `stageIndex`, `progress`, `raceTime`, `distanceToEnd`, `speedRaw`, `accelZ` |
+| BeamNG (`beamng.py` via `lapfile.py`) | `null` | absent | `discipline: circuit` | only units of channels present | `wheelSurfaceSpeedRaw.*`, `wheelMaterial.*`, `forward/up/worldVel` `X/Y/Z` |
 | Trackmania plugin (CSV) | the map name | - | `slip: index`, `discipline: arcade` | - | `respawns` |
 
 `car` is the Forza car block (`carOrdinal`, `carClass`, `carPI`, `drivetrain`, `cylinders`,
@@ -148,6 +149,10 @@ should tolerate all of these (checked against the code):
 `{}` otherwise. `lap.metres` is the game's distance-travelled difference for Forza and the
 summed 3D distance between samples elsewhere. Values are rounded on writing: `time` to 4
 decimals, `distance` to 3, other floats to 5. JSON is written compactly (no spaces).
+
+Every packet or page the recorder received - not only the laps' - is kept whole beside the lap
+files in `<stamp>_<game>.raw.parquet`, with a self-check in `<stamp>_<game>.summary.json` (the
+README's "Completeness" section).
 
 A sample a channel has no value for - missing from that frame, or not a finite number as the
 game sent it - is written as `null` by every recorder (`lapfile.clean`), and the suspension

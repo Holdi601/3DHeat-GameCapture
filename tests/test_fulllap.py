@@ -242,3 +242,51 @@ class TestWhatTheFileSays:
         text = write_lap(lap, tmp_path, layout="Horizon dash").read_text(encoding="utf-8")
         assert "NaN" not in text
         assert json.loads(text)["channels"]["boost"][1] is None
+
+
+class TestEverythingKept:
+    """3DHeat's converter rule: every packet received is kept whole, and a lap file holds all the packet holds."""
+
+    def test_the_recorder_keeps_every_packet_whole(self, tmp_path):
+        import pyarrow.parquet as pq
+
+        menu = packet(race_on=False, velocity=(0.0, 0.0, 0.0))  # before the layout is known
+        stranger = b"\x07" * 17
+        laps = []
+        stamp = 1000
+        for lap, current, last, distance in [(1, 0.0, 0.0, 0.0), (1, 30.0, 0.0, 900.0), (2, 0.1, 50.5, 1905.0)]:
+            stamp += 16
+            laps.append(packet(lap=lap, current_lap=current, last_lap=last, distance=distance, timestamp=stamp))
+        recorder = FullRecorder(tmp_path, port=0)
+        try:
+            for sent in (menu, stranger, *laps):
+                recorder.feed(sent)
+        finally:
+            recorder.close()
+        (sidecar,) = tmp_path.glob("*_forza.raw.parquet")
+        t = pq.read_table(sidecar).to_pydict()
+        assert t["payload"] == [menu, stranger, *laps]
+        assert t["type"] == ["dash-horizon", "17-byte", "dash-horizon", "dash-horizon", "dash-horizon"]
+        assert t["used"] == [False, False, True, True, True]
+        (summary,) = tmp_path.glob("*_forza.summary.json")
+        check = json.loads(summary.read_text(encoding="utf-8"))["selfCheck"]["completeness"]
+        assert check["lost"] == 0 and check["types"]["17-byte"]["raw"] == 1
+        assert not list(tmp_path.glob("*.raw.bin"))
+
+    def test_a_lap_file_keeps_the_game_s_clock_and_the_bytes_nobody_names(self, tmp_path):
+        recorder = FullRecorder(tmp_path, port=0, raw=False)
+        try:
+            stamp = 1000
+            for lap, current, last, distance in [(1, 0.0, 0.0, 0.0), (1, 30.0, 0.0, 900.0), (2, 0.1, 50.5, 1905.0)]:
+                stamp += 16
+                recorder.feed(packet(lap=lap, current_lap=current, last_lap=last, distance=distance, timestamp=stamp))
+        finally:
+            recorder.close()
+        (written,) = tmp_path.glob("*.lap.json")
+        doc = json.loads(written.read_text(encoding="utf-8"))
+        assert doc["channels"]["timestampMs"] == [1016, 1032]
+        assert {"raceTime", "bestLap", "lastLap"} <= set(doc["channels"])
+        # Horizon's packet: the bytes between the Sled block and the dash block, as sent (0xcd in the test packet).
+        assert doc["unparsed"]["ranges"] == [[232, HORIZON_BASE]]
+        assert doc["unparsed"]["hex"] == ["cd" * (HORIZON_BASE - 232)] * 2
+        assert not list(tmp_path.glob("*.raw.*"))

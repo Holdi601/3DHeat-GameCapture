@@ -101,3 +101,8 @@ __pycache__/
 *.log
 .DS_Store
 Thumbs.db
+
+# Local recordings, never committed.
+*.raw.bin
+*.raw.parquet
+unused/

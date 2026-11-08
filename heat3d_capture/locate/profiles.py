@@ -71,6 +71,8 @@ class GameProfile:
     #: unit's metres a second.
     speed_box: tuple[int, int, int, int] | None = None
     speed_unit: float = 1.0 / 3.6
+    #: Where the deploy screen draws the whole map (x, y, w, h on 1920x1080), for `locate refmap`.
+    deploy_map: tuple[int, int, int, int] | None = None
     notes: str = ""
 
     def with_overrides(self, **kwargs) -> "GameProfile":
@@ -101,7 +103,9 @@ PROFILES: dict[str, GameProfile] = {
         # The game's FOV slider is vertical; 55 degrees vertical is about 86
         # horizontal at 16:9. Pass the player's own with --vfov or --fov.
         hfov=round(hfov_from_vertical(55.0, 16 / 9), 2),
-        max_speed=8.0,
+        # On foot: the calibrated minimap's speed over 2 s on five clips: 90th percentile 7.2 m/s,
+        # fastest 10.
+        max_speed=11.0,
         views="bf6",
         # The game's vehicle field of view is its own slider, vertical too;
         # 53 degrees is about 83 horizontal. Read the player's own from their
@@ -110,15 +114,19 @@ PROFILES: dict[str, GameProfile] = {
         # The vehicle in its third-person view: the lower middle of the screen.
         vehicle_hud=((440, 420, 1040, 660),),
         vehicle_height=8.0,
-        # Ground vehicles: the fastest speed the tanks' own readout showed on the clips (36 km/h,
-        # 10 m/s), and half again. The others are not measured: no clip shows a boat, helicopter
-        # or jet being flown, so their limits are generous guesses, and a stretch faster than a
-        # ground vehicle is flagged rather than trusted (docs/locate.md).
-        vehicle_speed=15.0,
-        class_speeds=(("ground", 15.0), ("boat", 20.0), ("heli", 90.0), ("jet", 280.0)),
+        # Measured on the calibrated minimap. Ground vehicles: tanks showed at most 10.8 m/s on their
+        # own readout (which agreed with the minimap to 0.4 m/s, median), a light vehicle 21 m/s. A
+        # helicopter (one stretch, about 100 s): 27 m/s typically, 48 at most; no jet or boat flown
+        # yet, so theirs stay guesses. A stretch over a ground vehicle's limit is flagged by the
+        # track, not trusted, unless the minimap says it was an aircraft (it zooms out to about
+        # 1.2 m a pixel, 0.68 on the ground: `AIR_ZOOM`).
+        vehicle_speed=22.0,
+        class_speeds=(("ground", 22.0), ("boat", 20.0), ("heli", 60.0), ("jet", 280.0)),
         # "<n> KPH" in a tank's own (first-person) view, right of the sight; the third-person view
         # shows no speed.
         speed_box=(1330, 380, 190, 50),
+        # The deploy screen's map at its default zoom, left of the squad and loadout panels.
+        deploy_map=(165, 210, 1365, 680),
         speed_unit=1.0 / 3.6,
         vehicle_camera=3.5,
         # The ground under a main battle tank's middle, from its chase camera: measured by eye on

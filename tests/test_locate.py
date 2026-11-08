@@ -336,11 +336,29 @@ def test_smoothing_keeps_strong_fixes_and_pulls_weak_ones():
 
 def test_views_from_the_hud():
     cv2 = pytest.importorskip("cv2")
-    from heat3d_capture.locate.views import FOOT, VEHICLE, ZOOMED, bf6
+    from heat3d_capture.locate.views import FOOT, SCREEN, VEHICLE, ZOOMED, bf6
+
+    def with_map_key(picture):
+        out = picture.copy()
+        cv2.rectangle(out, (44, 1019), (65, 1040), (190, 195, 200), -1)
+        cv2.rectangle(out, (50, 1024), (52, 1036), (10, 10, 10), -1)
+        cv2.rectangle(out, (58, 1024), (60, 1036), (10, 10, 10), -1)
+        cv2.line(out, (51, 1024), (55, 1032), (10, 10, 10), 2)
+        cv2.line(out, (59, 1024), (55, 1032), (10, 10, 10), 2)
+        return out
 
     rng = np.random.default_rng(0)
-    frame = rng.integers(60, 140, (1080, 1920, 3)).astype(np.uint8)
+    bare = rng.integers(60, 140, (1080, 1920, 3)).astype(np.uint8)
+    # No HUD of a match at all: the desktop, a menu, the end of a round.
+    assert bf6(bare) == SCREEN
+    frame = with_map_key(bare)
     assert bf6(frame) == FOOT
+    assert bf6(cv2.resize(frame, (3840, 2160), interpolation=cv2.INTER_NEAREST)) == FOOT
+    # It sits a pixel or two either way; a road on the minimap running into it is still the key.
+    assert bf6(np.roll(frame, 2, axis=0)) == FOOT
+    road = frame.copy()
+    cv2.line(road, (20, 1000), (46, 1022), (190, 195, 200), 3)
+    assert bf6(road) == FOOT
     vehicle = frame.copy()
     for x, y, letter in ((1045, 932, "C"), (1045, 978, "E")):
         cv2.rectangle(vehicle, (x, y), (x + 22, y + 21), (190, 200, 205), -1)
@@ -349,22 +367,38 @@ def test_views_from_the_hud():
     # The same at 4K and at a quarter of 1080p.
     assert bf6(cv2.resize(vehicle, (3840, 2160), interpolation=cv2.INTER_NEAREST)) == VEHICLE
     assert bf6(cv2.resize(vehicle, (960, 540), interpolation=cv2.INTER_AREA)) == VEHICLE
+    # The bar under the seat diagram alone: a vehicle whose key caps moved or vanish on bright
+    # ground, at every size - and the same strip of texture without a bar is on foot.
+    sand = with_map_key(rng.integers(150, 200, (1080, 1920, 3)).astype(np.uint8))
+    barred = sand.copy()
+    barred[1050:1056, 860:1060] = (205, 205, 210)
+    assert bf6(sand) == FOOT
+    assert bf6(barred) == VEHICLE
+    # A damaged vehicle: the bar is its health, lit from the left.
+    damaged = sand.copy()
+    damaged[1050:1056, 860:920] = (205, 205, 210)
+    assert bf6(damaged) == VEHICLE
+    # A light strip anywhere else along the bar, with the left unlit, is no health bar.
+    elsewhere = sand.copy()
+    elsewhere[1050:1056, 980:1060] = (205, 205, 210)
+    assert bf6(elsewhere) == FOOT
+    assert bf6(cv2.resize(barred, (3840, 2160), interpolation=cv2.INTER_NEAREST)) == VEHICLE
     zoomed = vehicle.copy()
     zoomed[:, :200] = 5
     zoomed[:, -200:] = 5
-    assert bf6(zoomed) == ZOOMED
-    # Dark edges round a dark middle: the deploy map, a menu - not a view of the level.
-    from heat3d_capture.locate.views import SCREEN
-
+    # The HUD is drawn over a sight's black edges.
+    assert bf6(with_map_key(zoomed)) == ZOOMED
+    # Dark edges round a dark middle: the deploy map - not a view of the level, whatever else shows.
     menu = np.full((1080, 1920, 3), 15, np.uint8)
     menu[300:780, 700:1220] = 60
     menu[:, :200] = 5
     assert bf6(menu) == SCREEN
+    assert bf6(with_map_key(menu)) == SCREEN
     # A wall in shadow at both edges, but neither edge black: an ordinary view.
     shadow = frame.copy()
     shadow[:, :200] = 22
     shadow[:, -200:] = 25
-    assert bf6(shadow) == FOOT
+    assert bf6(with_map_key(shadow)) == FOOT
     # A plain light patch where the keys go, without letters, is not a vehicle's.
     blank = frame.copy()
     blank[925:1010, 1035:1080] = 200
@@ -749,3 +783,357 @@ def test_a_short_pause_in_play_is_not_a_new_life(tmp_path):
 
     lives = read_lives(str(_hud_events(tmp_path / "hud.parquet", [(0.0, "start"), (50.0, "end"), (56.0, "spawn"), (90.0, "end"), (200.0, "start")])))
     assert lives.spans == [(0.0, 90.0), (200.0, np.inf)] and lives.life(60.0) == lives.life(10.0) == 0 and lives.life(150.0) is None
+
+
+def test_anchor_warp_grid_and_local_corrections(tmp_path):
+    """A grid places points inside it (bilinear), the similarity outside; corrections stay local in time."""
+    import json
+
+    from heat3d_capture.locate.track import read_anchor
+
+    # Similarity: level = 2 * (x, -y). Grid over x, y in 0..20 (step 10): the same, plus 3 m east.
+    xs, ys = np.arange(0, 30, 10.0), np.arange(0, 30, 10.0)
+    gx, gy = np.meshgrid(xs, ys)
+    d = {"scale": 2.0, "rotation": [[1, 0], [0, -1]], "shift": [0, 0], "median": 1.0, "p90": 2.0, "pairs": 10,
+         "grid": {"x0": 0.0, "y0": 0.0, "step": 10.0, "nx": 3, "ny": 3, "x": (2 * gx + 3).tolist(), "z": (-2 * gy).tolist()}}
+    (tmp_path / "a.json").write_text(json.dumps(d))
+    an = read_anchor(str(tmp_path / "a.json"))
+    assert np.allclose(an.to_level(np.array([5.0, 15.0])), [13.0, -30.0])
+    assert np.allclose(an.to_level(np.array([50.0, 5.0])), [100.0, -10.0])  # off the grid: the similarity
+    an.corrections += [(10.0, 4.0, 0.0), (12.0, 6.0, 0.0), (14.0, 5.0, 0.0)]
+    shift, spread = an.correction(20.0)
+    assert np.allclose(shift, [5.0, 0.0]) and spread is not None
+    # Far off in time: no correction at all, not the whole clip's.
+    shift, spread = an.correction(500.0)
+    assert np.allclose(shift, 0.0) and spread is None
+
+
+def _blob_world(seed: int = 3, n: int = 260, size: float = 600.0):
+    """Discs and boxes standing on flat ground: (x, z, radius, height) in metres, level frame."""
+    rng = np.random.default_rng(seed)
+    return [(float(rng.uniform(20, size - 20)), float(rng.uniform(20, size - 20)), float(rng.uniform(3, 9)), float(rng.uniform(4, 12))) for _ in range(n)]
+
+
+def test_refmap_places_a_drawn_map_on_the_level():
+    """A north-up map drawn of the level's raised things at 0.5 m a pixel is placed to within a couple of metres."""
+    cv2 = pytest.importorskip("cv2")
+    from heat3d_capture.locate.refmap import TopDown, calibrate
+
+    world = _blob_world()
+    mpp = 0.656
+    W = H = int(600 / mpp)
+    height = np.full((H, W), 100.0, np.float32)
+    for x, z, r, h in world:
+        cv2.circle(height, (int(x / mpp), int(z / mpp)), int(r / mpp), 100.0 + h, -1)
+    top = TopDown(np.zeros((H, W, 3), np.uint8), height, 0.0, 0.0, mpp)
+    # The map: 0.5 m a pixel, showing x 100..500, z 120..420; raised things lighter than the ground.
+    s, ox, oz = 0.5, 100.0, 120.0
+    pic = np.full((int(300 / s), int(400 / s), 3), 60, np.uint8)
+    for x, z, r, h in world:
+        cv2.circle(pic, (int((x - ox) / s), int((z - oz) / s)), int(r / s), (120, 120, 120), -1)
+    cal = calibrate(top, pic, scales=[0.48, 0.49, 0.50, 0.51, 0.52], turns=(0,))
+    assert cal is not None and cal.inliers >= 6
+    for u, v in ((0, 0), (800, 600), (400, 300)):
+        want = np.array([ox + u * s, oz + v * s])
+        assert np.linalg.norm(cal.apply(np.array([u, v]))[0] - want) < 2.5
+
+
+def test_minimap_registered_to_the_reference_map():
+    """A turned, zoomed crop of the reference map is placed back: position, heading and zoom."""
+    cv2 = pytest.importorskip("cv2")
+    from heat3d_capture.locate.refmap import MinimapRegistrar, RefMap, register_minimaps
+
+    rng = np.random.default_rng(5)
+    # A map-like picture: grey-blue ground with lighter roads and blocks, at 0.5 m a pixel.
+    img = np.full((1400, 1400, 3), (70, 60, 50), np.uint8)
+    for _ in range(900):
+        x, y = rng.integers(0, 1400, 2)
+        w, h = rng.integers(6, 40, 2)
+        c = int(rng.integers(90, 170))
+        cv2.rectangle(img, (int(x), int(y)), (int(x + w), int(y + h)), (c, c, c - 10), -1)
+    for _ in range(60):
+        p = rng.integers(0, 1400, 4)
+        cv2.line(img, (int(p[0]), int(p[1])), (int(p[2]), int(p[3])), (150, 145, 140), 5)
+    ref = RefMap(img, np.ones(img.shape[:2], bool), -300.0, -200.0, 0.5)
+    reg = MinimapRegistrar(ref, (0.5, 0.5), None, work=296)
+
+    def minimap(cx: float, cz: float, heading: float, zoom: float) -> np.ndarray:
+        # Minimap pixel (u, v) -> reference pixel: turned so the heading points up, `zoom` m a pixel.
+        k = zoom / ref.mpp
+        th = math.radians(heading)
+        R = k * np.array([[math.cos(th), -math.sin(th)], [math.sin(th), math.cos(th)]])
+        c = ref.to_pixel(np.array([cx, cz]))[0]
+        A = np.c_[R, c - R @ np.array([148.0, 148.0])]
+        return cv2.warpAffine(img, cv2.invertAffineTransform(A), (296, 296), flags=cv2.INTER_AREA)
+
+    frames = [(0.0, minimap(50.0, 80.0, 30.0, 0.6)), (0.5, minimap(52.0, 78.0, 35.0, 0.62)), (1.0, minimap(54.0, 76.0, 40.0, 0.8))]
+    fixes = register_minimaps(frames, reg)
+    assert len(fixes) == 3
+    for f, (cx, cz, hd, zm) in zip(fixes, ((50, 80, 30, 0.6), (52, 78, 35, 0.62), (54, 76, 40, 0.8))):
+        assert np.linalg.norm(f.position - [cx, cz]) < 1.5
+        assert abs((f.heading - hd + 180) % 360 - 180) < 2.0
+        assert abs(f.zoom - zm) < 0.03
+
+
+def test_hud_fill_moves_the_mosaic_onto_reference_fixes():
+    """Gaps in the reference-map reading are filled from the HUD track, shifted by the nearby fixes' offset."""
+    from heat3d_capture.locate.refmap import MinimapFix, fill_from_hud
+    from heat3d_capture.locate.track import Anchor, Minimap, Similarity
+
+    t = np.arange(0.0, 60.0, 0.5)
+    true = np.c_[t * 2.0, 100.0 - t]  # level x, z
+    # The HUD's own track: x east, y north (= -z), off by 7 m east everywhere.
+    hud = Minimap(t, np.c_[true[:, 0] - 7.0, -true[:, 1]], np.zeros(len(t)), np.zeros(len(t), int))
+    anchor = Anchor(Similarity(1.0, np.array([[1.0, 0.0], [0.0, -1.0]]), np.zeros(2), 0.0, 1, 1), 1.0, 2.0, 1)
+    fixes = [MinimapFix(float(ti), p.copy(), 0.0, 0.68, 30, 0.8) for ti, p in zip(t, true) if ti < 20.0]
+    filled = fill_from_hud(fixes, hud, anchor, 0.5, within=60.0)
+    assert len(filled) == int((t > 19.5 + 0.6).sum())  # within 0.6 s of a fix counts as placed
+    for f in filled:
+        assert f.source == "hud"
+        assert np.linalg.norm(f.position - true[int(round(f.t / 0.5))]) < 1e-6
+    # Beyond `within` of every fix: nothing.
+    assert not [f for f in fill_from_hud(fixes, hud, anchor, 0.5, within=10.0) if f.t > 30.0]
+
+
+def _search_world(frames=60, seed=0):
+    """A square of views with random descriptors, a walk through it, and frames that resemble the right view only a little."""
+    rng = np.random.default_rng(seed)
+    side = 40
+    x, z = np.meshgrid(np.arange(side) * 24.0, np.arange(side) * 24.0, indexing="ij")
+    places = np.c_[x.ravel(), z.ravel()]
+    d = rng.normal(size=(len(places), 64))
+    d /= np.linalg.norm(d, axis=1, keepdims=True)
+    walk = np.array([[10 + k // 2, 10 + k // 3] for k in range(frames)])
+    truth = walk[:, 0] * side + walk[:, 1]
+    q = 0.28 * d[truth] + rng.normal(size=(frames, 64)) / 8.0
+    q /= np.linalg.norm(q, axis=1, keepdims=True)
+    return d, q, places, truth
+
+
+def test_a_run_of_frames_finds_a_place_no_single_frame_shows():
+    from heat3d_capture.locate.search import SearchOptions, along_lives
+
+    d, q, places, truth = _search_world()
+    times = [2.0 * k for k in range(len(q))]
+    lists = along_lives(d, q, places, None, times, ["foot"] * len(q), [0] * len(q), 8, SearchOptions(vehicle_speed=20.0))
+    alone = sum(int(t in np.argsort(-(d @ f))[:8]) for f, t in zip(q, truth))
+    along = sum(int(t in s) for s, t in zip(lists, truth))
+    assert along > alone + 10 and along >= 0.8 * len(q)
+
+
+def test_a_view_like_every_frame_does_not_take_the_shortlist():
+    from heat3d_capture.locate.search import SearchOptions, along_lives
+
+    d, q, places, truth = _search_world()
+    # One view that resembles every frame more than the right one does.
+    common = np.random.default_rng(1).normal(size=d.shape[1])
+    common /= np.linalg.norm(common)
+    q = q + 0.9 * common
+    q /= np.linalg.norm(q, axis=1, keepdims=True)
+    d[5] = common
+    assert all(int(np.argmax(d @ f)) == 5 for f in q)
+    times = [2.0 * k for k in range(len(q))]
+    lists = along_lives(d, q, places, None, times, ["foot"] * len(q), [0] * len(q), 4, SearchOptions())
+    assert sum(5 in s[:1] for s in lists) == 0
+    assert sum(int(t in s) for s, t in zip(lists, truth)) >= 0.7 * len(q)
+
+
+def test_the_search_stays_in_its_class_and_its_life():
+    from heat3d_capture.locate.search import SearchOptions, along_lives, merge
+
+    d, q, places, _ = _search_world(frames=24)
+    vehicle = np.arange(len(d)) % 2 == 0
+    views = ["vehicle" if k % 2 else "foot" for k in range(len(q))]
+    lives = [None if k < 2 else 0 if k < 12 else 1 for k in range(len(q))]
+    lists = along_lives(d, q, places, vehicle, [2.0 * k for k in range(len(q))], views, lives, 6, SearchOptions())
+    assert lists[0] == [] and lists[1] == []
+    for s, v in zip(lists[2:], views[2:]):
+        assert s and all(bool(vehicle[i]) == (v == "vehicle") for i in s)
+    assert merge([1, 2, 3], [2, 9], 4) == [1, 2, 9, 3] and merge([1, 2, 3], [2, 9], 2) == [1, 2]
+
+
+def _accept_rows(paths, life=0):
+    rows, cands = [], []
+    for k, frame in enumerate(paths):
+        rows.append(Row(time=2.0 * k, ok=bool(frame), view="vehicle", play_life=life, speed_limit=15.0))
+        cands.append([(np.array(p, float), inl, 0.0, 0.0, 2.0, np.array(p, float), spread) for p, inl, spread in frame])
+        if frame:
+            rows[-1].position = np.array(frame[0][0], float)
+    return rows, cands
+
+
+def test_a_look_alike_with_many_inliers_on_one_patch_is_not_believed():
+    from heat3d_capture.locate.run import _accept_along_lives
+
+    rows, cands = _accept_rows([[((10.0 * k, 0, 0), 120, 0.3)] for k in range(8)])
+    # A stack of containers elsewhere: the frame's strongest solve by far, on a few cells of the frame.
+    cands[4].insert(0, (np.array([500.0, 0, 500.0]), 600, 0.0, 0.0, 2.0, np.array([500.0, 0, 500.0]), 0.06))
+    rows[4].position = cands[4][0][0].copy()
+    report = _accept_along_lives(rows, cands, TrackOptions(max_speed=8.0, margin=1.5, vehicle_speed=15.0), True)
+    assert report["believed"] == 8
+    assert np.allclose(rows[4].position, [40.0, 0, 0])
+
+
+def test_a_strong_fix_without_agreeing_neighbours_is_not_believed():
+    from heat3d_capture.locate.run import _accept_along_lives
+
+    # A lone covering fix, and two that contradict each other, far from anything else in the life.
+    far = [[], [((0, 0, 0), 500, 0.4)], [], [], [], [], [], [], [((900, 0, 0), 500, 0.4)], [], [], [], [], [((0, 0, 900), 500, 0.4)]]
+    rows, cands = _accept_rows(far)
+    report = _accept_along_lives(rows, cands, TrackOptions(max_speed=8.0, margin=1.5, vehicle_speed=15.0), True)
+    assert report["believed"] == 0 and not any(r.ok for r in rows)
+    assert all("not believed" in r.note for r in rows if r.position is not None)
+
+
+def test_candidates_below_the_inlier_floor_do_not_vouch():
+    from heat3d_capture.locate.run import _accept_along_lives
+
+    # Three frames in a row agree, but the outer two are weak: nothing vouches for the middle one.
+    rows, cands = _accept_rows([[((0, 0, 0), 12, 0.3)], [((10, 0, 0), 300, 0.3)], [((20, 0, 0), 12, 0.3)]])
+    report = _accept_along_lives(rows, cands, TrackOptions(max_speed=8.0, margin=1.5, vehicle_speed=15.0), True)
+    assert report["believed"] == 0
+
+
+def test_the_depth_test_sets_aside_a_fix_on_one_surface_and_keeps_a_lone_one_that_is_not():
+    from heat3d_capture.locate.run import _accept_along_lives
+
+    def rows_with(depth):
+        rows, cands = _accept_rows([[((0, 0, 0), 500, 0.3)]])
+        cands[0] = [c + (depth,) for c in cands[0]]
+        return rows, cands
+
+    opts = TrackOptions(max_speed=8.0, margin=1.5, vehicle_speed=15.0)
+    rows, cands = rows_with(1.2)
+    assert _accept_along_lives(rows, cands, opts, True, 0, 1.5)["believed"] == 0 and not rows[0].ok
+    rows, cands = rows_with(4.0)
+    assert _accept_along_lives(rows, cands, opts, True, 0, 1.5)["believed"] == 1 and rows[0].ok
+    # As it was without the options: alone, it has no neighbours to agree with it.
+    rows, cands = rows_with(4.0)
+    assert _accept_along_lives(rows, cands, opts, True)["believed"] == 0
+
+
+def test_a_grown_fit_on_one_surface_is_not_taken():
+    from heat3d_capture.locate.camera import Pose
+    from heat3d_capture.locate.localize import Fix
+    from heat3d_capture.locate.profiles import profile
+    from heat3d_capture.locate.run import _grown_body
+
+    game = profile("bf6")
+    fit = lambda depth: Fix(True, Pose(np.array([0.0, 2.0, 0.0]), 0.0, 0.0), inliers=500, spread=0.3, depth_range=depth)
+    row = Row(time=0.0, ok=False, view="foot")
+    near = np.zeros(3)
+    assert _grown_body(fit(1.2), row, near, 50.0, game, 1.0, 25, 0.12, 1.5) is None
+    assert _grown_body(fit(4.0), row, near, 50.0, game, 1.0, 25, 0.12, 1.5) is not None
+    assert _grown_body(fit(1.2), row, near, 50.0, game, 1.0, 25, 0.12) is not None
+
+
+def test_the_depth_range_of_a_solve():
+    from heat3d_capture.locate.localize import _depth_range
+
+    at = np.zeros(3)
+    wall = np.array([[10.0, y, 0.0] for y in np.linspace(-1, 1, 50)])
+    far_and_near = np.array([[d, 0.0, 0.0] for d in np.linspace(5, 200, 50)])
+    assert _depth_range(wall, at) < 1.1
+    assert _depth_range(far_and_near, at) > 5
+    assert _depth_range(None, at) == 0.0
+
+
+def test_a_job_gives_way_to_a_file_or_a_process(tmp_path, monkeypatch):
+    from heat3d_capture.locate import run
+    from heat3d_capture.locate.run import give_way
+
+    flag = tmp_path / "wanted"
+    assert give_way([str(flag)]) is None
+    flag.write_text("")
+    assert "exists" in give_way([str(flag)])
+    assert give_way([], ["SomeGame"], names=["python.exe", "explorer.exe"]) is None
+    assert "somegame_x64.exe" in give_way([], ["SomeGame"], names=["python.exe", "somegame_x64.exe"])
+    # A process only counts by the start of its name.
+    assert give_way([], ["game"], names=["mygame.exe"]) is None
+    # Not knowing what runs is a reason to stop, not to carry on.
+    monkeypatch.setattr(run, "_listed", None)
+    monkeypatch.setattr(run, "_process_names", lambda: None)
+    assert "cannot be listed" in give_way([], ["SomeGame"])
+    assert give_way() is None
+
+
+def test_the_process_list_is_kept_for_a_while_and_a_failure_is_not(monkeypatch):
+    from heat3d_capture.locate import run
+    from heat3d_capture.locate.run import give_way
+
+    calls = []
+    answers = [None, ["python.exe"], ["somegame.exe"]]
+
+    def listed():
+        calls.append(1)
+        return answers[len(calls) - 1]
+
+    now = [100.0]
+    monkeypatch.setattr(run, "_listed", None)
+    monkeypatch.setattr(run, "_process_names", listed)
+    monkeypatch.setattr(run.time, "monotonic", lambda: now[0])
+    assert "cannot be listed" in give_way([], ["somegame.exe"])
+    assert give_way([], ["somegame.exe"]) is None
+    assert len(calls) == 2
+    # Within the time: not listed again, and a flag file is still read every time.
+    now[0] += run.PROCESSES_FOR - 1
+    assert give_way([], ["somegame.exe"]) is None
+    assert len(calls) == 2
+    now[0] += 2
+    assert "somegame.exe" in give_way([], ["somegame.exe"])
+    assert len(calls) == 3
+
+
+def test_a_frame_can_be_stopped_between_its_renders():
+    from types import SimpleNamespace
+
+    from heat3d_capture.locate.camera import Pose
+    from heat3d_capture.locate.localize import Locator
+
+    class Stop(Exception):
+        pass
+
+    rendered = []
+    ticks = []
+
+    def between():
+        ticks.append(1)
+        if len(ticks) == 3:
+            raise Stop
+
+    fake = SimpleNamespace(
+        width=64,
+        hfov=90.0,
+        light=None,
+        normalisation="none",
+        between=between,
+        renderer=SimpleNamespace(resize=lambda w, h: None, render=lambda *a: rendered.append(a) or None),
+        matcher=SimpleNamespace(detect=lambda rgb, mask: SimpleNamespace(xy=np.zeros((50, 2)))),
+        _solve=lambda *a: None,
+    )
+    seeds = [Pose(np.zeros(3), 0.0, 0.0)] * 8
+    with pytest.raises(Stop):
+        Locator._locate(fake, np.zeros((36, 64, 3), np.uint8), None, None, None, seeds)
+    assert len(rendered) == 2
+
+
+def test_this_systems_process_list_holds_this_process():
+    import sys
+    from pathlib import Path
+
+    from heat3d_capture.locate.run import _process_names
+
+    names = _process_names()
+    assert names and Path(sys.executable).name.lower() in {n.lower() for n in names}
+
+
+def test_a_state_is_written_whole_and_read_back(tmp_path):
+    from heat3d_capture.locate.run import _read_state, _write_state
+
+    path = tmp_path / "run.checkpoint"
+    assert _read_state(path) is None
+    state = {"rows": [Row(time=2.0, ok=True, view="foot", position=np.array([1.0, 2.0, 3.0]))], "phase": "frames"}
+    _write_state(path, state)
+    back = _read_state(path)
+    assert back["phase"] == "frames" and np.allclose(back["rows"][0].position, [1.0, 2.0, 3.0])
+    assert not path.with_name(path.name + ".part").exists()

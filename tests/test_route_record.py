@@ -224,3 +224,24 @@ class TestTheFileIsThereBeforeTheEnd:
         )
         route.save(tmp_path / "lap")
         assert sorted(p.name for p in tmp_path.iterdir()) == ["lap.json", "lap.npz"]
+
+
+class TestEverythingKept:
+    """3DHeat's converter rule: the route keeps a moving car's positions, the sidecar every packet."""
+
+    def test_every_packet_is_kept_whole_beside_the_route(self, tmp_path, port):
+        import pyarrow.parquet as pq
+
+        out = tmp_path / "lap"
+        parked = driving(5, moving=False)
+        moving = driving(30)
+        with Recorder(port=port, out=out, min_step=0.5) as recorder:
+            send(port, parked + moving)
+            drain(recorder, 35)
+        t = pq.read_table(tmp_path / "lap.raw.parquet").to_pydict()
+        assert t["payload"] == parked + moving
+        assert set(t["type"]) == {"dash-horizon"}
+        assert sum(t["used"]) == len(recorder.positions) > 20
+        assert not any(t["used"][:5])  # parked: not part of the route, kept all the same
+        summary = json.loads((tmp_path / "lap.summary.json").read_text(encoding="utf-8"))
+        assert summary["selfCheck"]["completeness"]["lost"] == 0

@@ -135,6 +135,12 @@ class Recorder:
     `save_every` seconds once something new has arrived, and once more on the
     way out of the `with` block, whatever ended it. Without `out` it is held in
     memory only, for a caller that saves `finish()` itself.
+
+    The route keeps a moving car's positions; the game sends far more. So with
+    `out`, every packet that arrives - parked, in the menus, every channel - is
+    also kept whole beside it, in `<out>.raw.parquet` with a self-check in
+    `<out>.summary.json` (`lapfile.RawLog`; 3DHeat's converter rule). `used`
+    marks the packets whose position went into the route.
     """
 
     port: int = 5300
@@ -160,12 +166,17 @@ class Recorder:
     _listener: object = None
     _last_save: float = 0.0
     _save_cost: float = 0.0
+    _raw: object = None
 
     def __enter__(self) -> "Recorder":
         from .forza import ForzaListener
+        from .lapfile import RawLog
 
         self._listener = ForzaListener(host=self.host, port=self.port, timeout=0.5)
         self._last_save = time.monotonic()
+        if self.out is not None:
+            out = Path(self.out)
+            self._raw = RawLog(out.parent, out.stem, game="forza")
         return self
 
     def __exit__(self, *_) -> None:
@@ -174,6 +185,8 @@ class Recorder:
         finally:
             if self._listener is not None:
                 self._listener.close()
+            if self._raw is not None:
+                self._raw.close()
 
     def save(self) -> Path | None:
         """Write what has been recorded to `out`, if there is anything new."""
@@ -209,6 +222,15 @@ class Recorder:
             # The game paused or quit: the last stretch still goes to disk.
             self._save_if_due()
             return False
+        kept = self._take(packet)
+        if self._raw is not None:
+            from .forza import packet_kind
+
+            self._raw.keep(packet_kind(packet), packet, used=kept)
+        return kept
+
+    def _take(self, packet: bytes) -> bool:
+        """One packet: whether its position went into the route."""
         frame = self._listener.feed(packet)
         if frame is None:
             return False

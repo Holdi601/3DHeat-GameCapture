@@ -101,6 +101,15 @@ class Minimap:
     xy: np.ndarray
     heading: np.ndarray
     life: np.ndarray
+    #: Metres of the level a minimap pixel showed, where the table measured it (`locate minimap`).
+    zoom: np.ndarray | None = None
+
+    def zoom_at(self, t: float, within: float = 3.0) -> float | None:
+        """The largest measured zoom within `within` seconds of t, or None."""
+        if self.zoom is None or not len(self.time):
+            return None
+        i, j = np.searchsorted(self.time, [t - within, t + within])
+        return float(np.nanmax(self.zoom[i:j])) if j > i and np.isfinite(self.zoom[i:j]).any() else None
 
     def at(self, t: float, within: float = 0.6) -> tuple[np.ndarray, float, int] | None:
         if not len(self.time):
@@ -127,7 +136,10 @@ def read_minimap(path: str) -> Minimap:
     lookup: dict[str, int] = {}
     life = np.array([lookup.setdefault(s, len(lookup)) for s in sessions], int)
     order = np.argsort(time, kind="stable")
-    return Minimap(time[order], xy[order], heading[order], life[order])
+    zoom = None
+    if "residual" in col and "zoom" in col:  # a `locate minimap` table: its zoom is measured, in metres
+        zoom = np.array([np.nan if col["zoom"][i] is None else col["zoom"][i] for i in keep], float)[order]
+    return Minimap(time[order], xy[order], heading[order], life[order], zoom)
 
 
 @dataclass
@@ -234,6 +246,25 @@ class Anchor:
     corrections: list = field(default_factory=list)
     #: Seconds round a frame whose corrections count.
     window: float = 120.0
+    #: A warp from the level itself (the game's own map registered to the level, the clip's mosaic
+    #: to that map): level x and z on a grid over minimap units, bilinear between the nodes. A
+    #: stitched minimap is not quite flat, so where there is a grid it replaces the similarity.
+    grid: dict | None = None
+
+    def _warp(self, xy: np.ndarray) -> np.ndarray | None:
+        g = self.grid
+        if g is None:
+            return None
+        fx = (float(xy[0]) - g["x0"]) / g["step"]
+        fy = (float(xy[1]) - g["y0"]) / g["step"]
+        i, j = int(math.floor(fy)), int(math.floor(fx))
+        if not (0 <= i < g["ny"] - 1 and 0 <= j < g["nx"] - 1):
+            return None
+        a, b = fy - i, fx - j
+        out = []
+        for m in (g["x"], g["z"]):
+            out.append((1 - a) * ((1 - b) * m[i, j] + b * m[i, j + 1]) + a * ((1 - b) * m[i + 1, j] + b * m[i + 1, j + 1]))
+        return np.array(out)
 
     def correction(self, t: float) -> tuple[np.ndarray, float | None]:
         """The anchor's local error at time t from this run's fixes, and how well they agree (or None: no fix yet)."""
@@ -241,9 +272,12 @@ class Anchor:
             return np.zeros(2), None
         c = np.array(self.corrections, float)
         near = c[np.abs(c[:, 0] - t) <= self.window]
-        use = near if len(near) >= 2 else c
-        d = np.median(use[:, 1:], axis=0)
-        spread = float(np.percentile(np.linalg.norm(use[:, 1:] - d, axis=1), 90)) if len(use) >= 3 else None
+        if len(near) < 2:
+            # Fixes far off in time say nothing about the error here: the minimap drifts with place,
+            # and the player has moved.
+            return np.zeros(2), None
+        d = np.median(near[:, 1:], axis=0)
+        spread = float(np.percentile(np.linalg.norm(near[:, 1:] - d, axis=1), 90)) if len(near) >= 3 else None
         return d, spread
 
     def yaw(self, heading: float) -> float:
@@ -255,12 +289,19 @@ class Anchor:
         return math.degrees(math.atan2(-d[1], d[0]))
 
     def to_level(self, xy: np.ndarray, t: float | None = None) -> np.ndarray:
-        p = self.similarity.apply(xy)[0]
+        """The minimap's xy on the level; with t, moved by this run's own correction round t."""
+        p = self._warp(np.asarray(xy, float).ravel())
+        if p is None:
+            p = self.similarity.apply(xy)[0]
         return p if t is None else p + self.correction(t)[0]
 
 
 def read_anchor(path: str) -> Anchor:
-    """An anchor file: {"scale", "rotation" (2x2), "shift", "median", "p90", "pairs"}, or with "clip_shift" added to xy first."""
+    """
+    An anchor file: {"scale", "rotation" (2x2), "shift", "median", "p90", "pairs"}, or with "clip_shift"
+    added to xy first; optionally "grid" (x0, y0, step, nx, ny, x, z: level x and z at each node over
+    the clip's own minimap units), which then places every point inside it.
+    """
     import json
 
     d = json.loads(open(path, encoding="utf-8").read())
@@ -271,7 +312,12 @@ def read_anchor(path: str) -> Anchor:
         # This clip's mosaic is the reference's moved by clip_shift (minimap units).
         shift = shift + scale * rot @ np.array(d["clip_shift"], float)
     sim = Similarity(scale, rot, shift, float(d.get("median", 0.0)), int(d.get("pairs", 0)), int(d.get("pairs", 0)))
-    return Anchor(sim, float(d.get("median", 0.0)), float(d.get("p90", 0.0)), int(d.get("pairs", 0)))
+    grid = None
+    if d.get("grid"):
+        g = d["grid"]
+        grid = {"x0": float(g["x0"]), "y0": float(g["y0"]), "step": float(g["step"]), "nx": int(g["nx"]), "ny": int(g["ny"]),
+                "x": np.array(g["x"], float), "z": np.array(g["z"], float)}
+    return Anchor(sim, float(d.get("median", 0.0)), float(d.get("p90", 0.0)), int(d.get("pairs", 0)), grid=grid)
 
 
 def build_track(rows: list[Row], options: TrackOptions, minimap: Minimap | None = None, anchor: Anchor | None = None) -> tuple[list[Row], dict]:

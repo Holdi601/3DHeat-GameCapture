@@ -41,7 +41,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 
-from .lapfile import clean
+from .lapfile import RawLog, clean
 
 WHEELS = ("FL", "FR", "RL", "RR")
 
@@ -205,6 +205,21 @@ def frame_from(raw: dict, clock: float, game: str = "ac") -> dict | None:
         # The aids acting, as ACC documents these slots (its own flags are unused).
         frame["tcActive"] = 1.0 if raw.get("tcActing", 0.0) > 0.0 else 0.0
         frame["absActive"] = 1.0 if raw.get("absActing", 0.0) > 0.0 else 0.0
+    # Everything else the page decode read, so a lap file holds all of it:
+    # the page counter, the steering as sent, the world velocity, the pitch
+    # and roll rates, the aids' raw slots, and per wheel the slip and contact point.
+    frame["packetId"] = raw["packetId"]
+    frame["steerAngle"] = raw["steerAngle"]
+    for axis, value in zip("XYZ", raw["velocity"]):
+        frame[f"worldVel{axis}"] = value
+    frame["angVelX"], frame["angVelZ"] = raw["localAngularVel"][0], raw["localAngularVel"][2]
+    frame["tcActing"] = raw.get("tcActing")
+    frame["absActing"] = raw.get("absActing")
+    for k, wheel in enumerate(WHEELS):
+        if f"wheelSlip.{wheel}" in raw:
+            frame[f"wheelSlip.{wheel}"] = raw[f"wheelSlip.{wheel}"]
+        for axis, value in zip("XYZ", contact[k]):
+            frame[f"contact{axis}.{wheel}"] = value
     local = raw.get("localVelocity")
     if local and any(local):
         # Car frame: x sideways, y up, z forwards. Which side x points to is
@@ -495,15 +510,28 @@ def run(out: str | Path, *, game: str, hz: float = 200.0) -> list[Path]:
     track = car = None
     start = time.perf_counter()
     period = 1.0 / hz
+    # Every page as mapped, kept whole each time it changes (3DHeat's converter rule).
+    raw = RawLog(out, f"{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}_{game}", game=GAME_NAMES[game])
+    kept: dict[str, bytes] = {}
+
+    def keep(kind: str, data: bytes, used: bool = False) -> None:
+        if kept.get(kind) != data:
+            kept[kind] = data
+            raw.keep(kind, data, used=used)
+
     try:
         while True:
             page = bytes(physics[:size])
             packet = struct.unpack_from("<i", page, 0)[0]
+            if graphics is not None:
+                keep(graphics_name.split("\\")[-1], bytes(graphics[:GRAPHICS_SIZE]))
+            keep(static_name.split("\\")[-1], bytes(static[:256]))
             if packet != last_packet and packet != 0:
                 last_packet = packet
                 if track is None:
                     track, car = read_static(bytes(static[:256]), game)
                 frame = frame_from(decode_physics(page), time.perf_counter() - start, game)
+                keep(physics_name.split("\\")[-1], page, frame is not None)
                 if frame is not None:
                     if graphics is not None:
                         g = bytes(graphics[:GRAPHICS_SIZE])
@@ -520,4 +548,5 @@ def run(out: str | Path, *, game: str, hz: float = 200.0) -> list[Path]:
         pass
     for lap in splitter.flush():
         written.append(write(lap, out, game=game, track=track, car=car))
+    raw.close()
     return written

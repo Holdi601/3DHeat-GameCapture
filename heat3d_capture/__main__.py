@@ -337,6 +337,121 @@ def _locate_game(args: argparse.Namespace):
     )
 
 
+def _locate_refmap(args: argparse.Namespace) -> int:
+    """`locate refmap`: the deploy screen's map placed on the level; `locate minimap`: the minimap read against it."""
+    import numpy as np
+
+    from .locate import refmap as rm
+
+    started = time.monotonic()
+    if args.action == "refmap":
+        from .locate.level import load
+
+        level = load(str(args.level))
+        unit = level.unit_metres
+        if args.topdown and Path(str(args.topdown) + ".json").exists():
+            top = rm.TopDown.load(args.topdown)
+        else:
+            print("rendering the level from above ...", flush=True)
+            top = rm.topdown(level, mpp=args.topdown_mpp, bounds=tuple(args.box) if args.box else None)
+            if args.topdown:
+                top.save(args.topdown)
+        picture = _deploy_picture(args)
+        if picture is None:
+            print(f"{args.deploy}: could not read a picture from it", file=sys.stderr)
+            return 1
+        cal = rm.calibrate(top, picture, unit_metres=unit)
+        if cal is None:
+            print("the map could not be placed on the level: too few of its tiles matched", file=sys.stderr)
+            return 1
+        ref = rm.reference_map(picture, cal, mpp=args.mpp / unit)
+        ref.save(args.out)
+        c = cal.coarse
+        print(
+            f"placed: {c['metres_per_map_pixel']:.3f} m a map pixel (coarse score {c['score']:.3f}, next place {c['next_place']:.3f}); "
+            f"{cal.inliers} of {cal.tiles} tiles agree, residual median {cal.median * unit:.2f} m, p90 {cal.p90 * unit:.2f} m"
+        )
+        print(f"wrote {args.out}.png, .valid.png, .json in {time.monotonic() - started:.0f} s")
+        return 0
+
+    from .hud.profiles import PROFILES as HUD_PROFILES
+    from .hud.video import samples
+
+    profile = HUD_PROFILES[args.game]
+    ref = rm.RefMap.load(args.refmap)
+    region = next(r for r in profile.regions if r.name == "minimap")
+    reg = rm.MinimapRegistrar(ref, profile.player, profile.map_key, work=int(region.box.w))
+    guess = lives = None
+    if args.hud is not None:
+        from .locate.track import read_anchor, read_minimap
+
+        hud = read_minimap(str(args.hud))
+
+        def lives(t: float) -> int:
+            h = hud.at(t, 5.0)
+            return int(h[2]) if h is not None else 0
+
+        if args.hud_anchor is not None:
+            anchor = read_anchor(str(args.hud_anchor))
+
+            def guess(t: float):
+                h = hud.at(t, 1.0)
+                return None if h is None else anchor.to_level(h[0])
+
+    placed = [0]
+
+    def show(n: int, fix) -> None:
+        placed[0] += fix is not None
+        if (n + 1) % 200 == 0:
+            print(f"[{time.monotonic() - started:7.0f}s] {n + 1} minimaps, {placed[0]} placed", flush=True)
+
+    frames = ((s.t, s.regions["minimap"]) for s in samples(args.video, profile, fps=args.fps, start=args.start, duration=args.seconds, names=["minimap"]))
+    fixes = rm.register_minimaps(frames, reg, guess=guess, on_fix=show)
+    if not fixes:
+        print("no minimap could be placed on the reference map", file=sys.stderr)
+        return 1
+    filled = []
+    if guess is not None and args.hud_fill > 0:
+        filled = rm.fill_from_hud(fixes, hud, anchor, 1.0 / args.fps, within=args.hud_fill)
+    table, anchor_path = rm.write_minimap_table(fixes + filled, args.out, video=str(args.video), lives=lives)
+    if filled:
+        print(f"{len(filled)} more from the HUD's own track, moved onto the nearest reference-map fixes (within {args.hud_fill:g} s)")
+    zoom = np.array([f.zoom for f in fixes])
+    print(
+        f"{len(fixes)} minimaps placed; zoom {np.percentile(zoom, 10):.3f}-{np.percentile(zoom, 90):.3f} m a pixel "
+        f"(median {np.median(zoom):.3f}); match residual median {np.median([f.residual for f in fixes]):.2f} m"
+    )
+    print(f"wrote {table}")
+    print(f"wrote {anchor_path}")
+    return 0
+
+
+def _deploy_picture(args: argparse.Namespace):
+    """The deploy screen's map: a picture file, or a frame of a video at --at seconds, cut to the profile's map box."""
+    import cv2
+
+    from .locate.profiles import PROFILES
+
+    src = Path(args.deploy)
+    if src.suffix.lower() in (".png", ".jpg", ".jpeg", ".bmp", ".webp"):
+        img = cv2.imread(str(src))
+    else:
+        cap = cv2.VideoCapture(str(src))
+        cap.set(cv2.CAP_PROP_POS_MSEC, float(args.at or 0.0) * 1000.0)
+        ok, img = cap.read()
+        cap.release()
+        img = img if ok else None
+    if img is None:
+        return None
+    box = PROFILES[args.game].deploy_map
+    if box is not None and not args.whole_picture:
+        h, w = img.shape[:2]
+        x, y, bw, bh = box
+        sx, sy = w / 1920.0, h / 1080.0
+        img = img[int(y * sy) : int((y + bh) * sy), int(x * sx) : int((x + bw) * sx)]
+    return img
+
+
 def _locate(args: argparse.Namespace) -> int:
     """
     Where each frame of a recording was taken, from the picture against the
@@ -344,6 +459,8 @@ def _locate(args: argparse.Namespace) -> int:
     locates a recording against it, `eval` compares a result with known
     poses. See docs/locate.md.
     """
+    if args.action in ("refmap", "minimap"):
+        return _locate_refmap(args)
     try:
         game = _locate_game(args)
     except ValueError as exc:
@@ -392,7 +509,7 @@ def _locate(args: argparse.Namespace) -> int:
         return 0
 
     if args.action == "frames":
-        from .locate.run import Options, Progress, locate_frames
+        from .locate.run import GaveWay, Options, Progress, locate_frames
 
         if not args.source.exists():
             print(f"no such file or folder: {args.source}", file=sys.stderr)
@@ -410,10 +527,18 @@ def _locate(args: argparse.Namespace) -> int:
             prior_radius=args.prior_radius,
             anchor=str(args.minimap_anchor) if args.minimap_anchor else None,
             level_search=not args.no_level_search,
+            search=not args.no_search,
+            search_shortlist=args.search_shortlist,
+            accept_depth=args.accept_depth,
+            accept_support=args.accept_support,
+            checkpoint=str(args.checkpoint) if args.checkpoint else (str(out) + ".checkpoint" if args.stop_file or args.stop_process else None),
+            stop_files=tuple(args.stop_file),
+            stop_processes=tuple(args.stop_process),
             lives=str(args.lives) if args.lives else None,
             level=str(args.level) if args.level else None,
             check_every=args.check_every,
             sequence=not args.no_sequence,
+            grow=not args.no_grow,
             fit_fov=args.fit_fov,
             zoomed=not args.no_zoomed,
             checks=not args.no_checks,
@@ -424,14 +549,20 @@ def _locate(args: argparse.Namespace) -> int:
 
         try:
             files, summary = locate_frames(args.source, args.db, out, game, options, on_progress=show)
+        except GaveWay as why:
+            print(f"\nstopped to free the machine: {why}; its state is in {options.checkpoint}, run the same command again to carry on", file=sys.stderr)
+            return 75
         except (OSError, ValueError) as exc:
             print(f"\n{exc}", file=sys.stderr)
             return 1
         print()
         by = summary["by_source"]
         print(
-            f"{summary['frames']} frames: {by['visual']} placed from the picture, {by['minimap']} from the minimap, "
-            f"{by['none']} not placed; {summary['outliers']} visual fixes voted out; {summary['lives']} lives; "
+            f"{summary['frames']} frames: {by['visual'] + by['visual+minimap-prior']} placed from the picture "
+            f"({by['visual+minimap-prior']} of them searched round the minimap), "
+            f"{by['minimap'] + by['minimap+nav-floor']} from the minimap, {by['none']} not placed "
+            f"({summary['none_in_play']} of them in play, the rest out of play or a map/menu screen); "
+            f"{summary['outliers']} visual fixes voted out; {summary['lives']} lives; "
             f"{summary['seconds_per_frame']:.2f} s a frame"
         )
         for f in files:
@@ -636,7 +767,7 @@ def main(argv: list[str] | None = None) -> int:
     frames.add_argument("--fps", type=float, default=2.0, help="frames located per second of video (default 2)")
     frames.add_argument("--start", type=float, default=0.0, help="seconds into the video to begin at")
     frames.add_argument("--seconds", type=float, default=None, help="how much of the video to read (default: all of it)")
-    frames.add_argument("--width", type=int, default=960, help="the width frames are matched at (default 960)")
+    frames.add_argument("--width", type=int, default=1280, help="the width frames are matched at (default 1280)")
     frames.add_argument("--shortlist", type=int, default=8, help="database views tried per frame (default 8)")
     frames.add_argument("--normalise", choices=["none", "clahe", "gray"], default="none", help="light normalisation before matching (default none)")
     frames.add_argument("--minimap", type=Path, default=None, help="the `hud` verb's table: the fallback where the picture gives no fix")
@@ -670,6 +801,14 @@ def main(argv: list[str] | None = None) -> int:
         help="every N located frames, write <out>.check/<frame>.jpg: the frame beside the level rendered at its fix, the frame's edges drawn over it",
     )
     frames.add_argument("--no-sequence", action="store_true", help="decide every frame on its own, not along the run")
+    frames.add_argument("--no-search", action="store_true", help="with no prior: search each frame on its own, and believe its fix without its neighbours")
+    frames.add_argument("--search-shortlist", type=int, default=16, help="with no prior: database views tried per frame (default 16)")
+    frames.add_argument("--accept-depth", type=float, default=0.0, help="with no prior: believe a fix only if its inliers' far distance is this many times their near one (default 0: no such test)")
+    frames.add_argument("--accept-support", type=int, default=2, help="with no prior: agreeing neighbours along the life a fix needs to be believed (default 2)")
+    frames.add_argument("--checkpoint", type=Path, default=None, help="keep the run's state here and carry on from it if it is there (default with --stop-file or --stop-process: <out>.checkpoint)")
+    frames.add_argument("--stop-file", action="append", default=[], help="stop by itself, state saved and exit code 75, when this file exists; checked before every frame; may be repeated")
+    frames.add_argument("--stop-process", action="append", default=[], help="the same, when a process runs whose name starts with this; may be repeated")
+    frames.add_argument("--no-grow", action="store_true", help="do not search again near each fix for the frames round it still without one")
     frames.add_argument("--no-zoomed", action="store_true", help="do not solve zoomed views (scopes, sights) from their neighbours' fixes")
     frames.add_argument("--no-checks", action="store_true", help="do not write a check picture for every visual fix (<out>.check)")
     frames.add_argument(
@@ -693,6 +832,33 @@ def main(argv: list[str] | None = None) -> int:
         help="a `locate frames` table and its recording: its confident fixes join as real pairs (repeatable)",
     )
     trainer.add_argument("--real-confidence", type=float, default=0.85, help="the confidence a fix needs to join as a real pair (default 0.85)")
+    refmap = actions.add_parser("refmap", help="place the game's own map (its deploy screen) on the level: the reference the minimap is read against")
+    refmap.add_argument("level", type=Path, help="the level's .glb")
+    refmap.add_argument("deploy", type=Path, help="a picture of the deploy screen, or a recording (with --at)")
+    refmap.add_argument("--at", type=float, default=None, help="seconds into the recording where the deploy screen shows the whole map")
+    refmap.add_argument("-o", "--out", type=Path, required=True, help="output path without extension (<out>.png, .valid.png, .json)")
+    refmap.add_argument("--mpp", type=float, default=0.5, help="metres a pixel of the reference map (default 0.5)")
+    refmap.add_argument("--topdown", type=Path, default=None, help="where to keep (and reuse) the level seen from above, without extension")
+    refmap.add_argument("--topdown-mpp", type=float, default=0.656, help="metres a pixel of the level seen from above (default 0.656)")
+    refmap.add_argument("--box", type=float, nargs=4, metavar=("X0", "Z0", "X1", "Z1"), default=None, help="only this part of the level, from above")
+    refmap.add_argument("--whole-picture", action="store_true", help="use the whole picture, not the profile's map box")
+    refmap.add_argument("--game", choices=["bf6"], default="bf6", help="the game's profile (default bf6)")
+    mini = actions.add_parser("minimap", help="read a recording's minimap against the reference map: the player's position on the level, frame by frame")
+    mini.add_argument("video", type=Path, help="the recording")
+    mini.add_argument("--refmap", type=Path, required=True, help="`locate refmap`'s output, without extension")
+    mini.add_argument("-o", "--out", type=Path, required=True, help="the table to write (.parquet); its anchor goes beside it")
+    mini.add_argument("--fps", type=float, default=2.0, help="minimaps read per second (default 2)")
+    mini.add_argument("--start", type=float, default=0.0, help="seconds into the video to begin at")
+    mini.add_argument("--seconds", type=float, default=None, help="how much of the video to read (default: all of it)")
+    mini.add_argument("--hud", type=Path, default=None, help="the `hud` verb's table: its lives, and (with --hud-anchor) where to search first")
+    mini.add_argument("--hud-anchor", type=Path, default=None, help="an anchor for the --hud table: searched round its reading when nothing recent is known")
+    mini.add_argument(
+        "--hud-fill",
+        type=float,
+        default=120.0,
+        help="with --hud and --hud-anchor: where no minimap matched, the HUD's track moved onto reference-map fixes up to this many seconds away (default 120; 0: none)",
+    )
+    mini.add_argument("--game", choices=["bf6"], default="bf6", help="the game's HUD profile (default bf6)")
     evaluate = actions.add_parser("eval", help="compare a located table with known camera poses")
     evaluate.add_argument("located", type=Path, help="the table `locate frames` wrote")
     evaluate.add_argument("--truth", type=Path, required=True, help="a table of time, x, y, z, yaw, pitch in the level's frame")

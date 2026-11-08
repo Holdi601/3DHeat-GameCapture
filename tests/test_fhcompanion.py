@@ -325,3 +325,30 @@ class TestWhatItWritesOut:
 
         assert len({r["lap"] for r in rows}) == 2
         assert len({r["car_class"] for r in rows}) == 2
+
+
+class TestEverythingKept:
+    """3DHeat's converter rule: what a lap file says beyond the samples is carried along, not left behind."""
+
+    def test_the_lap_s_own_fields_and_the_unreadable_files_reach_the_route(self, library, tmp_path):
+        folder = library / "Mapletree Test Loop (course_1200_3400_to_1175_3400)"
+        doc = lap_document()
+        doc["Lap"]["carName"] = "Test Car '08"
+        doc["Lap"]["WetFraction"] = 0.25
+        for sample in doc["Lap"]["samples"]:
+            sample["Rpm"] = 6500.0  # a field a later FH Companion might add
+        path = folder / "C" / "extra.json"
+        path.parent.mkdir(parents=True)
+        path.write_text(json.dumps(doc), encoding="utf-8")
+        (folder / "C" / "broken.json").write_text("not json at all", encoding="utf-8")
+
+        course = read_course(folder)
+        assert course.unreadable == ["C/broken.json"]
+        route = json.loads(course.save_route(tmp_path / "route").read_text(encoding="utf-8"))
+        assert route["courseInfo"]["Laps"] == 2
+        assert route["unreadable"] == ["C/broken.json"]
+        extra = next(info for info in route["lapInfo"] if info["file"] == "C/extra.json")
+        assert extra["carName"] == "Test Car '08" and extra["WetFraction"] == 0.25 and extra["Class"] == "A"
+        assert "samples" not in extra
+        header = (course.save_samples(tmp_path / "samples")).read_text(encoding="utf-8").splitlines()[0]
+        assert header.endswith(",Rpm")

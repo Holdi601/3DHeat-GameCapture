@@ -29,10 +29,11 @@ import os
 import shutil
 import socket
 import struct
+import time
 from pathlib import Path
 
 from .kunos import LineSplitter
-from .lapfile import Run, write
+from .lapfile import RawLog, Run, write
 
 PORT = 4460
 MAGIC = b"H3D1"
@@ -115,6 +116,13 @@ def frame_from(raw: dict) -> dict:
         frame[f"wheelSpeed.{wheel}"] = raw["wheelAngular"][k]
         frame[f"wheelLoad.{wheel}"] = raw["wheelLoad"][k]
         frame[f"groundContact.{wheel}"] = 0.0 if raw["wheelMaterial"][k] < 0 else 1.0
+        # As sent: the surface speed's sign and the ground's material id.
+        frame[f"wheelSurfaceSpeedRaw.{wheel}"] = raw["wheelSpeed"][k]
+        frame[f"wheelMaterial.{wheel}"] = raw["wheelMaterial"][k]
+    # The car's axes in the world (Y up), kept beside what was worked out from them.
+    for name, vector in (("forward", forward), ("up", up), ("worldVel", v)):
+        for axis, value in zip("XYZ", vector):
+            frame[f"{name}{axis}"] = value
     return frame
 
 
@@ -150,14 +158,20 @@ def add_accelerations(frames: list[dict]) -> None:
 
 
 class Recorder:
-    def __init__(self, out: str | Path):
+    def __init__(self, out: str | Path, *, raw: bool = True):
         self.out = Path(out)
         self.splitter = LineSplitter()
         self.written: list[Path] = []
         self.last_time = -1.0
+        # Every packet whole, beside the lap files (3DHeat's converter rule); `raw=False` for tests.
+        stamp = time.strftime("%Y-%m-%d_%H-%M-%S")
+        self.raw = RawLog(self.out, f"{stamp}_beamng", game="beamng") if raw else None
 
     def feed(self, packet: bytes) -> list[Path]:
         raw = decode(packet)
+        if self.raw is not None:
+            kind = "H3D1" if packet[:4] == MAGIC and len(packet) >= LENGTH else f"{len(packet)}-byte"
+            self.raw.keep(kind, packet, used=raw is not None)
         if raw is None:
             return []
         frame = frame_from(raw)
@@ -166,7 +180,7 @@ class Recorder:
         # is kept first, as a run of its own when it is long enough, rather
         # than thrown away with the old splitter.
         if frame["time"] < self.last_time - 0.5:
-            out += self.close()
+            out += self.close(final=False)
             self.splitter = LineSplitter()
         self.last_time = frame["time"]
         for lap in self.splitter.feed(frame):
@@ -179,11 +193,14 @@ class Recorder:
         self.written.append(path)
         return path
 
-    def close(self) -> list[Path]:
-        return [
+    def close(self, *, final: bool = True) -> list[Path]:
+        written = [
             self._write(Run(number=lap.number, frames=lap.frames, seconds=lap.seconds, complete=lap.complete))
             for lap in self.splitter.flush()
         ]
+        if final and self.raw is not None:
+            self.raw.close()
+        return written
 
 
 def user_mods() -> Path:

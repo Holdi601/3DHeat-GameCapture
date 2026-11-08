@@ -141,19 +141,28 @@ class Keypoints:
 
 
 class LocalMatcher:
-    def __init__(self, max_keypoints: int = 2048, dev: str | None = None, threshold: float = 0.1):
+    """
+    ALIKED and LightGlue. `max_keypoints` are kept of those on the level: the detector is asked for
+    `detected` first, because a frame's strongest keypoints are mostly on what is masked afterwards
+    (the HUD, the player's vehicle) and would otherwise use up the budget. `threshold` is low for
+    the same reason as the budget is high: a frame of the game and a render of the level share few
+    strong corners, and the flat, sunlit parts of a frame have only weak ones.
+    """
+
+    def __init__(self, max_keypoints: int = 2048, dev: str | None = None, threshold: float = 0.1, detected: int | None = None):
         import kornia.feature as KF
         import torch
 
         self.dev = dev or device()
         self.torch = torch
+        self.keep = max_keypoints
         self.detector = KF.ALIKED.from_pretrained(
-            "aliked-n16", max_num_keypoints=max_keypoints, detection_threshold=threshold, device=torch.device(self.dev)
+            "aliked-n16", max_num_keypoints=detected or max_keypoints, detection_threshold=threshold, device=torch.device(self.dev)
         ).eval()
         self.matcher = KF.LightGlue("aliked").to(self.dev).eval()
 
     def detect(self, rgb: np.ndarray, valid: np.ndarray | None = None) -> Keypoints:
-        """Keypoints of an RGB uint8 picture, only where `valid` (when given) is True."""
+        """Keypoints of an RGB uint8 picture, only where `valid` (when given) is True, the strongest `max_keypoints` of those."""
         torch = self.torch
         h, w = rgb.shape[:2]
         x = torch.from_numpy(rgb).to(self.dev).permute(2, 0, 1)[None].float() / 255.0
@@ -161,11 +170,16 @@ class LocalMatcher:
             f = self.detector(x)[0]
         xy = f.keypoints.cpu().numpy()
         d = f.descriptors
+        score = f.keypoint_scores.cpu().numpy()
         if valid is not None and len(xy):
             ix = np.clip(np.round(xy).astype(int), 0, [w - 1, h - 1])
             ok = valid[ix[:, 1], ix[:, 0]]
-            xy = xy[ok]
+            xy, score = xy[ok], score[ok]
             d = d[torch.from_numpy(ok).to(d.device)]
+        if len(xy) > self.keep:
+            top = np.argsort(-score)[: self.keep]
+            xy = xy[top]
+            d = d[torch.from_numpy(top).to(d.device)]
         return Keypoints(xy, d, (w, h))
 
     def match(self, a: Keypoints, b: Keypoints) -> tuple[np.ndarray, np.ndarray]:

@@ -51,7 +51,7 @@ import struct
 import time
 from pathlib import Path
 
-from .lapfile import Run, dot, write
+from .lapfile import RawLog, Run, dot, write
 
 G = 9.80665
 
@@ -138,6 +138,22 @@ def frame_wrc(raw: dict) -> dict:
         frame[f"suspensionM.{wheel}"] = hub
         frame[f"wheelSurfaceSpeed.{wheel}"] = speed
         frame[f"brakeTemp.{wheel}"] = temp
+    # The rest of what the packet decode read, as sent, so a stage file holds all of it.
+    for wheel, hub_speed in zip(WRC_WHEELS, raw["hub_velocity"]):
+        frame[f"hubVel.{wheel}"] = hub_speed
+    for name, vector in (("worldVel", v), ("worldAcc", a), ("left", left), ("forward", forward), ("up", up)):
+        for axis, value in zip("XYZ", vector):
+            frame[f"{name}{axis}"] = value
+    frame.update(
+        packetUid=float(raw["packet_uid"]),
+        gameTime=raw["game_total_time"],
+        gameDelta=raw["game_delta_time"],
+        gearIndex=raw["gear_index"],
+        transmissionSpeed=raw["transmission_speed"],
+        rpmMax=raw["rpm_max"],
+        rpmIdle=raw["rpm_idle"],
+        stageLength=raw["stage_length"],
+    )
     return frame
 
 
@@ -196,6 +212,14 @@ DR = {
 }
 #: DiRT orders the wheels rear-left, rear-right, front-left, front-right.
 DR_WHEELS = ("RL", "RR", "FL", "FR")
+#: Indices `frame_dirt` names, as single floats or runs of 3 (vectors) and 4 (wheels).
+_DR_NAMED = (
+    {DR[k] for k in ("total_time", "lap_time", "lap_distance", "speed", "throttle", "steer", "brake", "clutch", "gear",
+                     "g_lat", "g_lon", "lap", "rpm10", "laps_completed", "total_laps", "track_length", "last_lap_time")}
+    | {DR[k] + i for k in ("position", "velocity", "side", "forward") for i in range(3)}
+    | {DR[k] + i for k in ("suspension_position", "suspension_velocity", "wheel_patch_speed", "brake_temp") for i in range(4)}
+)
+DR_UNNAMED = tuple(i for i in range(66) if i not in _DR_NAMED)
 
 
 def decode_dirt(packet: bytes) -> list[float] | None:
@@ -234,6 +258,21 @@ def frame_dirt(f: list[float]) -> dict:
         frame[f"suspensionM.{wheel}"] = f[DR["suspension_position"] + k]
         frame[f"wheelSurfaceSpeed.{wheel}"] = f[DR["wheel_patch_speed"] + k]
         frame[f"brakeTemp.{wheel}"] = f[DR["brake_temp"] + k]
+        frame[f"suspensionVel.{wheel}"] = f[DR["suspension_velocity"] + k]
+    for name, vector in (("worldVel", v), ("side", side), ("forward", forward)):
+        for axis, value in zip("XYZ", vector):
+            frame[f"{name}{axis}"] = value
+    frame.update(
+        totalTime=f[DR["total_time"]],
+        lapNumber=f[DR["lap"]],
+        lapsCompleted=f[DR["laps_completed"]],
+        totalLaps=f[DR["total_laps"]],
+        stageLength=f[DR["track_length"]],
+        lastLapTime=f[DR["last_lap_time"]],
+    )
+    # Floats of the 66 that have no settled name: kept by their index, as sent.
+    for i in DR_UNNAMED:
+        frame[f"float{i}"] = f[i]
     return frame
 
 
@@ -303,6 +342,18 @@ def frame_rbr(raw: dict) -> dict:
     for wheel, deflection, force in zip(RBR_WHEELS, raw["spring_deflection"], raw["spring_force"]):
         frame[f"suspensionM.{wheel}"] = deflection
         frame[f"wheelLoad.{wheel}"] = force
+    # The rest of what the packet decode read, as sent (units undocumented).
+    for axis, value in zip("XYZ", raw["attitude"]):
+        frame[f"attitude{axis}"] = value
+    frame.update(
+        totalSteps=raw["total_steps"],
+        stageIndex=raw["stage_index"],
+        progress=raw["progress"],
+        raceTime=raw["race_time"],
+        distanceToEnd=raw["distance_to_end"],
+        speedRaw=raw["speed"],
+        accelZ=az,
+    )
     return frame
 
 
@@ -390,14 +441,27 @@ GAMES = {
 DEFAULT_PORTS = {"wrc": 20777, "dirtrally2": 20777, "dirtrally": 20777, "dirt4": 20777, "rbr": 6776}
 
 
+def packet_kind(game: str, packet: bytes) -> str:
+    """What a packet is, the `type` it is kept under: the format each game documents, else its length."""
+    n = len(packet)
+    if game == "wrc":
+        return "session_update" if n == WRC_LENGTH else f"wrc {n}-byte"
+    if game == "rbr":
+        return "telemetry" if n == RBR_LENGTH else f"rbr {n}-byte"
+    return {66 * 4: "extradata3", 64 * 4: "extradata3-64"}.get(n, f"{n}-byte")
+
+
 class RallyRecorder:
     """Packets in, stage files out, for one of the games above."""
 
-    def __init__(self, out: str | Path, *, game: str, surface: str | None = None):
+    def __init__(self, out: str | Path, *, game: str, surface: str | None = None, raw: bool = True):
         if game not in GAMES:
             raise ValueError(f"unknown rally game {game!r}; one of {', '.join(GAMES)}")
         self.out = Path(out)
         self.game = game
+        # Every packet whole, beside the stage files (3DHeat's converter rule); `raw=False` for tests.
+        stamp = time.strftime("%Y-%m-%d_%H-%M-%S")
+        self.raw = RawLog(self.out, f"{stamp}_{GAMES[game]}", game=GAMES[game]) if raw else None
         self.splitter = StageSplitter()
         self.meta = {"discipline": "rally", "slip": None}
         if surface:
@@ -411,6 +475,18 @@ class RallyRecorder:
             print(f"note: {text}")
 
     def feed(self, packet: bytes) -> list[Path]:
+        frames = self.splitter.current.frames if self.splitter.current is not None else None
+        before = len(frames) if frames is not None else -1
+        try:
+            return self._feed(packet)
+        finally:
+            if self.raw is not None:
+                # Used: the packet became a frame of a stage.
+                current = self.splitter.current
+                used = current is not None and (current.frames is not frames or len(current.frames) != before)
+                self.raw.keep(packet_kind(self.game, packet), packet, used=used)
+
+    def _feed(self, packet: bytes) -> list[Path]:
         if self.game == "wrc":
             raw = decode_wrc(packet)
             if raw is None:
@@ -463,7 +539,10 @@ class RallyRecorder:
         return path
 
     def close(self) -> list[Path]:
-        return [self._write(run) for run in self.splitter.flush()]
+        written = [self._write(run) for run in self.splitter.flush()]
+        if self.raw is not None:
+            self.raw.close()
+        return written
 
 
 def run(out: str | Path, *, game: str, port: int | None = None, surface: str | None = None, report=print) -> list[Path]:

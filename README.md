@@ -683,6 +683,76 @@ canonical names, per wheel as `tireTemp.FL` and so on - see
 viewer's Race tab. iRacing needs no recorder: its
 own `.ibt` files load directly.
 
+### Completeness
+
+The telemetry recorders follow 3DHeat's
+[converter rule](https://github.com/Holdi601/3DHeat/blob/main/docs/converters.md):
+what the game sends is decoded or kept, never dropped. A lap file holds the
+laps; beside it, every packet or page that arrived - in the menus, between
+laps, parked, the bytes no field names - is kept whole in
+`<stamp>_<game>.raw.parquet` (zstd; columns `time`, `ms`, `type`, `used`,
+`payload`, `text`, as the watcher's `heat.raw.parquet`), written as it arrives
+into a `.raw.bin` so a crash loses nothing and turned into Parquet when the
+recorder stops (without pyarrow the `.raw.bin` stays, readable by
+`lapfile.read_frames`). `<stamp>_<game>.summary.json` holds the self-check:
+per `type`, how many items came, how many also went into lap files (`used`),
+and `lost`, which is 0. The viewer skips both when a folder is loaded.
+
+**Read** - into the lap files:
+
+- Forza (`telemetry`): every field of the Sled and dash blocks, the 2023
+  tail (tyre wear, track id) and now also the game's clock (`timestampMs`),
+  race time and best and last lap as channels; the car once, in `car`. The
+  bytes no published layout names (13 in a Horizon packet, between the two
+  blocks) go into the lap file as `unparsed` - their byte ranges and, per
+  sample, their hex - so the lap file alone holds the whole packet.
+- Assetto Corsa games: everything the physics page decode reads, now
+  including the page counter, the steering as sent, the world velocity, the
+  pitch and roll rates, the aids' raw slots, and per wheel the slip and the
+  contact point.
+- EA WRC, DiRT, RBR: everything the packet decode reads - for WRC also the
+  world velocity and acceleration, the car's axes, hub speeds, the game clock
+  and rpm limits; for DiRT all 66 floats (those without a settled name as
+  `float<i>`); for RBR attitude, progress and distance to the end.
+- BeamNG: the mod's whole struct, now including the ground material per
+  wheel, the surface speed's sign and the car's axes.
+- `route`: the moving car's positions, as before; `laps` (FH Companion):
+  every sample field of every lap file (a field a later FH Companion adds
+  becomes a CSV column of its own), and in the route JSON `courseInfo`
+  (course.json), `lapInfo` (every lap file's own fields: car name, drivetrain,
+  power, mode, wet fraction, tune, ...) and `unreadable` (lap files that could
+  not be read, named rather than skipped in silence).
+
+**Kept raw** - in `<stamp>_<game>.raw.parquet` (`route -o lap`:
+`lap.raw.parquet`), under `type`:
+
+- Forza: every packet by its format - `dash-horizon` (324 bytes), `dash`
+  (311), `dash-fm2023` (331), `sled` (232), `<n>-byte` otherwise.
+- Assetto Corsa games: each page as mapped (physics 800 bytes, graphics and
+  static 256), each time it changes, under the mapping's name
+  (`acpmf_physics`, `acevo_pmf_static`, ...). The watcher keeps the whole
+  mapping region; this recorder keeps the bytes it maps.
+- EA WRC `session_update` (or `wrc <n>-byte`), DiRT `extradata3` /
+  `extradata3-64`, RBR `telemetry` (or `rbr <n>-byte`), BeamNG `H3D1` (or
+  `<n>-byte`).
+
+**Not available**:
+
+- other cars: none of these games' telemetry describes them;
+- the track's name: Forza Horizon never sends one, Motorsport 2023 a number;
+- physics ticks between reads of the Assetto Corsa pages (the recorder reads
+  up to 200 times a second, the game writes up to 333);
+- for RBR, its speed unit and axes, which are not documented;
+- Trackmania: the Openplanet plugin writes its CSV in the game's storage
+  folder, and what it records is what the plugin chooses.
+
+**Size**, before compression; packets differ little from one to the next and
+zstd keeps a fraction: Forza about 85 MB an hour (60 packets a second),
+WRC and DiRT about 65-70 MB, RBR about 160 MB, BeamNG about 80 MB (100 a
+second), the Assetto Corsa pages about 600 MB at the 200 Hz read (the
+800-byte physics page each time the game has written a new one; much of it
+zeros, which compress to almost nothing).
+
 ## Tests
 
 ```bash

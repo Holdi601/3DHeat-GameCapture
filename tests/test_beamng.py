@@ -92,3 +92,21 @@ def test_a_reset_keeps_what_was_driven_before_it(tmp_path):
     assert len(out) == 1
     doc = json.loads(out[0].read_text())
     assert not doc["lap"]["complete"] and doc["lap"]["metres"] > 500
+
+
+def test_every_packet_is_kept_whole_beside_the_laps(tmp_path):
+    """3DHeat's converter rule: every packet whole, the mod's and anything else on the port."""
+    import pyarrow.parquet as pq
+
+    rec = beamng.Recorder(tmp_path)
+    packets = [packet(t=k * 0.05, pos=(k * 1.0, 0.0, 0.0), vel=(20.0, 0.0, 0.0), fwd=(1.0, 0.0, 0.0)) for k in range(5)]
+    for p in (*packets, b"not beamng"):
+        rec.feed(p)
+    rec.close()
+    (sidecar,) = tmp_path.glob("*_beamng.raw.parquet")
+    t = pq.read_table(sidecar).to_pydict()
+    assert t["payload"] == [*packets, b"not beamng"]
+    assert t["type"] == ["H3D1"] * 5 + ["10-byte"]
+    assert t["used"] == [True] * 5 + [False]
+    frame = beamng.frame_from(beamng.decode(packets[0]))
+    assert frame["wheelMaterial.FL"] == 1.0 and "forwardX" in frame and "worldVelX" in frame

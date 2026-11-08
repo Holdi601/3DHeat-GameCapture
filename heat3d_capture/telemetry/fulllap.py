@@ -52,8 +52,9 @@ from .forza import (
     Layout,
     LayoutUndetermined,
     detect_layout,
+    packet_kind,
 )
-from .lapfile import clean
+from .lapfile import RawLog, clean
 
 WHEELS = ("FL", "FR", "RL", "RR")
 
@@ -130,14 +131,33 @@ DASH_TIRE_TEMP = 24  # four floats, Fahrenheit
 FM2023_LENGTH = FM_DASH_LENGTH + 20
 
 
-def decode_full(packet: bytes, layout: Layout) -> dict:
+def unparsed_ranges(length: int, layout: Layout) -> list[tuple[int, int]]:
+    """
+    The bytes of a packet no field above covers, as [start, end) ranges: the
+    Horizon packet's dozen bytes between the Sled and dash blocks, and anything
+    after the last block a layout is known for. Kept as they are (`decode_full`
+    with `unparsed=True`), so a later decoder that names them needs no new drive.
+    """
+    out = []
+    if layout.dash_base > SLED_LENGTH:
+        out.append((SLED_LENGTH, layout.dash_base))
+    end = layout.dash_base + DASH_BLOCK_LENGTH
+    if length >= end + 20:
+        end += 20
+    if length > end:
+        out.append((end, length))
+    return out
+
+
+def decode_full(packet: bytes, layout: Layout, *, unparsed: bool = False) -> dict:
     """
     One packet, every field, in the canonical channel names and SI units.
 
     Pedals come out 0..1, steering -1..1, temperatures in Celsius (the game
     sends Fahrenheit), and the car-local accelerations are also given under the
     names the analysis uses: `latAcc` (positive to the right), `longAcc`
-    (positive forwards) and `yawRate`.
+    (positive forwards) and `yawRate`. With `unparsed`, `_unparsed` holds the
+    bytes no field covers (`unparsed_ranges`), as hex.
     """
     out: dict = {}
     for name, fmt, at in SLED:
@@ -164,13 +184,21 @@ def decode_full(packet: bytes, layout: Layout) -> dict:
     out["longAcc"] = out["accelZ"]
     out["vertAcc"] = out["accelY"]
     out["yawRate"] = out["angVelY"]
+    if unparsed:
+        ranges = unparsed_ranges(len(packet), layout)
+        if ranges:
+            out["_unparsed"] = "".join(packet[a:b].hex() for a, b in ranges)
+            out["_unparsedRanges"] = ranges
     return out
 
 
 #: Per-lap facts, taken once rather than written into every sample.
 CAR_FIELDS = ("carOrdinal", "carClass", "carPI", "drivetrain", "cylinders", "rpmMax", "rpmIdle")
-#: Not worth a column: constant through a lap, or bookkeeping.
-DROPPED = set(CAR_FIELDS) | {"isRaceOn", "timestampMs", "bestLap", "lastLap", "raceTime", "trackOrdinal"}
+#: Not a column because they are said once: the car (`car`), the track
+#: (`lap.trackOrdinal`), and isRaceOn, which is 1 in every frame of a lap.
+#: Everything else the packet holds is a channel - the game's clock
+#: (`timestampMs`), its race time and best and last laps too.
+DROPPED = set(CAR_FIELDS) | {"isRaceOn", "trackOrdinal"}
 
 UNITS = {
     "time": "s",
@@ -226,7 +254,7 @@ class Lap:
         first = self.frames[0]
         start_time = first["currentLap"]
         start_distance = first["distanceTravelled"]
-        names = [k for k in first if k not in DROPPED]
+        names = [k for k in first if k not in DROPPED and not k.startswith("_")]
         channels: dict[str, list] = {"time": [], "distance": []}
         for name in names:
             channels.setdefault(name, [])
@@ -245,6 +273,14 @@ class Lap:
         }
         if "trackOrdinal" in first:
             lap["trackOrdinal"] = first["trackOrdinal"]
+        extra = {}
+        if any("_unparsed" in f for f in self.frames):
+            # Bytes no field names yet, per sample, so the lap file alone holds the whole packet.
+            ranges = next((f["_unparsedRanges"] for f in self.frames if "_unparsedRanges" in f), [])
+            extra["unparsed"] = {
+                "ranges": [list(r) for r in ranges],
+                "hex": [f.get("_unparsed") for f in self.frames],
+            }
         return {
             "format": "heat3d-lap",
             "version": 1,
@@ -262,6 +298,7 @@ class Lap:
                 if name in channels or any(c.startswith(name + ".") for c in channels)
             },
             "channels": channels,
+            **extra,
         }
 
 
@@ -344,6 +381,11 @@ class FullRecorder:
     Layout detection is the listener's (`forza.detect_layout`): packets are held
     until the car has moved and the dash block's position is proven, and only
     then decoded. Relaying does not wait for it.
+
+    Every packet is also kept whole as it arrives (`lapfile.RawLog`): the
+    menus, the stretches between laps, the packets held while the layout was
+    unknown and the bytes no field names, in `<stamp>_forza.raw.parquet` beside
+    the lap files - `raw=False` leaves it out (tests).
     """
 
     def __init__(
@@ -354,6 +396,7 @@ class FullRecorder:
         port: int = 5300,
         forward: tuple[str, int] | None = None,
         timeout: float = 0.5,
+        raw: bool = True,
     ):
         self.folder = Path(folder)
         self.forward = forward
@@ -368,10 +411,15 @@ class FullRecorder:
         self._sock.bind((host, port))
         self._out = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) if forward else None
         self._heard = time.monotonic()
+        stamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        self.raw = RawLog(self.folder, f"{stamp}_forza", game="forza") if raw else None
+        self._decoded = False
 
     def close(self) -> None:
         for lap in self.splitter.flush():
             self._write(lap)
+        if self.raw is not None:
+            self.raw.close()
         self._sock.close()
         if self._out is not None:
             self._out.close()
@@ -399,6 +447,14 @@ class FullRecorder:
         self.packets += 1
         if self._out is not None and self.forward is not None:
             self._out.sendto(packet, self.forward)
+        self._decoded = False
+        try:
+            return self._feed(packet)
+        finally:
+            if self.raw is not None:
+                self.raw.keep(packet_kind(packet), packet, used=self._decoded)
+
+    def _feed(self, packet: bytes) -> list[Path]:
         if len(packet) < SLED_LENGTH + DASH_BLOCK_LENGTH:
             return []
         if self.layout is None:
@@ -419,9 +475,10 @@ class FullRecorder:
     def _frames(self, packet: bytes) -> list[Path]:
         if len(packet) != self.layout.packet_length:
             return []
-        frame = decode_full(packet, self.layout)
+        frame = decode_full(packet, self.layout, unparsed=True)
         if not all(math.isfinite(v) for v in (frame["x"], frame["z"], frame["speed"])):
             return []
+        self._decoded = bool(frame["isRaceOn"])
         return [self._write(lap) for lap in self.splitter.feed(frame)]
 
     def _write(self, lap: Lap) -> Path:
