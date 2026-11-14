@@ -80,7 +80,7 @@ the viewer maps every column without asking.
 | `killer`, `victim`, `weapon`, `headshot`, `marker` | On kill and death rows: the feed line (below). |
 
 Kill and death rows take the player's position at the feed line's time (for a death, the last
-position before it). The rows fit the viewer's [line heat](https://holdi601.github.io/3DHeat-Docs/line-heat.html) directly: its
+position before it). The rows fit the viewer's [line heat](https://holdi601.github.io/3DHeat/line-heat.html) directly: its
 suggestion picks `event`, starts at `start`, `spawn` and `revive`, ends at `death` and `end`, and
 `position` rows lie along the route; `kill` is not an end.
 
@@ -116,7 +116,7 @@ islands), the assumptions made, and the timing.
 
 The mosaic of every minimap of the run, averaged, overlays removed, turned and scaled exactly like
 the table. The JSON sidecar holds the two anchors the viewer's **Map image** placement asks for
-([Map images](https://holdi601.github.io/3DHeat-Docs/map-images.html) in the viewer's documentation): load the PNG with
+([Map images](https://holdi601.github.io/3DHeat/map-images.html) in the viewer's documentation): load the PNG with
 **Map image...**, keep **Flip north/south** on, and type anchor 1 and anchor 2 (`px`, `py`,
 `worldX`, `worldZ`) from the sidecar. The image then lies exactly under the track.
 
