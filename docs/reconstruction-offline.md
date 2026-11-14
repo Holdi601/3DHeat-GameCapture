@@ -71,6 +71,8 @@ the package's `LICENSE.txt`). See [Models and licences](models-and-licences.md).
 
 The stage names are what the command prints.
 
+![The five stages of reconstruct: masking, planning, solving, fusing, exporting](assets/img/reconstruct-stages.svg)
+
 ### masking
 
 A `FlowMask` is learned from **4 runs of 90 consecutive frames**, centred at 1/8, 3/8, 5/8 and 7/8

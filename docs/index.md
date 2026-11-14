@@ -18,10 +18,15 @@ separate jobs:
    telemetry. Frames come from Windows Graphics Capture, depth is estimated by a neural
    network, the camera path comes from visual odometry, from Forza's telemetry, or from an
    offline feed-forward solve.
+3. **The player's own match, after it.** `hud` reads the HUD of the player's own recording - own
+   actions, deaths, the minimap track, the kill feed - and `locate` places each frame on a level
+   exported by GameFiles, for games that keep no record of where the player was.
 
 Both follow one rule: **nothing is injected into a game and nothing is hooked**. Frames come
 from the public screen-capture API, telemetry from interfaces the games publish for it. See
 [The rules](rules.md).
+
+![What goes in, which command, what comes out, where the viewer shows it](assets/img/overview.svg)
 
 The code is Python (package `heat3d_capture`), MIT licensed, in
 [Holdi601/3DHeat-GameCapture](https://github.com/Holdi601/3DHeat-GameCapture). The depth and
@@ -96,7 +101,9 @@ the `vggt` package and a GPU):
 | [Slip, drift and derived channels](slip-and-drift.md) | How slip is scaled, and what the viewer derives |
 | [The heat3d-lap file](lap-format.md) | The lap file format, channels, units, `meta` |
 | [Games](games.md) | Per game: how to record, what is sent, which courses can be exported |
-| [Command reference](commands.md) | `route`, `telemetry`, `laps`, `reconstruct` and every option |
+| [Command reference](commands.md) | `route`, `telemetry`, `laps`, `reconstruct`, `hud`, `locate` and every option |
+| [Reading the HUD from a recording](hud-video.md) | `hud`: own actions, deaths, minimap track and kill feed from a recording |
+| [Locating frames in a level](locate.md) | `locate`: where each frame was taken, against the level's geometry |
 | [Level reconstruction](reconstruction.md) | The pipeline from frames to a `.glb` |
 | [The scan window](reconstruction-scan-ui.md) | Every control, hotkey and overlay element |
 | [Capture, masks and frame quality](reconstruction-capture.md) | Windows Graphics Capture, keyframes, HUD masks, quality advice |
@@ -112,6 +119,13 @@ the `vggt` package and a GPU):
 | [Development](development.md) | Tests, the virtual environment, repository layout |
 
 ## Part of 3DHeat
+
+The files this writes are loaded by the **3DHeat viewer** -
+[source](https://github.com/Holdi601/3DHeat), [documentation](https://holdi601.github.io/3DHeat/).
+Lap files go to its Race tab, `.glb` levels to its Level panel, the `hud` and `locate` tables to
+its Heatmap tab; how the viewer reads tables and match files is in
+[One file a match (.3dheat)](https://holdi601.github.io/3DHeat/container.html) and
+[Getting data in](https://holdi601.github.io/3DHeat/getting-data-in.html).
 
 | Tool | What it does |
 |---|---|

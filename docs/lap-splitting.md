@@ -24,6 +24,8 @@ files are split by the viewer on the sim's lap counter ([iRacing](telemetry-irac
 On **Ctrl+C** every recorder calls its splitter's `flush()`, so an open lap or stage is
 written if it passes the same minimums as below.
 
+![Packets go through a splitter into one file per lap; every packet is also kept in the raw sidecar](assets/img/lap-splitting.svg)
+
 ## LapSplitter (Forza)
 
 Parameters: `minimum_metres = 400`, `gap_seconds = 2.0`.

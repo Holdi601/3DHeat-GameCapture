@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="802" height="262" viewBox="0 0 802 262" role="img" aria-label="locate: from a level and a recording to the player&#x27;s own positions">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5f6368"/></marker></defs>
+<rect width="802" height="262" rx="8" fill="#ffffff" stroke="#dadce0"/>
+<text x="16" y="24" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="600" fill="#202124">locate: from a level and a recording to the player&#x27;s own positions</text>
+<line x1="311" y1="94" x2="311" y2="118" stroke="#5f6368" stroke-width="1.6" marker-end="url(#a)"/>
+<line x1="196" y1="145" x2="224" y2="145" stroke="#5f6368" stroke-width="1.6" marker-end="url(#a)"/>
+<line x1="396" y1="145" x2="424" y2="145" stroke="#5f6368" stroke-width="1.6" marker-end="url(#a)"/>
+<line x1="596" y1="145" x2="624" y2="145" stroke="#5f6368" stroke-width="1.6" marker-end="url(#a)"/>
+<line x1="311" y1="196" x2="311" y2="172" stroke="#5f6368" stroke-width="1.6" marker-end="url(#a)"/>
+<line x1="424" y1="69" x2="398" y2="69" stroke="#5f6368" stroke-width="1.6" marker-end="url(#a)"/>
+<rect x="16" y="44" width="180" height="50" rx="6" fill="#e8f0fe" stroke="#9aa0a6"/>
+<text x="106.0" y="65.0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="600" fill="#202124" text-anchor="middle">level .glb</text>
+<text x="106.0" y="81.0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="12.5" fill="#202124" text-anchor="middle">from GameFiles</text>
+<rect x="226" y="44" width="170" height="50" rx="6" fill="#fff4e0" stroke="#9aa0a6"/>
+<text x="311.0" y="65.0" font-family="Consolas,Menlo,monospace" font-size="12.5" font-weight="600" fill="#202124" text-anchor="middle">locate build</text>
+<text x="311.0" y="81.0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="12.5" fill="#202124" text-anchor="middle">renders + index</text>
+<rect x="16" y="120" width="180" height="50" rx="6" fill="#e8f0fe" stroke="#9aa0a6"/>
+<text x="106.0" y="141.0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="600" fill="#202124" text-anchor="middle">recording</text>
+<text x="106.0" y="157.0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="12.5" fill="#202124" text-anchor="middle">video or pictures</text>
+<rect x="226" y="120" width="170" height="50" rx="6" fill="#fff4e0" stroke="#9aa0a6"/>
+<text x="311.0" y="141.0" font-family="Consolas,Menlo,monospace" font-size="12.5" font-weight="600" fill="#202124" text-anchor="middle">locate frames</text>
+<text x="311.0" y="157.0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="12.5" fill="#202124" text-anchor="middle">retrieve, match, solve</text>
+<rect x="426" y="120" width="170" height="50" rx="6" fill="#fff4e0" stroke="#9aa0a6"/>
+<text x="511.0" y="141.0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="600" fill="#202124" text-anchor="middle">track</text>
+<text x="511.0" y="157.0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="12.5" fill="#202124" text-anchor="middle">jumps only at deaths</text>
+<rect x="626" y="120" width="160" height="50" rx="6" fill="#e6f4ea" stroke="#9aa0a6"/>
+<text x="706.0" y="141.0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="600" fill="#202124" text-anchor="middle">&lt;out&gt;.parquet</text>
+<text x="706.0" y="157.0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="12.5" fill="#202124" text-anchor="middle">+ summary, checks</text>
+<rect x="226" y="196" width="170" height="50" rx="6" fill="#fff4e0" stroke="#9aa0a6"/>
+<text x="311.0" y="217.0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="600" fill="#202124" text-anchor="middle">hud or locate minimap</text>
+<text x="311.0" y="233.0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="12.5" fill="#202124" text-anchor="middle">prior and lives</text>
+<rect x="426" y="44" width="170" height="50" rx="6" fill="#fff4e0" stroke="#9aa0a6"/>
+<text x="511.0" y="65.0" font-family="Consolas,Menlo,monospace" font-size="12.5" font-weight="600" fill="#202124" text-anchor="middle">locate train</text>
+<text x="511.0" y="81.0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="12.5" fill="#202124" text-anchor="middle">optional head for build</text>
+</svg>

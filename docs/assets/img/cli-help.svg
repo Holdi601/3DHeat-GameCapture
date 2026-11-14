@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="632" height="482" viewBox="0 0 632 482" role="img" aria-label="heat3d_capture --help">
+<rect width="632" height="482" rx="8" fill="#1e1f24"/>
+<rect width="632" height="26" rx="8" fill="#2c2e35"/><rect y="18" width="632" height="8" fill="#2c2e35"/>
+<circle cx="16" cy="13" r="5" fill="#ff5f57"/><circle cx="32" cy="13" r="5" fill="#febc2e"/><circle cx="48" cy="13" r="5" fill="#28c840"/>
+<text x="316.0" y="17" fill="#9aa0aa" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="12" text-anchor="middle">heat3d_capture --help</text>
+<g font-family="Consolas,Menlo,DejaVu Sans Mono,monospace" font-size="13" xml:space="preserve" style="white-space:pre">
+<text x="16" y="46" fill="#7ee787">$&#160;python&#160;-m&#160;heat3d_capture&#160;--help</text>
+<text x="16" y="64" fill="#d6d9df">usage:&#160;heat3d_capture&#160;[-h]&#160;{route,telemetry,laps,reconstruct,hud,locate}&#160;...</text>
+<text x="16" y="82" fill="#d6d9df"></text>
+<text x="16" y="100" fill="#d6d9df">Reconstruct&#160;a&#160;level&#160;from&#160;a&#160;recording.</text>
+<text x="16" y="118" fill="#d6d9df"></text>
+<text x="16" y="136" fill="#d6d9df">positional&#160;arguments:</text>
+<text x="16" y="154" fill="#d6d9df">&#160;&#160;{route,telemetry,laps,reconstruct,hud,locate}</text>
+<text x="16" y="172" fill="#d6d9df">&#160;&#160;&#160;&#160;route&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;record&#160;a&#160;lap&#x27;s&#160;positions&#160;from&#160;the&#160;game&#x27;s&#160;telemetry,</text>
+<text x="16" y="190" fill="#d6d9df">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;and&#160;nothing&#160;else</text>
+<text x="16" y="208" fill="#d6d9df">&#160;&#160;&#160;&#160;telemetry&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;record&#160;every&#160;telemetry&#160;channel,&#160;one&#160;file&#160;per&#160;lap,&#160;for</text>
+<text x="16" y="226" fill="#d6d9df">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;the&#160;viewer&#x27;s&#160;Race&#160;tab</text>
+<text x="16" y="244" fill="#d6d9df">&#160;&#160;&#160;&#160;laps&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;read&#160;a&#160;recorded&#160;lap&#160;library,&#160;and&#160;write&#160;out&#160;one&#160;course</text>
+<text x="16" y="262" fill="#d6d9df">&#160;&#160;&#160;&#160;reconstruct&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;solve&#160;a&#160;recording&#160;offline&#160;and&#160;write&#160;a&#160;.glb</text>
+<text x="16" y="280" fill="#d6d9df">&#160;&#160;&#160;&#160;hud&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;read&#160;the&#160;player&#x27;s&#160;own&#160;actions,&#160;deaths&#160;and&#160;minimap</text>
+<text x="16" y="298" fill="#d6d9df">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;track,&#160;and&#160;the&#160;kill&#160;feed,&#160;out&#160;of&#160;a&#160;recording,&#160;after</text>
+<text x="16" y="316" fill="#d6d9df">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;the&#160;match</text>
+<text x="16" y="334" fill="#d6d9df">&#160;&#160;&#160;&#160;locate&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;where&#160;each&#160;frame&#160;of&#160;a&#160;recording&#160;was&#160;taken,&#160;from&#160;the</text>
+<text x="16" y="352" fill="#d6d9df">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;picture&#160;against&#160;the&#160;level&#x27;s&#160;geometry</text>
+<text x="16" y="370" fill="#d6d9df"></text>
+<text x="16" y="388" fill="#d6d9df">options:</text>
+<text x="16" y="406" fill="#d6d9df">&#160;&#160;-h,&#160;--help&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;show&#160;this&#160;help&#160;message&#160;and&#160;exit</text>
+<text x="16" y="424" fill="#d6d9df"></text>
+<text x="16" y="442" fill="#d6d9df">For&#160;live&#160;scanning&#160;with&#160;the&#160;overlay&#160;and&#160;coverage&#160;map,&#160;run&#160;python&#160;-m</text>
+<text x="16" y="460" fill="#d6d9df">heat3d_capture.ui&#160;instead.</text>
+</g></svg>

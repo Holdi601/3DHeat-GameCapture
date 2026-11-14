@@ -17,6 +17,8 @@ assists, revives, resupplies, captures...), their deaths from the down and deplo
 
 Battlefield 6 is the first game profile.
 
+![hud: one recording in, the track, the events, a summary and the map image out](assets/img/hud-outputs.svg)
+
 ## What it does and does not touch
 
 - It reads a **video file**: a ShadowPlay / Instant Replay clip, an OBS recording, anything
@@ -91,7 +93,7 @@ the viewer maps every column without asking.
 | `killer`, `victim`, `weapon`, `headshot`, `marker` | On kill and death rows that have a feed line: the feed line (below). A popup kill with no feed line has the popup's name as `victim`; a popup kill shown as HEADSHOT has `headshot` true. |
 
 Every event row takes the player's position at the event's time (for a death or a down, the last
-position before it; for a revive, the first after). The rows fit the viewer's [line heat](https://holdi601.github.io/3DHeat-Docs/line-heat.html) directly: its
+position before it; for a revive, the first after). The rows fit the viewer's [line heat](https://holdi601.github.io/3DHeat/line-heat.html) directly: its
 suggestion picks `event`, starts at `start`, `spawn` and `revived`, ends at `death`, `downed` and
 `end`, and `position` rows lie along the route. The other events are named so that the
 suggestion takes none of them for a start or an end: giving a revive is `reviving` (not
@@ -145,7 +147,7 @@ feed lines, per map whether it is north up and how many compass reads agreed, th
 
 The mosaic of every minimap of the run, averaged, overlays removed, turned and scaled exactly like
 the table. The JSON sidecar holds the two anchors the viewer's **Map image** placement asks for
-([Map images](https://holdi601.github.io/3DHeat-Docs/map-images.html) in the viewer's documentation): load the PNG with
+([Map images](https://holdi601.github.io/3DHeat/map-images.html) in the viewer's documentation): load the PNG with
 **Map image...**, keep **Flip north/south** on, and type anchor 1 and anchor 2 (`px`, `py`,
 `worldX`, `worldZ`) from the sidecar. The image then lies exactly under the track.
 

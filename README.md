@@ -4,7 +4,7 @@
 > with its own obligations. What a reconstruction may be used for depends on the
 > depth model chosen: the default is Apache-2.0 and unrestricted, the larger and
 > more accurate variants are CC-BY-NC-4.0 and non-commercial. Full detail in
-> [`../LICENSES.md`](../LICENSES.md).
+> [`LICENSES.md`](LICENSES.md).
 >
 > The division is not administrative. A developer with the project open should use
 > `unreal/` — it reads the real geometry and is exact. This is for
@@ -17,6 +17,92 @@ into the viewer as 3D context under the telemetry.
 Walk a Battlefield level slowly, or drive a Forza track, and this turns what the
 screen showed into a `.glb` the viewer reads with no special handling — the same
 file contract `unreal/` writes.
+
+## At a glance
+
+3DHeat GameCapture is one of the free tools around the
+[3DHeat viewer](https://github.com/Holdi601/3DHeat) ([documentation](https://holdi601.github.io/3DHeat/)).
+Full documentation of this tool, a page per command:
+**[holdi601.github.io/3DHeat-GameCapture](https://holdi601.github.io/3DHeat-GameCapture/)**.
+
+What it is useful for:
+
+- **Lap telemetry** - record every channel a racing game publishes (Forza Data Out, the Assetto
+  Corsa games' shared memory, the rally games' UDP, a BeamNG mod, a Trackmania plugin), one
+  `heat3d-lap` file per lap, for the viewer's Race tab: lines, speed traces, slip, braking zones.
+- **Levels nobody exported** - turn what the screen showed into a `.glb` the viewer lays under
+  the heatmap.
+- **Your own match, after it** - read the HUD of your own recording (actions, deaths, minimap
+  track, kill feed), and place each frame on a level, for games that keep no record of where you
+  were.
+
+Nothing is injected into a game and nothing is hooked: frames come from the public screen-capture
+API, telemetry from interfaces the games publish for it.
+
+![What goes in, which command, what comes out, where the viewer shows it](docs/assets/img/overview.svg)
+
+### Install
+
+Python 3 (developed on 3.13), Windows for screen capture and the Assetto Corsa recorders.
+
+```bash
+git clone https://github.com/Holdi601/3DHeat-GameCapture
+cd 3DHeat-GameCapture
+python -m venv .venv
+.venv/Scripts/python -m pip install -r requirements.txt          # telemetry, the scan window
+.venv/Scripts/python -m pip install -r requirements-offline.txt  # reconstruct (PyTorch, VGGT)
+.venv/Scripts/python -m pip install -r requirements-locate.txt   # locate (PyTorch)
+```
+
+Or double-click `scan.bat`, which checks what is missing and asks before installing anything
+(below, [Running it](#running-it)).
+
+### Commands
+
+| Command | Does | Docs |
+|---|---|---|
+| `telemetry` | records every channel, a lap file per lap | [Telemetry recorders](https://holdi601.github.io/3DHeat-GameCapture/telemetry.html) |
+| `route` | records a Forza lap's positions only | [Commands](https://holdi601.github.io/3DHeat-GameCapture/commands.html#route) |
+| `laps` | reads an FH Companion lap library, writes one course | [Commands](https://holdi601.github.io/3DHeat-GameCapture/commands.html#laps) |
+| `reconstruct` | solves a recording offline into a `.glb` | [Offline reconstruction](https://holdi601.github.io/3DHeat-GameCapture/reconstruction-offline.html) |
+| `hud` | own actions, deaths, minimap track and kill feed from a recording | [Reading the HUD](https://holdi601.github.io/3DHeat-GameCapture/hud-video.html) |
+| `locate build/frames/train/refmap/minimap/eval` | where each frame of a recording was taken | [Locating frames](https://holdi601.github.io/3DHeat-GameCapture/locate.html) |
+| `python -m heat3d_capture.ui` | the live scan window | [The scan window](https://holdi601.github.io/3DHeat-GameCapture/reconstruction-scan-ui.html) |
+| `python -m heat3d_update [--check]` | checks for and applies an update | [Updates](https://holdi601.github.io/3DHeat-GameCapture/updates.html) |
+
+Every option of every command: [Command reference](https://holdi601.github.io/3DHeat-GameCapture/commands.html),
+or `--help` after any verb.
+
+```bash
+python -m heat3d_capture telemetry -o laps                                    # Forza, port 5300
+python -m heat3d_capture telemetry --game acc -o laps                         # ac, acc, acevo, acrally
+python -m heat3d_capture telemetry --game wrc --configure <config.json> -o laps
+python -m heat3d_capture telemetry --game beamng --install -o laps
+python -m heat3d_capture route -o lap --seconds 600
+python -m heat3d_capture laps                                                 # list the courses
+python -m heat3d_capture laps "<course>" -o out/course
+python -m heat3d_capture reconstruct "<recording>.mp4" -o level.glb
+python -m heat3d_capture hud "<recording>.mp4" --game bf6 --player <name> -o out/match
+python -m heat3d_capture locate build level.glb -o level.db
+python -m heat3d_capture locate frames "<recording>.mp4" --db level.db -o out/match
+```
+
+![telemetry recording two laps of a synthetic Forza feed](docs/assets/img/telemetry-run.svg)
+
+### Output
+
+| File | From | Holds | In the viewer |
+|---|---|---|---|
+| `<stamp>_car<n>_lap<k>_<s>s.lap.json` | `telemetry` | one lap: `game`, `car`, `lap`, `meta`, `units`, and every channel as a column (`time`, `distance`, `x`, `y`, `z`, `speed`, per-wheel slip, ...) - [the format](https://holdi601.github.io/3DHeat-GameCapture/lap-format.html) | Race tab |
+| `<stamp>_<game>.raw.parquet`, `.summary.json` | `telemetry` | every packet kept whole; the completeness self-check (below) | skipped |
+| `<level>.glb` | scan window, `reconstruct` | one mesh in the viewer's frame - [the .glb](https://holdi601.github.io/3DHeat-GameCapture/glb-output.html) | Level panel |
+| `<out>.parquet` (+ `.events.jsonl`, `.summary.json`, `.map.png`) | `hud` | the player's track and own events, one row each, in minimap or level units | Heatmap tab, Map image |
+| `<out>.parquet` (+ `.summary.json`) | `locate frames` | per frame: time, position, view direction, where the fix came from, confidence | Heatmap tab |
+
+The tables follow the viewer's column roles (time, position, entity, event); how the viewer reads
+tables and its one-file-a-match container is in
+[Getting data in](https://holdi601.github.io/3DHeat/getting-data-in.html) and
+[One file a match (.3dheat)](https://holdi601.github.io/3DHeat/container.html).
 
 ## The rule this is built under
 
@@ -784,6 +870,7 @@ own project, with its own releases and licence:
 
 | Tool | What it does |
 |---|---|
+| [3DHeat](https://github.com/Holdi601/3DHeat) ([docs](https://holdi601.github.io/3DHeat/)) | the viewer: realtime 3D heatmaps, race analysis and match review |
 | [3DHeat GameFiles](https://github.com/Holdi601/3DHeat-GameFiles) | courses and levels out of the archives games ship, as glTF |
 | [3DHeat GameCapture](https://github.com/Holdi601/3DHeat-GameCapture) | lap telemetry from racing games' published interfaces; levels reconstructed from gameplay video |
 | [3DHeat Unreal Exporter](https://github.com/Holdi601/3DHeat-UnrealExporter) | an Unreal Editor plugin that exports a level as glTF |
@@ -805,4 +892,5 @@ settings, exports - are never touched. To update on request: `python -m heat3d_u
 MIT - see [`LICENSE`](LICENSE), and [`LICENSES.md`](LICENSES.md) for the
 third-party packages it uses and what the games it reads oblige.
 
-Documentation: the [wiki](https://github.com/Holdi601/3DHeat-GameCapture/wiki).
+Documentation: the [GameCapture site](https://holdi601.github.io/3DHeat-GameCapture/) (from `docs/`),
+and the viewer's at [holdi601.github.io/3DHeat](https://holdi601.github.io/3DHeat/).

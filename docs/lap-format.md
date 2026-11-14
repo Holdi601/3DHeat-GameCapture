@@ -11,6 +11,8 @@ stage, in the same shape whatever the game. The course export in `gamefiles/`
 reads it back to find the game, the level and the driven line. Anything that
 reads JSON can read it.
 
+![The fields and channels of a lap file written from a synthetic Forza feed](assets/img/lap-file.svg)
+
 ## The document
 
 One JSON object. Channels are stored as columns: one array per channel, all

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="776" height="126" viewBox="0 0 776 126" role="img" aria-label="reconstruct: the stages it prints, in order">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5f6368"/></marker></defs>
+<rect width="776" height="126" rx="8" fill="#ffffff" stroke="#dadce0"/>
+<text x="16" y="24" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="600" fill="#202124">reconstruct: the stages it prints, in order</text>
+<line x1="156" y1="78" x2="166" y2="78" stroke="#5f6368" stroke-width="1.6" marker-end="url(#a)"/>
+<line x1="308" y1="78" x2="318" y2="78" stroke="#5f6368" stroke-width="1.6" marker-end="url(#a)"/>
+<line x1="460" y1="78" x2="470" y2="78" stroke="#5f6368" stroke-width="1.6" marker-end="url(#a)"/>
+<line x1="612" y1="78" x2="622" y2="78" stroke="#5f6368" stroke-width="1.6" marker-end="url(#a)"/>
+<rect x="16" y="50" width="140" height="56" rx="6" fill="#e8f0fe" stroke="#9aa0a6"/>
+<text x="86.0" y="74.0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="600" fill="#202124" text-anchor="middle">masking</text>
+<text x="86.0" y="90.0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="12.5" fill="#202124" text-anchor="middle">learn what never moves</text>
+<rect x="168" y="50" width="140" height="56" rx="6" fill="#fff4e0" stroke="#9aa0a6"/>
+<text x="238.0" y="74.0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="600" fill="#202124" text-anchor="middle">planning</text>
+<text x="238.0" y="90.0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="12.5" fill="#202124" text-anchor="middle">frames by motion</text>
+<rect x="320" y="50" width="140" height="56" rx="6" fill="#fff4e0" stroke="#9aa0a6"/>
+<text x="390.0" y="74.0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="600" fill="#202124" text-anchor="middle">solving</text>
+<text x="390.0" y="90.0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="12.5" fill="#202124" text-anchor="middle">VGGT windows</text>
+<rect x="472" y="50" width="140" height="56" rx="6" fill="#fff4e0" stroke="#9aa0a6"/>
+<text x="542.0" y="74.0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="600" fill="#202124" text-anchor="middle">fusing</text>
+<text x="542.0" y="90.0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="12.5" fill="#202124" text-anchor="middle">depth along the path</text>
+<rect x="624" y="50" width="140" height="56" rx="6" fill="#e6f4ea" stroke="#9aa0a6"/>
+<text x="694.0" y="74.0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="600" fill="#202124" text-anchor="middle">exporting</text>
+<text x="694.0" y="90.0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="12.5" fill="#202124" text-anchor="middle">one .glb</text>
+</svg>

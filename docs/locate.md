@@ -22,6 +22,10 @@ The position comes **from the picture**, against the whole level, with no prior.
 of the [HUD reader](hud-video.md) is only a fallback for frames the picture cannot place, and every
 row says which of the two it came from.
 
+![locate: build once per level, then locate each recording's frames; the hud reader or locate minimap gives a prior and the lives](assets/img/locate-pipeline.svg)
+
+![The locate sub-commands, as --help lists them](assets/img/locate-help.svg)
+
 ## What it does and does not touch
 
 - It reads the player's **own recording** and a level file the player exported from their **own

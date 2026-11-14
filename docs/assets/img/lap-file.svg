@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="812" height="446" viewBox="0 0 812 446" role="img" aria-label="a heat3d-lap file (synthetic lap)">
+<rect width="812" height="446" rx="8" fill="#1e1f24"/>
+<rect width="812" height="26" rx="8" fill="#2c2e35"/><rect y="18" width="812" height="8" fill="#2c2e35"/>
+<circle cx="16" cy="13" r="5" fill="#ff5f57"/><circle cx="32" cy="13" r="5" fill="#febc2e"/><circle cx="48" cy="13" r="5" fill="#28c840"/>
+<text x="406.0" y="17" fill="#9aa0aa" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="12" text-anchor="middle">a heat3d-lap file (synthetic lap)</text>
+<g font-family="Consolas,Menlo,DejaVu Sans Mono,monospace" font-size="13" xml:space="preserve" style="white-space:pre">
+<text x="16" y="46" fill="#7ee787">$&#160;python&#160;-c&#160;&quot;import&#160;json;&#160;d&#160;=&#160;json.load(open(&#x27;&lt;lap&gt;.lap.json&#x27;));&#160;...&quot;</text>
+<text x="16" y="64" fill="#d6d9df">format&#160;&#160;&#160;&quot;heat3d-lap&quot;</text>
+<text x="16" y="82" fill="#d6d9df">version&#160;&#160;1</text>
+<text x="16" y="100" fill="#d6d9df">game&#160;&#160;&#160;&#160;&#160;&quot;forza-horizon&quot;</text>
+<text x="16" y="118" fill="#d6d9df">track&#160;&#160;&#160;&#160;null</text>
+<text x="16" y="136" fill="#d6d9df">lap&#160;&#160;&#160;&#160;&#160;&#160;{&quot;number&quot;:&#160;1,&#160;&quot;seconds&quot;:&#160;31.4159,&#160;&quot;complete&quot;:&#160;true,&#160;&quot;metres&quot;:&#160;942.0}</text>
+<text x="16" y="154" fill="#d6d9df">meta&#160;&#160;&#160;&#160;&#160;{&quot;slip&quot;:&#160;&quot;peak&quot;,&#160;&quot;discipline&quot;:&#160;&quot;circuit&quot;}</text>
+<text x="16" y="172" fill="#d6d9df">channels&#160;83&#160;channels&#160;x&#160;1885&#160;samples</text>
+<text x="16" y="190" fill="#d6d9df">&#160;&#160;time,&#160;distance,&#160;timestampMs,&#160;rpm,&#160;accelX,&#160;accelY</text>
+<text x="16" y="208" fill="#d6d9df">&#160;&#160;accelZ,&#160;latVel,&#160;vertVel,&#160;longVel,&#160;angVelX,&#160;angVelY</text>
+<text x="16" y="226" fill="#d6d9df">&#160;&#160;angVelZ,&#160;yaw,&#160;pitch,&#160;roll,&#160;suspension.FL,&#160;suspension.FR</text>
+<text x="16" y="244" fill="#d6d9df">&#160;&#160;suspension.RL,&#160;suspension.RR,&#160;slipRatio.FL,&#160;slipRatio.FR,&#160;slipRatio.RL,&#160;slipRatio.RR</text>
+<text x="16" y="262" fill="#d6d9df">&#160;&#160;wheelSpeed.FL,&#160;wheelSpeed.FR,&#160;wheelSpeed.RL,&#160;wheelSpeed.RR,&#160;rumble.FL,&#160;rumble.FR</text>
+<text x="16" y="280" fill="#d6d9df">&#160;&#160;rumble.RL,&#160;rumble.RR,&#160;puddle.FL,&#160;puddle.FR,&#160;puddle.RL,&#160;puddle.RR</text>
+<text x="16" y="298" fill="#d6d9df">&#160;&#160;surfaceRumble.FL,&#160;surfaceRumble.FR,&#160;surfaceRumble.RL,&#160;surfaceRumble.RR,&#160;slipAngle.FL,&#160;slipAngle.FR</text>
+<text x="16" y="316" fill="#d6d9df">&#160;&#160;slipAngle.RL,&#160;slipAngle.RR,&#160;combinedSlip.FL,&#160;combinedSlip.FR,&#160;combinedSlip.RL,&#160;combinedSlip.RR</text>
+<text x="16" y="334" fill="#d6d9df">&#160;&#160;suspensionM.FL,&#160;suspensionM.FR,&#160;suspensionM.RL,&#160;suspensionM.RR,&#160;x,&#160;y</text>
+<text x="16" y="352" fill="#d6d9df">&#160;&#160;z,&#160;speed,&#160;power,&#160;torque,&#160;boost,&#160;fuel</text>
+<text x="16" y="370" fill="#d6d9df">&#160;&#160;distanceTravelled,&#160;bestLap,&#160;lastLap,&#160;currentLap,&#160;raceTime,&#160;lapNumber</text>
+<text x="16" y="388" fill="#d6d9df">&#160;&#160;racePosition,&#160;throttle,&#160;brake,&#160;clutch,&#160;handbrake,&#160;gear</text>
+<text x="16" y="406" fill="#d6d9df">&#160;&#160;steer,&#160;drivingLine,&#160;aiBrakeDifference,&#160;tireTemp.FL,&#160;tireTemp.FR,&#160;tireTemp.RL</text>
+<text x="16" y="424" fill="#d6d9df">&#160;&#160;tireTemp.RR,&#160;latAcc,&#160;longAcc,&#160;vertAcc,&#160;yawRate</text>
+</g></svg>
