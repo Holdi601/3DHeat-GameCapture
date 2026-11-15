@@ -1,7 +1,7 @@
 ---
 title: "Fusión, cobertura y color"
 nav_order: 5
-lang: es
+lang: "es"
 source: reconstruction-fusion-and-texture.md
 source_hash: "0b3ff873cd94"
 nav_exclude: true

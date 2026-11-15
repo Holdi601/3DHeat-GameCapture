@@ -1,7 +1,7 @@
 ---
 title: "Captura, máscaras y calidad de fotograma"
 nav_order: 2
-lang: es
+lang: "es"
 source: reconstruction-capture.md
 source_hash: "986c2c1fa3ca"
 nav_exclude: true

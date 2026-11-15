@@ -1,7 +1,7 @@
 ---
 title: "Pose de la cámara y escala"
 nav_order: 4
-lang: es
+lang: "es"
 source: reconstruction-pose.md
 source_hash: "b4e80fd24449"
 nav_exclude: true

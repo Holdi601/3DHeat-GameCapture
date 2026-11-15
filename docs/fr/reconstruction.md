@@ -1,7 +1,7 @@
 ---
 title: Reconstruction de niveau
 nav_order: 6
-lang: fr
+lang: "fr"
 source: reconstruction.md
 source_hash: "335908a1ed4a"
 nav_exclude: true

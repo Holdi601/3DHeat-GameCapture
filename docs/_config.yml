@@ -11,3 +11,8 @@ aux_links:
 exclude:
   - wiki
   - "*.py"
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: "default"

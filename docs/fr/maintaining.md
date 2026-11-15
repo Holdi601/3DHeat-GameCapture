@@ -1,7 +1,7 @@
 ---
 title: "Maintenance de ces pages"
 nav_order: 96
-lang: fr
+lang: "fr"
 source: maintaining.md
 source_hash: "ab9167bccf3a"
 nav_exclude: true

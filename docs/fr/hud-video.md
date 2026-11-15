@@ -1,7 +1,7 @@
 ---
 title: "Lire le HUD depuis une vidéo"
 nav_order: 90
-lang: fr
+lang: "fr"
 source: hud-video.md
 source_hash: "3ae76739ec8d"
 nav_exclude: true

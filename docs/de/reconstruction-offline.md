@@ -1,7 +1,7 @@
 ---
 title: Offline-Rekonstruktion
 nav_order: 7
-lang: de
+lang: "de"
 source: reconstruction-offline.md
 source_hash: "1ce6bea35ee0"
 nav_exclude: true

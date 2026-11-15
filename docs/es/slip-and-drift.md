@@ -1,7 +1,7 @@
 ---
 title: "Deslizamiento, deriva y canales derivados"
 nav_order: 8
-lang: es
+lang: "es"
 source: slip-and-drift.md
 source_hash: "6b4721abae3c"
 nav_exclude: true

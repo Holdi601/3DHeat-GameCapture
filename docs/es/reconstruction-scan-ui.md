@@ -1,7 +1,7 @@
 ---
 title: La ventana de escaneo
 nav_order: 1
-lang: es
+lang: "es"
 source: reconstruction-scan-ui.md
 source_hash: "829cfd5ef4de"
 nav_exclude: true

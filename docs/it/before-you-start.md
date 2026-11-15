@@ -1,7 +1,7 @@
 ---
 title: Prima di iniziare
 nav_order: 1.5
-lang: it
+lang: "it"
 source: before-you-start.md
 source_hash: "0c8bf313b1db"
 nav_exclude: true
@@ -32,7 +32,7 @@ Git scarica lo strumento. Prendilo da [git-scm.com](https://git-scm.com/download
 
 ## 3. Apri un terminale in una cartella {#open-a-terminal-in-a-folder}
 
-Un terminale è una finestra in cui digiti i comandi. Queste pagine usano **PowerShell**, che ogni PC
+Un terminale è una finestra in cui scrivi i comandi. Queste pagine usano **PowerShell**, che ogni PC
 Windows ha.
 
 - Apri la cartella in Esplora file, clicca nella barra degli indirizzi, digita `powershell` e premi
@@ -50,7 +50,7 @@ cd "C:\Games\Tools"
   `<recording>.mp4` significa un nome di file come `match1.mp4`.
 - Il testo tra parentesi quadre, come `[--fps 5]`, è **facoltativo**.
 - Un percorso con spazi richiede le virgolette: `"C:\My Videos\match1.mp4"`.
-- Le righe che iniziano con `#` sono commenti. Non le digiti.
+- Le righe che iniziano con `#` sono commenti. Non digitarle.
 
 ## 5. Procurati lo strumento e i suoi pacchetti {#get-the-tool-and-its-packages}
 

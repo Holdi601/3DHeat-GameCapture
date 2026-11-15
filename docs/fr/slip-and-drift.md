@@ -1,7 +1,7 @@
 ---
 title: "Glissement, dérive et canaux dérivés"
 nav_order: 8
-lang: fr
+lang: "fr"
 source: slip-and-drift.md
 source_hash: "6b4721abae3c"
 nav_exclude: true

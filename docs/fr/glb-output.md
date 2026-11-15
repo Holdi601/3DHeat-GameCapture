@@ -1,7 +1,7 @@
 ---
 title: Le fichier .glb produit
 nav_order: 6
-lang: fr
+lang: "fr"
 source: glb-output.md
 source_hash: "ef4602372650"
 nav_exclude: true

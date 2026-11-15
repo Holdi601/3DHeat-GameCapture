@@ -1,7 +1,7 @@
 ---
 title: "Pose et échelle de la caméra"
 nav_order: 4
-lang: fr
+lang: "fr"
 source: reconstruction-pose.md
 source_hash: "b4e80fd24449"
 nav_exclude: true

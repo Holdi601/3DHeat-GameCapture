@@ -1,7 +1,7 @@
 ---
 title: "Bilder in einem Level verorten"
 nav_order: 91
-lang: de
+lang: "de"
 source: locate.md
 source_hash: "a194419868e6"
 nav_exclude: true

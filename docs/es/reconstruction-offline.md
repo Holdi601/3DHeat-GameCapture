@@ -1,7 +1,7 @@
 ---
 title: "Reconstrucción sin conexión"
 nav_order: 7
-lang: es
+lang: "es"
 source: reconstruction-offline.md
 source_hash: "1ce6bea35ee0"
 nav_exclude: true

@@ -1,7 +1,7 @@
 ---
 title: Modèles et licences
 nav_order: 7
-lang: fr
+lang: "fr"
 source: models-and-licences.md
 source_hash: "87be1ce962da"
 nav_exclude: true

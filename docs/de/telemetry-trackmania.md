@@ -1,7 +1,7 @@
 ---
 title: Trackmania (2020)
 nav_order: 5
-lang: de
+lang: "de"
 source: telemetry-trackmania.md
 source_hash: "26be8aff772b"
 nav_exclude: true

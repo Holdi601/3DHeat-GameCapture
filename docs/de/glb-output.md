@@ -1,7 +1,7 @@
 ---
 title: Die .glb-Ausgabe
 nav_order: 6
-lang: de
+lang: "de"
 source: glb-output.md
 source_hash: "ef4602372650"
 nav_exclude: true

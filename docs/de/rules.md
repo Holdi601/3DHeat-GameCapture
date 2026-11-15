@@ -1,7 +1,7 @@
 ---
 title: Die Regeln dieses Werkzeugs
 nav_order: 2
-lang: de
+lang: "de"
 source: rules.md
 source_hash: "88d5b7041a49"
 nav_exclude: true

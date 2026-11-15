@@ -1,7 +1,7 @@
 ---
 title: "Cómo se dividen las vueltas y los tramos"
 nav_order: 7
-lang: es
+lang: "es"
 source: lap-splitting.md
 source_hash: "cc8d3ba8e92e"
 nav_exclude: true

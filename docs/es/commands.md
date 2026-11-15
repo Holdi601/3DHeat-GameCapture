@@ -1,7 +1,7 @@
 ---
 title: Referencia de comandos
 nav_order: 5
-lang: es
+lang: "es"
 source: commands.md
 source_hash: "2d4420053a98"
 nav_exclude: true

@@ -1,7 +1,7 @@
 ---
 title: "HUD aus einer Aufnahme lesen"
 nav_order: 90
-lang: de
+lang: "de"
 source: hud-video.md
 source_hash: "3ae76739ec8d"
 nav_exclude: true

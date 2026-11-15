@@ -1,7 +1,7 @@
 ---
 title: "Перад пачаткам"
 nav_order: 1.5
-lang: be
+lang: "be"
 source: before-you-start.md
 source_hash: "0c8bf313b1db"
 nav_exclude: true

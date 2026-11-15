@@ -1,7 +1,7 @@
 ---
 title: Level-Rekonstruktion aus dem Spiel
 nav_order: 6
-lang: de
+lang: "de"
 source: reconstruction.md
 source_hash: "335908a1ed4a"
 nav_exclude: true

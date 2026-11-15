@@ -1,7 +1,7 @@
 ---
 title: Schlupf, Drift und abgeleitete Kanäle
 nav_order: 8
-lang: de
+lang: "de"
 source: slip-and-drift.md
 source_hash: "6b4721abae3c"
 nav_exclude: true

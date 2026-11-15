@@ -13,7 +13,7 @@
 <line x1="271" y1="119.0" x2="303" y2="119.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
 <rect x="593" y="84" width="247" height="70" rx="8" fill="#e6f4ea" stroke="#8a94a3"/>
 <text x="717" y="114" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">&lt;giro&gt;.lap.json</text>
-<text x="717" y="134" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">3DHeat: scheda Analisi di gara</text>
+<text x="717" y="134" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">3DHeat: Analisi di gara</text>
 <line x1="557" y1="119.0" x2="589" y2="119.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
 <rect x="20" y="168" width="247" height="70" rx="8" fill="#e8f0fe" stroke="#8a94a3"/>
 <text x="143" y="198" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">Un giro di Forza</text>
@@ -37,9 +37,9 @@
 <line x1="557" y1="287.0" x2="589" y2="287.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
 <rect x="20" y="336" width="247" height="70" rx="8" fill="#e8f0fe" stroke="#8a94a3"/>
 <text x="143" y="366" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">Lo schermo mentre giochi</text>
-<text x="143" y="386" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">Cattura dello schermo di Windows</text>
+<text x="143" y="386" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">Cattura schermo Windows</text>
 <rect x="307" y="336" width="247" height="70" rx="8" fill="#fff4e0" stroke="#8a94a3"/>
-<text x="430" y="376" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">finestra di scansione</text>
+<text x="430" y="376" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">scansione</text>
 <line x1="271" y1="371.0" x2="303" y2="371.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
 <rect x="593" y="336" width="247" height="70" rx="8" fill="#e6f4ea" stroke="#8a94a3"/>
 <text x="717" y="366" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">livello .glb</text>
@@ -63,7 +63,7 @@
 <text x="430" y="554" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">locate (sperimentale)</text>
 <line x1="271" y1="539.0" x2="303" y2="539.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
 <rect x="593" y="504" width="247" height="70" rx="8" fill="#e6f4ea" stroke="#8a94a3"/>
-<text x="717" y="534" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">il proprio .parquet del tracciato</text>
-<text x="717" y="554" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">3DHeat: scheda Mappa di calore</text>
+<text x="717" y="534" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">.parquet del tracciato</text>
+<text x="717" y="554" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">3DHeat: Mappa di calore</text>
 <line x1="557" y1="539.0" x2="589" y2="539.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
 </svg>

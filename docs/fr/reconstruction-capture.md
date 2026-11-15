@@ -1,7 +1,7 @@
 ---
 title: "Capture, masques et qualité des images"
 nav_order: 2
-lang: fr
+lang: "fr"
 source: reconstruction-capture.md
 source_hash: "986c2c1fa3ca"
 nav_exclude: true

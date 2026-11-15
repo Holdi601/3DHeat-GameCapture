@@ -1,7 +1,7 @@
 ---
 title: BeamNG.drive
 nav_order: 4
-lang: fr
+lang: "fr"
 source: telemetry-beamng.md
 source_hash: "825665685a83"
 nav_exclude: true

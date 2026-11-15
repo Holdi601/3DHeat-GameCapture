@@ -1,7 +1,7 @@
 ---
 title: Leer el HUD de una grabación
 nav_order: 90
-lang: es
+lang: "es"
 source: hud-video.md
 source_hash: "3ae76739ec8d"
 nav_exclude: true

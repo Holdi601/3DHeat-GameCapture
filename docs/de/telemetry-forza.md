@@ -1,7 +1,7 @@
 ---
 title: Forza
 nav_order: 1
-lang: de
+lang: "de"
 source: telemetry-forza.md
 source_hash: "7596c02db7f2"
 nav_exclude: true

@@ -1,7 +1,7 @@
 ---
 title: "El archivo heat3d-lap"
 nav_order: 9
-lang: es
+lang: "es"
 source: lap-format.md
 source_hash: "0b65cc8a0c81"
 nav_exclude: true

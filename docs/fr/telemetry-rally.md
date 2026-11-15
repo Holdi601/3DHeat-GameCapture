@@ -1,7 +1,7 @@
 ---
 title: "EA SPORTS WRC, DiRT Rally 2.0, DiRT Rally, DiRT 4, Richard Burns Rally"
 nav_order: 3
-lang: fr
+lang: "fr"
 source: telemetry-rally.md
 source_hash: "f7b3236cdfc9"
 nav_exclude: true

@@ -1,7 +1,7 @@
 ---
 title: "Las reglas"
 nav_order: 2
-lang: es
+lang: "es"
 source: rules.md
 source_hash: "88d5b7041a49"
 nav_exclude: true

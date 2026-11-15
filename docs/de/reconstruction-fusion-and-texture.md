@@ -1,7 +1,7 @@
 ---
 title: Fusion, Abdeckung und Farbe
 nav_order: 5
-lang: de
+lang: "de"
 source: reconstruction-fusion-and-texture.md
 source_hash: "0b3ff873cd94"
 nav_exclude: true

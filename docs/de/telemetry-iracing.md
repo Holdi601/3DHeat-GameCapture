@@ -1,7 +1,7 @@
 ---
 title: iRacing
 nav_order: 6
-lang: de
+lang: "de"
 source: telemetry-iracing.md
 source_hash: "db9e52dfff86"
 nav_exclude: true

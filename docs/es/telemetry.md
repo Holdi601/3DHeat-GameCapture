@@ -1,7 +1,7 @@
 ---
 title: "Grabadores de telemetría"
 nav_order: 3
-lang: es
+lang: "es"
 source: telemetry.md
 source_hash: "58d0440321a3"
 nav_exclude: true

@@ -1,7 +1,7 @@
 ---
 title: Tiefe
 nav_order: 3
-lang: de
+lang: "de"
 source: reconstruction-depth.md
 source_hash: "640f483b0b71"
 nav_exclude: true

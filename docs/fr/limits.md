@@ -1,7 +1,7 @@
 ---
 title: "Limites et vérification"
 nav_order: 9
-lang: fr
+lang: "fr"
 source: limits.md
 source_hash: "f145d00c4d10"
 nav_exclude: true

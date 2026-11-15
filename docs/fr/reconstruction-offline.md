@@ -1,7 +1,7 @@
 ---
 title: "Reconstruction hors ligne"
 nav_order: 7
-lang: fr
+lang: "fr"
 source: reconstruction-offline.md
 source_hash: "1ce6bea35ee0"
 nav_exclude: true

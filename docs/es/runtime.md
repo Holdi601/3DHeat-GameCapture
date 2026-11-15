@@ -1,7 +1,7 @@
 ---
 title: "Runtime y dependencias"
 nav_order: 8
-lang: es
+lang: "es"
 source: runtime.md
 source_hash: "f59339917d0d"
 nav_exclude: true

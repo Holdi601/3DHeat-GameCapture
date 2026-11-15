@@ -1,7 +1,7 @@
 ---
 title: "Exécution et dépendances"
 nav_order: 8
-lang: fr
+lang: "fr"
 source: runtime.md
 source_hash: "f59339917d0d"
 nav_exclude: true

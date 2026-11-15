@@ -1,7 +1,7 @@
 ---
 title: "La fenêtre de scan"
 nav_order: 1
-lang: fr
+lang: "fr"
 source: reconstruction-scan-ui.md
 source_hash: "829cfd5ef4de"
 nav_exclude: true

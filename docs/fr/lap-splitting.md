@@ -1,7 +1,7 @@
 ---
 title: "Découpage des tours et des étapes"
 nav_order: 7
-lang: fr
+lang: "fr"
 source: lap-splitting.md
 source_hash: "cc8d3ba8e92e"
 nav_exclude: true

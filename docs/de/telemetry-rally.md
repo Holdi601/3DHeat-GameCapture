@@ -1,7 +1,7 @@
 ---
 title: Rallyespiele
 nav_order: 3
-lang: de
+lang: "de"
 source: telemetry-rally.md
 source_hash: "f7b3236cdfc9"
 nav_exclude: true

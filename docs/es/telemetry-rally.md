@@ -1,7 +1,7 @@
 ---
 title: "Juegos de rally"
 nav_order: 3
-lang: es
+lang: "es"
 source: telemetry-rally.md
 source_hash: "f7b3236cdfc9"
 nav_exclude: true

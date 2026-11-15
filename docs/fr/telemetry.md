@@ -1,7 +1,7 @@
 ---
 title: "Enregistreurs de télémétrie"
 nav_order: 3
-lang: fr
+lang: "fr"
 source: telemetry.md
 source_hash: "58d0440321a3"
 nav_exclude: true

@@ -1,7 +1,7 @@
 ---
 title: "Галоўная"
 nav_order: 1
-lang: be
+lang: "be"
 source: index.md
 source_hash: "4723321adf14"
 nav_exclude: true

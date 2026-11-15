@@ -1,7 +1,7 @@
 ---
 title: Assetto-Corsa-Spiele
 nav_order: 2
-lang: de
+lang: "de"
 source: telemetry-assetto-corsa.md
 source_hash: "b428f07c954c"
 nav_exclude: true

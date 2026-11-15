@@ -1,7 +1,7 @@
 ---
 title: Aufnahme, Masken und Bildqualität
 nav_order: 2
-lang: de
+lang: "de"
 source: reconstruction-capture.md
 source_hash: "986c2c1fa3ca"
 nav_exclude: true

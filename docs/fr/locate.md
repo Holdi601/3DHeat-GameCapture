@@ -1,7 +1,7 @@
 ---
 title: "Localiser les images dans un niveau"
 nav_order: 91
-lang: fr
+lang: "fr"
 source: locate.md
 source_hash: "a194419868e6"
 nav_exclude: true

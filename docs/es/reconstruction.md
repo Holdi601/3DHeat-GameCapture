@@ -1,7 +1,7 @@
 ---
 title: "Reconstrucción de niveles"
 nav_order: 6
-lang: es
+lang: "es"
 source: reconstruction.md
 source_hash: "335908a1ed4a"
 nav_exclude: true

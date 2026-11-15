@@ -1,7 +1,7 @@
 ---
 title: "Befehlsübersicht"
 nav_order: 5
-lang: de
+lang: "de"
 source: commands.md
 source_hash: "2d4420053a98"
 nav_exclude: true

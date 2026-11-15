@@ -1,7 +1,7 @@
 ---
 title: Laufzeit und Abhängigkeiten
 nav_order: 8
-lang: de
+lang: "de"
 source: runtime.md
 source_hash: "f59339917d0d"
 nav_exclude: true

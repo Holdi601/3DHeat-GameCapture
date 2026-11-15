@@ -1,7 +1,7 @@
 ---
 title: "Grenzen und Überprüfung"
 nav_order: 9
-lang: de
+lang: "de"
 source: limits.md
 source_hash: "f145d00c4d10"
 nav_exclude: true

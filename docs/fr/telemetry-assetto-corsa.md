@@ -1,7 +1,7 @@
 ---
 title: "Assetto Corsa, ACC, AC EVO et AC Rally"
 nav_order: 2
-lang: fr
+lang: "fr"
 source: telemetry-assetto-corsa.md
 source_hash: "b428f07c954c"
 nav_exclude: true

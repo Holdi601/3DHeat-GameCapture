@@ -1,7 +1,7 @@
 ---
 title: "La salida .glb"
 nav_order: 6
-lang: es
+lang: "es"
 source: glb-output.md
 source_hash: "ef4602372650"
 nav_exclude: true

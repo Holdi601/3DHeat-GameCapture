@@ -1,7 +1,7 @@
 ---
 title: Runden- und Etappenteilung
 nav_order: 7
-lang: de
+lang: "de"
 source: lap-splitting.md
 source_hash: "cc8d3ba8e92e"
 nav_exclude: true

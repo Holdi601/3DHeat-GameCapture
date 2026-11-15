@@ -1,7 +1,7 @@
 ---
 title: Trackmania
 nav_order: 5
-lang: fr
+lang: "fr"
 source: telemetry-trackmania.md
 source_hash: "26be8aff772b"
 nav_exclude: true
