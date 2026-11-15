@@ -15,7 +15,7 @@
 <text x="717" y="106" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">ścieżka kamery w</text>
 <text x="717" y="127" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">okna VGGT</text>
 <rect x="20" y="192" width="247" height="104" rx="8" fill="#ffffff" stroke="#8a94a3"/>
-<text x="143" y="220" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">łączenie</text>
+<text x="143" y="220" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">fuzja</text>
 <text x="143" y="246" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">głębia wzdłuż</text>
 <text x="143" y="267" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">ścieżka</text>
 <rect x="307" y="192" width="247" height="104" rx="8" fill="#ffffff" stroke="#8a94a3"/>

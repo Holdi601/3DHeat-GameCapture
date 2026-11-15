@@ -36,14 +36,14 @@ Nikdy jste nepracovali s příkazovým řádkem? Nejdřív si přečtěte [Než 
    stopu na minimapě a killfeed. `locate` (experimentální: zatím umisťuje jen několik skutečných
    snímků) zjišťuje, kde byl každý snímek pořízen, na 3D modelu úrovně.
 
-Všechny tři se řídí jedním pravidlem: **do hry se nic nevkládá a nic se nehookuje.** Snímky pocházejí
+Všechny tři se řídí jedním pravidlem: **do hry se nic nevkládá a nic se nezachytává háčkem.** Snímky pocházejí
 z veřejného API pro zachytávání obrazovky, telemetrie z rozhraní, která hry zveřejňují pro tento účel.
-Viz [Pravidla](../rules.md).
+Viz [Pravidla](rules.md).
 
 ![Co vstoupí, který příkaz, co vyjde, kde to prohlížeč ukáže](../assets/img/cs/overview.svg)
 
 Kód je v Pythonu (balíček `heat3d_capture`), licence MIT. Modely hloubky a pozic, které umí spouštět,
-mají vlastní licence – viz [Modely a licence](../models-and-licences.md).
+mají vlastní licence – viz [Modely a licence](models-and-licences.md).
 
 ## Rychlý start {#quick-start}
 
@@ -70,19 +70,19 @@ na záložku Analýza závodu v prohlížeči. Každá další hra je jeden pře
 .venv\Scripts\python -m heat3d_capture telemetry --game dirtrally2 -o laps
 ```
 
-Všechny hry a možnosti: [Nahrávače telemetrie](../telemetry.md).
+Všechny hry a možnosti: [Nahrávače telemetrie](telemetry.md).
 
 ### Skenování úrovně {#scan-a-level}
 
 Ve složce nástroje dvakrát klikněte na **`scan.bat`**. Najde Python (a když žádný není, nabídne
 instalaci přes winget), vytvoří soukromé `.venv` a otevře okno skenování. Okno řekne, co chybí,
 k čemu je který balíček a jak velké je stahování, a bez vašeho souhlasu nic neinstaluje.
-Viz [Běhové prostředí a závislosti](../runtime.md) a [Okno skenování](../reconstruction-scan-ui.md).
+Viz [Běhové prostředí a závislosti](runtime.md) a [Okno skenování](reconstruction-scan-ui.md).
 
 Ručně: `.venv\Scripts\python -m heat3d_capture.ui`.
 
 Pro přepočítání záznamu offline, s dráhou kamery vyřešenou najednou (potřebuje PyTorch, balíček
-`vggt` a grafickou kartu – viz [Rekonstrukce offline](../reconstruction-offline.md)):
+`vggt` a grafickou kartu – viz [Rekonstrukce offline](reconstruction-offline.md)):
 
 ```powershell
 .venv\Scripts\python -m heat3d_capture reconstruct lap.mp4 -o lap.glb
@@ -93,43 +93,42 @@ Pro přepočítání záznamu offline, s dráhou kamery vyřešenou najednou (po
 | Stránka | Co obsahuje |
 |---|---|
 | [Než začnete](before-you-start.md) | Python, terminál, první příkaz, časté chyby |
-| [Pravidla](../rules.md) | Žádné vkládání do her, jen zveřejněná rozhraní, a co to stojí |
-| [Nahrávače telemetrie](../telemetry.md) | Příkaz `telemetry` a přehled každé hry |
-| [Forza](../telemetry-forza.md) | Data Out, rozpoznání rozložení, přeposílání FH Companion a jeho `.tele.gz` |
-| [Hry Assetto Corsa](../telemetry-assetto-corsa.md) | AC, ACC, AC EVO, AC Rally ze sdílené paměti |
-| [Rallye hry](../telemetry-rally.md) | EA SPORTS WRC, DiRT Rally 2.0 / 1 / DiRT 4, Richard Burns Rally |
-| [BeamNG.drive](../telemetry-beamng.md) | Modifikace protokolu `heat3d` |
-| [Trackmania](../telemetry-trackmania.md) | Plugin `Heat3dRecorder` pro Openplanet |
-| [iRacing](../telemetry-iracing.md) | Čtení souborů `.ibt` v prohlížeči |
-| [Dělení kol a etap](../lap-splitting.md) | `LapSplitter`, `CounterSplitter`, `LineSplitter`, `StageSplitter` |
-| [Skluz, driftování a odvozené kanály](../slip-and-drift.md) | Jak se škáluje skluz a co prohlížeč odvozuje |
-| [Soubor heat3d-lap](../lap-format.md) | Formát souboru kola, kanály, jednotky, `meta` |
-| [Hry](../games.md) | Pro každou hru: jak nahrávat, co se posílá, které tratě lze exportovat |
-| [Příkazy](../commands.md) | `route`, `telemetry`, `laps`, `reconstruct`, `hud`, `locate`, krok za krokem |
+| [Pravidla](rules.md) | Žádné vkládání do her, jen zveřejněná rozhraní, a co to stojí |
+| [Nahrávače telemetrie](telemetry.md) | Příkaz `telemetry` a přehled každé hry |
+| [Forza](telemetry-forza.md) | Data Out, rozpoznání rozložení, přeposílání FH Companion a jeho `.tele.gz` |
+| [Hry Assetto Corsa](telemetry-assetto-corsa.md) | AC, ACC, AC EVO, AC Rally ze sdílené paměti |
+| [Rallye hry](telemetry-rally.md) | EA SPORTS WRC, DiRT Rally 2.0 / 1 / DiRT 4, Richard Burns Rally |
+| [BeamNG.drive](telemetry-beamng.md) | Modifikace protokolu `heat3d` |
+| [Trackmania](telemetry-trackmania.md) | Plugin `Heat3dRecorder` pro Openplanet |
+| [iRacing](telemetry-iracing.md) | Čtení souborů `.ibt` v prohlížeči |
+| [Dělení kol a etap](lap-splitting.md) | `LapSplitter`, `CounterSplitter`, `LineSplitter`, `StageSplitter` |
+| [Skluz, driftování a odvozené kanály](slip-and-drift.md) | Jak se škáluje skluz a co prohlížeč odvozuje |
+| [Soubor heat3d-lap](lap-format.md) | Formát souboru kola, kanály, jednotky, `meta` |
+| [Hry](games.md) | Pro každou hru: jak nahrávat, co se posílá, které tratě lze exportovat |
+| [Příkazy](commands.md) | `route`, `telemetry`, `laps`, `reconstruct`, `hud`, `locate`, krok za krokem |
 | [Přehled příkazů](../cli-reference.md) | každá možnost, vygenerováno z `--help` |
-| [Čtení HUD ze záznamu](../hud-video.md) | `hud`: vlastní akce, smrti, stopa na minimapě a killfeed ze záznamu |
-| [Umisťování snímků v úrovni](../locate.md) | `locate`: kde byl každý snímek pořízen, podle geometrie úrovně |
-| [Rekonstrukce úrovně](../reconstruction.md) | Postup od snímků k `.glb` |
-| [Okno skenování](../reconstruction-scan-ui.md) | Každé ovládací prvky, klávesové zkratky a prvky překryvu |
-| [Zachytávání, masky a kvalita snímků](../reconstruction-capture.md) | Windows Graphics Capture, klíčové snímky, masky HUD, rady ke kvalitě |
-| [Hloubka](../reconstruction-depth.md) | Depth Anything V2, ONNX Runtime, sestavení modelu |
-| [Poloha kamery a měřítko](../reconstruction-pose.md) | Odometrie, relokalizace, polohy z telemetrie, měřítko země, bundle adjustment |
-| [Fúze, pokrytí a barva](../reconstruction-fusion-and-texture.md) | Objemová mřížka obsazenosti, mřížka pokrytí, slabá místa, barva vrcholů |
-| [Výstup .glb](../glb-output.md) | Soubor, který prohlížeč načítá |
-| [Rekonstrukce offline](../reconstruction-offline.md) | `reconstruct`, okna VGGT a slučování |
-| [Modely a licence](../models-and-licences.md) | Velikosti Depth Anything V2, VGGT, balíčky |
-| [Běhové prostředí a závislosti](../runtime.md) | Předletová kontrola, backendy, výkonnostní úrovně |
-| [Omezení a ověření](../limits.md) | Co se nedělá a co nebylo ověřeno |
-| [Aktualizace](../updates.md) | Kontrola vydání a `python -m heat3d_update` |
-| [Vývoj](../development.md) | Testy, virtuální prostředí, struktura repozitáře |
-| [Údržba těchto dokumentů](../maintaining.md) | Kontrolní seznam vydání pro kód a dokumentaci |
+| [Čtení HUD ze záznamu](hud-video.md) | `hud`: vlastní akce, smrti, stopa na minimapě a killfeed ze záznamu |
+| [Umisťování snímků v úrovni](locate.md) | `locate`: kde byl každý snímek pořízen, podle geometrie úrovně |
+| [Rekonstrukce úrovně](reconstruction.md) | Postup od snímků k `.glb` |
+| [Okno skenování](reconstruction-scan-ui.md) | Každé ovládací prvky, klávesové zkratky a prvky překryvu |
+| [Zachytávání, masky a kvalita snímků](reconstruction-capture.md) | Windows Graphics Capture, klíčové snímky, masky HUD, rady ke kvalitě |
+| [Hloubka](reconstruction-depth.md) | Depth Anything V2, ONNX Runtime, sestavení modelu |
+| [Poloha kamery a měřítko](reconstruction-pose.md) | Odometrie, relokalizace, polohy z telemetrie, měřítko země, bundle adjustment |
+| [Fúze, pokrytí a barva](reconstruction-fusion-and-texture.md) | Objemová mřížka obsazenosti, mřížka pokrytí, slabá místa, barva vrcholů |
+| [Výstup .glb](glb-output.md) | Soubor, který prohlížeč načítá |
+| [Rekonstrukce offline](reconstruction-offline.md) | `reconstruct`, okna VGGT a slučování |
+| [Modely a licence](models-and-licences.md) | Velikosti Depth Anything V2, VGGT, balíčky |
+| [Běhové prostředí a závislosti](runtime.md) | Předletová kontrola, backendy, výkonnostní úrovně |
+| [Omezení a ověření](limits.md) | Co se nedělá a co nebylo ověřeno |
+| [Aktualizace](updates.md) | Kontrola vydání a `python -m heat3d_update` |
+| [Vývoj](development.md) | Testy, virtuální prostředí, struktura repozitáře |
+| [Údržba těchto dokumentů](maintaining.md) | Kontrolní seznam vydání pro kód a dokumentaci |
 
 ## Součást 3DHeat {#part-of-3dheat}
 
 Soubory, které tento nástroj zapisuje, načítá **prohlížeč 3DHeat** –
 [zdroj](https://github.com/Holdi601/3DHeat), [dokumentace](https://holdi601.github.io/3DHeat/).
-Soubory kol jdou na záložku Analýza závodu, `.glb` úrovně do panelu Pozadí / úroveň, tabulky `hud` a `locate` na záložku
-záložku Teplotní mapa; jak prohlížeč čte tabulky a soubory zápasů, je popsáno na stránkách
+Soubory kol jdou na záložku Analýza závodu, `.glb` úrovně do panelu Pozadí / úroveň, tabulky `hud` a `locate` na záložku Teplotní mapa; jak prohlížeč čte tabulky a soubory zápasů, je popsáno na stránkách
 [Jeden soubor na zápas (.3dheat)](https://holdi601.github.io/3DHeat/container.html) a
 [Získání dat](https://holdi601.github.io/3DHeat/getting-data-in.html).
 
@@ -149,5 +148,5 @@ záložku Teplotní mapa; jak prohlížeč čte tabulky a soubory zápasů, je p
 | [Ext-IL2](https://github.com/Holdi601/3DHeat-Ext-IL2) | mapy IL-2 Sturmovik do 3D modelů | [dokumentace](https://holdi601.github.io/3DHeat-Ext-IL2/) |
 
 Vývojář, který má otevřený projekt hry, má použít Unreal exporter, který čte skutečnou geometrii
-a je přesný. Tam, kde lze čít archivy hry samotné, GameFiles vytáhne přesnou trať. Rekonstrukce
+a je přesný. Tam, kde lze číst archivy hry samotné, GameFiles vytáhne přesnou trať. Rekonstrukce
 z hraní je určena pro případ, kdy je k dispozici jen obrazovka.

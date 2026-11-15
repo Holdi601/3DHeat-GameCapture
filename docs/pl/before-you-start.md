@@ -26,7 +26,7 @@ Albo w terminalu: `winget install Python.Python.3.12`.
 
 ## 2. Zainstaluj Git {#install-git}
 
-Git pobiera narzędzie. Weź go z [git-scm.com](https://git-scm.com/download/win) albo uruchom
+Git służy do pobrania narzędzia. Weź go z [git-scm.com](https://git-scm.com/download/win) albo uruchom
 `winget install Git.Git`. Jeśli nie chcesz Gita, użyj *Code > Download ZIP* na
 [stronie GitHub](https://github.com/Holdi601/3DHeat-GameCapture) i rozpakuj plik.
 

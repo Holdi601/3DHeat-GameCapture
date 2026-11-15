@@ -38,12 +38,12 @@ Nigdy nie używałeś wiersza poleceń? Najpierw przeczytaj [Zanim zaczniesz](be
 
 Wszystkie trzy działają wg jednej zasady: **nic nie jest wstrzykiwane do gry i nic nie jest podpinane**.
 Klatki pochodzą z publicznego interfejsu przechwytywania ekranu, telemetria z interfejsów, które gry
-publikują właśnie w tym celu. Zobacz [Zasady](../rules.md).
+publikują właśnie w tym celu. Zobacz [Zasady](rules.md).
 
 ![Co wchodzi, które polecenie, co wychodzi, gdzie przeglądarka to pokazuje](../assets/img/pl/overview.svg)
 
 Kod to Python (pakiet `heat3d_capture`), na licencji MIT. Modele głębi i pozy, które potrafi uruchomić,
-mają własne licencje - zobacz [Modele i licencje](../models-and-licences.md).
+mają własne licencje - zobacz [Modele i licencje](models-and-licences.md).
 
 ## Szybki start {#quick-start}
 
@@ -70,19 +70,19 @@ Przeciągnij pliki z `laps\` na zakładkę Analiza wyścigowa przeglądarki. Ka�
 .venv\Scripts\python -m heat3d_capture telemetry --game dirtrally2 -o laps
 ```
 
-Wszystkie gry i opcje: [Nagrywarki telemetrii](../telemetry.md).
+Wszystkie gry i opcje: [Nagrywarki telemetrii](telemetry.md).
 
 ### Skanuj poziom {#scan-a-level}
 
 Kliknij dwukrotnie **`scan.bat`** w folderze narzędzia. Znajdzie Pythona (a jeśli go nie ma, zaproponuje
 instalację przez winget), utworzy prywatny `.venv` i otworzy okno skanowania. Okno mówi, czego brakuje,
 do czego służy każdy pakiet i jak duże jest pobieranie, i nic nie instaluje bez zgody.
-Zobacz [Środowisko wykonawcze i zależności](../runtime.md) oraz [Okno skanowania](../reconstruction-scan-ui.md).
+Zobacz [Środowisko wykonawcze i zależności](runtime.md) oraz [Okno skanowania](reconstruction-scan-ui.md).
 
 Ręcznie: `.venv\Scripts\python -m heat3d_capture.ui`.
 
 Aby odtworzyć nagranie offline, z rozwiązaną ścieżką kamery naraz (potrzebuje PyTorch, pakietu `vggt`
-i karty GPU - zobacz [Rekonstrukcja offline](../reconstruction-offline.md)):
+i karty GPU - zobacz [Rekonstrukcja offline](reconstruction-offline.md)):
 
 ```powershell
 .venv\Scripts\python -m heat3d_capture reconstruct lap.mp4 -o lap.glb
@@ -93,36 +93,36 @@ i karty GPU - zobacz [Rekonstrukcja offline](../reconstruction-offline.md)):
 | Strona | Czego dotyczy |
 |---|---|
 | [Zanim zaczniesz](before-you-start.md) | Python, terminal, pierwsze polecenie, typowe błędy |
-| [Zasady](../rules.md) | Brak wstrzykiwania, tylko opublikowane interfejsy i to, co to kosztuje |
-| [Nagrywarki telemetrii](../telemetry.md) | Polecenie `telemetry` i przegląd każdej gry |
-| [Forza](../telemetry-forza.md) | Data Out, wykrywanie układu, przekaźnik FH Companion i jego `.tele.gz` |
-| [Gry Assetto Corsa](../telemetry-assetto-corsa.md) | AC, ACC, AC EVO, AC Rally z pamięci współdzielonej |
-| [Gry rajdowe](../telemetry-rally.md) | EA SPORTS WRC, DiRT Rally 2.0 / 1 / DiRT 4, Richard Burns Rally |
-| [BeamNG.drive](../telemetry-beamng.md) | Mod protokołu `heat3d` |
-| [Trackmania](../telemetry-trackmania.md) | Wtyczka Openplanet `Heat3dRecorder` |
-| [iRacing](../telemetry-iracing.md) | Czytanie plików `.ibt` w przeglądarce |
-| [Podział na okrążenia i odcinki](../lap-splitting.md) | `LapSplitter`, `CounterSplitter`, `LineSplitter`, `StageSplitter` |
-| [Poślizg, dryf i kanały pochodne](../slip-and-drift.md) | Jak skaluje się poślizg i co wyprowadza przeglądarka |
-| [Plik heat3d-lap](../lap-format.md) | Format pliku okrążenia, kanały, jednostki, `meta` |
-| [Gry](../games.md) | Dla każdej gry: jak nagrywać, co jest wysyłane, które tory można eksportować |
-| [Polecenia](../commands.md) | `route`, `telemetry`, `laps`, `reconstruct`, `hud`, `locate`, krok po kroku |
+| [Zasady](rules.md) | Brak wstrzykiwania, tylko opublikowane interfejsy i to, co to kosztuje |
+| [Nagrywarki telemetrii](telemetry.md) | Polecenie `telemetry` i przegląd każdej gry |
+| [Forza](telemetry-forza.md) | Data Out, wykrywanie układu, przekaźnik FH Companion i jego `.tele.gz` |
+| [Gry Assetto Corsa](telemetry-assetto-corsa.md) | AC, ACC, AC EVO, AC Rally z pamięci współdzielonej |
+| [Gry rajdowe](telemetry-rally.md) | EA SPORTS WRC, DiRT Rally 2.0 / 1 / DiRT 4, Richard Burns Rally |
+| [BeamNG.drive](telemetry-beamng.md) | Mod protokołu `heat3d` |
+| [Trackmania](telemetry-trackmania.md) | Wtyczka Openplanet `Heat3dRecorder` |
+| [iRacing](telemetry-iracing.md) | Czytanie plików `.ibt` w przeglądarce |
+| [Podział na okrążenia i odcinki](lap-splitting.md) | `LapSplitter`, `CounterSplitter`, `LineSplitter`, `StageSplitter` |
+| [Poślizg, dryf i kanały pochodne](slip-and-drift.md) | Jak skaluje się poślizg i co wyprowadza przeglądarka |
+| [Plik heat3d-lap](lap-format.md) | Format pliku okrążenia, kanały, jednostki, `meta` |
+| [Gry](games.md) | Dla każdej gry: jak nagrywać, co jest wysyłane, które tory można eksportować |
+| [Polecenia](commands.md) | `route`, `telemetry`, `laps`, `reconstruct`, `hud`, `locate`, krok po kroku |
 | [Opis poleceń](../cli-reference.md) | każda opcja, generowana z `--help` |
-| [Odczyt HUD z nagrania](../hud-video.md) | `hud`: własne akcje, zgony, ślad minimapy i kanał zabójstw z nagrania |
-| [Lokalizowanie klatek w poziomie](../locate.md) | `locate`: skąd pochodzi każda klatka, względem geometrii poziomu |
-| [Rekonstrukcja poziomu](../reconstruction.md) | Potok od klatek do `.glb` |
-| [Okno skanowania](../reconstruction-scan-ui.md) | Każde sterowanie, skrót klawiszowy i element nakładki |
-| [Przechwytywanie, maski i jakość klatek](../reconstruction-capture.md) | Windows Graphics Capture, klatki kluczowe, maski HUD, porady o jakości |
-| [Głębia](../reconstruction-depth.md) | Depth Anything V2, ONNX Runtime, budowanie modelu |
-| [Poza kamery i skala](../reconstruction-pose.md) | Odometria, relokalizacja, pozy z telemetrii, skala gruntu, bundle adjustment |
-| [Fuzja, pokrycie i kolor](../reconstruction-fusion-and-texture.md) | Wolumen zajętości, siatka pokrycia, słabe miejsca, kolor wierzchołków |
-| [Wyjście .glb](../glb-output.md) | Plik, który wczytuje przeglądarka |
-| [Rekonstrukcja offline](../reconstruction-offline.md) | `reconstruct`, okna VGGT i łączenie |
-| [Modele i licencje](../models-and-licences.md) | Rozmiary Depth Anything V2, VGGT, pakiety |
-| [Środowisko wykonawcze i zależności](../runtime.md) | Kontrola wstępna, backendy, poziomy wydajności |
-| [Ograniczenia i weryfikacja](../limits.md) | Czego nie zrobiono i co nie zostało sprawdzone |
-| [Aktualizacje](../updates.md) | Sprawdzenie wydania i `python -m heat3d_update` |
-| [Rozwój](../development.md) | Testy, wirtualne środowisko, układ repozytorium |
-| [Utrzymanie tych stron](../maintaining.md) | Lista kontrolna wydania kodu i dokumentacji |
+| [Odczyt HUD z nagrania](hud-video.md) | `hud`: własne akcje, zgony, ślad minimapy i kanał zabójstw z nagrania |
+| [Lokalizowanie klatek w poziomie](locate.md) | `locate`: skąd pochodzi każda klatka, względem geometrii poziomu |
+| [Rekonstrukcja poziomu](reconstruction.md) | Potok od klatek do `.glb` |
+| [Okno skanowania](reconstruction-scan-ui.md) | Każde sterowanie, skrót klawiszowy i element nakładki |
+| [Przechwytywanie, maski i jakość klatek](reconstruction-capture.md) | Windows Graphics Capture, klatki kluczowe, maski HUD, porady o jakości |
+| [Głębia](reconstruction-depth.md) | Depth Anything V2, ONNX Runtime, budowanie modelu |
+| [Poza kamery i skala](reconstruction-pose.md) | Odometria, relokalizacja, pozy z telemetrii, skala gruntu, bundle adjustment |
+| [Fuzja, pokrycie i kolor](reconstruction-fusion-and-texture.md) | Wolumen zajętości, siatka pokrycia, słabe miejsca, kolor wierzchołków |
+| [Wyjście .glb](glb-output.md) | Plik, który wczytuje przeglądarka |
+| [Rekonstrukcja offline](reconstruction-offline.md) | `reconstruct`, okna VGGT i łączenie |
+| [Modele i licencje](models-and-licences.md) | Rozmiary Depth Anything V2, VGGT, pakiety |
+| [Środowisko wykonawcze i zależności](runtime.md) | Kontrola wstępna, backendy, poziomy wydajności |
+| [Ograniczenia i weryfikacja](limits.md) | Czego nie zrobiono i co nie zostało sprawdzone |
+| [Aktualizacje](updates.md) | Sprawdzenie wydania i `python -m heat3d_update` |
+| [Rozwój](development.md) | Testy, wirtualne środowisko, układ repozytorium |
+| [Utrzymanie tych stron](maintaining.md) | Lista kontrolna wydania kodu i dokumentacji |
 
 ## Część 3DHeat {#part-of-3dheat}
 
