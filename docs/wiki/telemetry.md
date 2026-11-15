@@ -1,4 +1,3 @@
-
 # Telemetry recorders
 
 ```bash
@@ -65,7 +64,13 @@ and what is not yet confirmed per game.
 - **Rally games** print `listening for <game> on port <port>`, then `stage written: <file>`;
   on Ctrl+C an open stage long enough to keep is written as `partial stage written: <file>`.
 - **BeamNG** prints `lap written: <file>`, and on Ctrl+C `run written: <file>`.
+- **Trackmania** prints nothing per run: the plugin writes its CSV files itself.
 - At the end every recorder prints how many files it wrote.
+
+A Forza recording, here fed with synthetic Data Out packets of a car driving two laps of a
+150 m circle (the lap files, the raw sidecar and the self-check summary it leaves):
+
+![telemetry recording two laps of a synthetic Forza feed](https://raw.githubusercontent.com/Holdi601/3DHeat-GameCapture/main/docs/assets/img/telemetry-run.svg)
 
 ## File names
 
@@ -79,6 +84,12 @@ and what is not yet confirmed per game.
 `lap` against `run` (Forza, Assetto Corsa) and the `_partial` suffix (rally, BeamNG) mark
 whether the lap or stage was finished. The time stamp is when the file was written, not
 when the lap began.
+
+Beside the lap files every recorder writes `<YYYY-MM-DD_HH-MM-SS>_<game>.raw.parquet` - every
+packet or page that arrived, kept whole, in the menus and between laps too - and
+`<YYYY-MM-DD_HH-MM-SS>_<game>.summary.json`, the self-check: per packet type how many came, how
+many went into lap files, and `lost`, which is 0. The viewer skips both when a folder is loaded.
+See [Completeness](https://github.com/Holdi601/3DHeat-GameCapture#completeness) in the README.
 
 ## Children of this page
 

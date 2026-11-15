@@ -11,8 +11,10 @@ assists, revives, resupplies, captures...), their deaths from the down and deplo
 **own** track from the minimap, and the kill feed beside them as timed events - written as a
 3DHeat table with the minimap's mosaic as a map image to lay under it.
 
+In short: it watches your match video and writes down your kills, deaths and where you walked.
+
 ```bash
-.venv/Scripts/python -m heat3d_capture hud "<recording>.mp4" --game bf6 --player <name> -o out/match
+.venv\Scripts\python -m heat3d_capture hud "<recording>.mp4" --game bf6 --player <name> -o out/match
 ```
 
 Battlefield 6 is the first game profile.
@@ -41,9 +43,15 @@ Battlefield 6 is the first game profile.
   CPU `onnxruntime`, which clashes with the DirectML one the project uses):
 
 ```bash
-.venv/Scripts/python -m pip install -r requirements.txt
-.venv/Scripts/python -m pip install --no-deps rapidocr_onnxruntime==1.2.3
+.venv\Scripts\python -m pip install -r requirements.txt
+.venv\Scripts\python -m pip install --no-deps rapidocr_onnxruntime==1.2.3
 ```
+
+`rapidocr_onnxruntime` is the text reader (OCR) that reads names and words off the screen.
+`--no-deps` keeps it from replacing the project's DirectML `onnxruntime`.
+
+To install ffmpeg on Windows: `winget install Gyan.FFmpeg`, then open a new terminal and check
+with `ffmpeg -version`. New to the command line? Read [Before you start](before-you-start.md).
 
 - A **16:9** recording at any resolution (1080p, 1440p, 4K). Other aspect ratios are refused,
   because the profile's boxes would land on the wrong parts of the screen.
@@ -60,7 +68,7 @@ Battlefield 6 is the first game profile.
 | `--fps` | 5 | Minimap samples per second. The kill feed is sampled at half that, the points popup and the death screens at half that too (a quarter while no popup is up), the compass every 3 s, the squad list every 15 s. |
 | `--start` | 0 | Seconds into the video to begin at. |
 | `--seconds` | all | How much of the video to read. |
-| `--metres-per-pixel` | none | The minimap's scale, if known: metres per minimap pixel at the usual zoom (the minimap is 296 pixels wide on a 1080p screen). Without it positions are in those pixels; see [Units](#units). |
+| `--metres-per-pixel` | none | The minimap's scale, if known: metres per minimap pixel at the usual zoom (the minimap is 296 pixels wide on a 1080p screen). Without it positions are in those pixels; see [Units](#north-and-units). |
 | `--cpu` | off | Decode on the CPU even when an NVIDIA card is there. |
 
 Progress is printed every five seconds; at the end the player, kills, deaths, lives and the files
@@ -385,76 +393,27 @@ then come from the kill feed alone, as `death` rows with `source` `feed`.
 
 ## What is verified
 
-Measured on three Battlefield 6 recordings of 20 minutes each at 4K, 60 fps (the player's own,
-not part of the repository): tanks, infantry, a helicopter, two maps, 25 lives in all.
+Checked by eye against test recordings (the player's own, not part of the repository), by
+drawing samples at random and comparing each with the frames around it:
 
-**Run time.** 243 s and 247 s for two 20-minute clips run one at a time, on an RTX 5080 with a
-desktop CPU (decoding, at about 5 times real time, is most of it); all three at once took 363 s.
-That was before the popup and the death screens were read. Reading them adds one OCR pass per
-popup read (1,640 and 1,837 in the two clips checked below): on the same 5 minutes of a recording,
-run alternately with and without them while other work shared the graphics card, 110 s and 136 s
-against 94 s and 93 s - about a fifth to a half more. The two 20-minute clips took 402 s and 386 s
-with them, with the card shared the same way.
-
-**The player's own events**, checked by eye on two of the recordings (one mostly infantry with
-revives, resupplies and captures over two maps, one mostly in a tank):
-
-| | |
-|---|---|
-| Popup actions drawn at random from the output (20 from each recording), each against the frames around it | 40 of 40 a real action of that kind, appearing within one read (0.4 s) of the time given: 29 at that very sample, 11 one sample (0.4 s) early or late (the tag animates in) |
-| ...of those with `points`, the value right | 20 of 22 (18 have none) |
-| ...of those with a name, the name the popup showed with that action | 14 of 18 (two names in Cyrillic come out garbled, one is a teammate's floating name tag, one belonged to the next action) |
-| Moments drawn at random from the recordings that showed a popup (18 and 2; the tank recording has few) | 20 of 20 with every action the popup showed found, at its count |
-| The player's kills, popup against kill feed | 10 and 10, 18 and 18; all but one in each matched to the same feed line (in the first, one kill whose victim's name the two read too differently to pair; in the second, one popup kill the feed did not show and one feed kill with no popup on screen) |
-| Every death screen episode in both recordings (10 and 3), each against the frames after it | 13 of 13 right: 12 deaths (2 of them killed outright, which the feed did not show) and 1 revive |
-| Feed deaths with no episode | none |
-
-The checks found and fixed, before the numbers above: a name ending in digits read together with
-the total (a total of 50 read as 6950), a kill shown as HEADSHOT not counted as a kill, a KILL
-tag read in one sample only, a name taken for an unknown tag, and a player still down after a gap
-in play counted as a new life.
-
-**Kill feed**, checked by eye on 24 random feed samples (12 from each of two recordings), against
-every row on screen in each:
-
-| | |
-|---|---|
-| Rows with a killer and a victim on screen | 99 |
-| ...found as an event with both names right (small OCR slips such as `Tex` for `TeX` allowed) | 96 (97%) |
-| ...found with the victim only (the killer's name in glyphs the game itself draws as boxes) | 2 |
-| ...missed (the victim's name in such glyphs) | 1 |
-| Rows with only an icon and a victim (a death to the world, or a killer already faded) | 4, not reported by the version checked on the first recording; reported now, with an empty killer |
-| Events shown for those samples that were not a row on screen | 2 (a duplicate of a row whose end was hidden; one victim name split in two, since fixed) |
-| Sides (colours) wrong among the names checked | about 2% |
-
-A row's time is its first sighting, within one feed sample (0.4 s) of it appearing. The player's
-own kills and deaths in the samples were all found.
-
-**In play.** 72 random moments across the three recordings, compared with the frame: the key-hint
-test was right on all of them after one fix (a minimap over a light-tinted sector read as "not in
-play" for 33 s in one recording). One moment was in play but left out of the table by the death
-rule (a downed player revived and killed again within 40 s).
-
-**Track.** There is no ground truth for where the player was, so the track is checked against the
-recording itself: two minimaps are registered **directly to each other**, and the offset that gives
-is compared with the offset between the two table positions. Pairs are drawn at random.
-
-| | Revisits (same place, 30 s or more apart, often different lives) | 10-second windows |
-|---|---|---|
-| Tank and infantry, recording 1 | median 1.0, 90% under 4.4, max 6.4 | median 1.2, 90% under 4.1, max 11.6 |
-| Tanks and a helicopter, recording 2, map 1 | median 1.1, 90% under 3.4, max 5.2 | median 1.0, 90% under 8.2; one window in the helicopter 65 off |
-| Infantry, recording 2, map 2 (crowded, zoomed-out minimap) | median 3.4, 90% under 12.7, max 18 | median 3.2, max 15 |
-| Tanks and infantry, recording 3 | median 1.5, 90% under 8.4, max 10.6 | median 1.1, 90% under 4.4, max 7.3 |
-
-Units are pixels of a 296-pixel minimap at the usual zoom: an error of 1.5 is half a percent of the
-minimap's width. Over 16 windows where the player did not move (the direct offset under 3), the
-table moved at most 3.4. North: 86 of 86, 147 of 149, 41 of 41 and 200 of 202 compass reads
-agreed with the mosaic within 10 degrees, with a median disagreement of 1 to 2 degrees.
+- **The player's own events.** Every popup action sampled was a real action of that kind, found
+  within one read (0.4 s) of its time; most values and names were right (names in some scripts,
+  such as Cyrillic, can come out garbled). Every death screen sampled was found.
+- **Kill feed.** The large majority of feed rows were found with both names right; small OCR
+  slips (a capital I read as a lower-case l) are allowed. Names drawn in glyphs the game itself
+  shows as boxes can be missed. Sides (colours) are wrong for a few percent of names.
+- **In play.** The key-hint test agreed with the frame at every sampled moment.
+- **Track.** There is no ground truth for where the player was, so the track is checked against
+  the recording itself: two minimaps are registered **directly to each other**, and that offset
+  is compared with the offset between the two table positions. The median disagreement is about
+  1-3 minimap pixels (under 1% of the minimap's width), more on a crowded, zoomed-out minimap.
+  Compass reads agree with the mosaic within 10 degrees almost always.
+- **Run time.** Decoding at about 5 times real time is most of it, on a desktop GPU; reading the
+  points popup adds about a fifth to a half.
 
 Looked at by eye: every mosaic has continuous roads and buildings across the lives that built it,
-and the routes of different lives driven along the same road lie on top of each other. One
-10-second stretch in an earlier run (not in the random samples above) had its distance about
-twice too long, with the minimap's zoom changing - see [Limits](#limits).
+and routes of different lives along the same road lie on top of each other. A stretch where the
+minimap's zoom changes can come out too long - see [Limits](#limits).
 
 The tests (`tests/test_hud_*.py`) draw everything they read: a made-up level of roads, buildings and
 contours, minimaps of walks through it with the overlays a real one has, compass strips, kill-feed

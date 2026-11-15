@@ -1,4 +1,3 @@
-
 # The scan window
 
 ```bash

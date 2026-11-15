@@ -1,4 +1,3 @@
-
 # Level reconstruction from gameplay
 
 Walk a level slowly, or drive a track, and the scanner turns what the screen showed into a

@@ -1,4 +1,3 @@
-
 # Depth
 
 The one thing external capture cannot give is geometry. The game knows every pixel's depth and

@@ -1,4 +1,3 @@
-
 # EA SPORTS WRC, DiRT Rally 2.0 / DiRT Rally / DiRT 4, Richard Burns Rally
 
 ```bash

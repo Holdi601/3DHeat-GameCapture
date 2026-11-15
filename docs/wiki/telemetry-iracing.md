@@ -1,4 +1,3 @@
-
 # iRacing
 
 iRacing needs **no recorder**. The sim writes its own telemetry files, `.ibt`, when telemetry

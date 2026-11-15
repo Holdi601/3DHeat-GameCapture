@@ -10,12 +10,15 @@ and view direction - by matching the picture against renders of the level's own 
 for games that keep no record of where the player was: no demo, no replay file, no telemetry.
 Battlefield 6 is the first.
 
+> **Experimental.** On real recordings it places only a small share of frames so far; see
+> [Real frames: experimental](#real-frames-experimental).
+
 ```bash
 # Once per level: render it from every place a player can stand, and index the renders.
-.venv/Scripts/python -m heat3d_capture locate build level.glb -o level.db
+.venv\Scripts\python -m heat3d_capture locate build level.glb -o level.db
 
 # Per recording: where was each frame taken?
-.venv/Scripts/python -m heat3d_capture locate frames "<recording>.mp4" --db level.db -o out/match
+.venv\Scripts\python -m heat3d_capture locate frames "<recording>.mp4" --db level.db -o out/match
 ```
 
 The position comes **from the picture**, against the whole level, with no prior. The minimap track
@@ -41,7 +44,7 @@ row says which of the two it came from.
   `requirements-locate.txt`:
 
 ```bash
-.venv/Scripts/python -m pip install -r requirements-locate.txt
+.venv\Scripts\python -m pip install -r requirements-locate.txt
 ```
 
 - A GPU with OpenGL 3.3 (4.3 is faster) for the renders, and preferably CUDA for the models. On a
@@ -50,8 +53,10 @@ row says which of the two it came from.
   LightGlue through kornia. All are licensed for commercial use; see [Licences](#licences).
 - The **level** as a `.glb` (or `.gltf`) in the viewer's frame, Y up, **with its base colour
   textures**, as the 3DHeat exporters write it (`ground:` / `structure:` parts; the part names are
-  not needed). One unit is one metre unless the file's `extras.unit_metres` says otherwise. An
-  untextured level works much less well; see [Limits](#limits).
+  not needed). One unit is one metre unless the file's top-level `extras.unit_metres` says
+  otherwise. A GameCapture scan (`reconstruct`, the scan window) is written in **centimetres** and
+  carries `extras.unit_metres: 0.01`, so it is read at its true size. An untextured level works
+  much less well; see [Limits](#limits).
 
 ## Commands
 
@@ -92,6 +97,8 @@ Writes `<db>/db.json` (what it was built from and with) and `<db>/views.npz` (po
 | `--shortlist` | 8 | Database views tried per frame near a prior or a fix. |
 | `--search-shortlist` | 16 | With no prior: database views tried per frame ([searched together](#with-no-prior-frames-searched-together)). |
 | `--no-search` | off | With no prior: search each frame on its own and believe its fix without its neighbours. |
+| `--accept-depth` | 0 (off) | With no prior: believe a fix only if its matches' far distance is this many times their near one. |
+| `--accept-support` | 2 | With no prior: agreeing neighbours along the life a fix needs to be believed. |
 | `--checkpoint` | none | Keep the run's state here and carry on from it if it is there. |
 | `--stop-file`, `--stop-process` | none | Stop by itself, state saved, exit code 75, when this file exists or a process runs whose name starts with this (checked before every frame; may be repeated), so that a long run frees the machine for a game. The same command carries on. |
 | `--normalise` | none | Light normalisation before matching: `clahe`, `gray`. |
@@ -105,6 +112,7 @@ Writes `<db>/db.json` (what it was built from and with) and `<db>/views.npz` (po
 | `--check-every` | 0 | Also every N frames, placed or not, a picture into `<out>.check`. |
 | `--no-checks` | off | Do not write the check pictures of the visual fixes (below). |
 | `--no-zoomed` | off | Do not solve zoomed views from their neighbours' fixes (below). |
+| `--no-grow` | off | Do not search again near each fix for the frames round it still without one. |
 | `--game`, `--eye`, `--fov`, `--vfov`, `--mask`, `--no-hud-mask`, `--max-speed` | the profile's | As above; `--mask x,y,w,h` adds a screen box (on a 1920x1080 screen) that is not the level. |
 | `--vehicle-vfov` | the profile's | The vertical field of view of vehicle cameras (Battlefield's vehicle slider). |
 | `--settings` | the newest settings file | `bf6`: the game's settings file the fields of view are read from (read only) when no `--fov`/`--vfov` is given; by default the newest `PROFSAVE*_profile` under `Documents/Battlefield 6/settings`. It holds the settings as they are now, which may not be how an older recording was made. |
@@ -275,14 +283,11 @@ the track, so a camera swinging round a standing vehicle is not taken for moveme
 footer carries the offset used and whether it was measured (`vehicleOffset`). On foot and through
 a sight there is no offset.
 
-How the Battlefield 6 offset was measured: on eleven right fixes of real third-person frames of a
-main battle tank, the middle of the tank was marked by eye on the frame, and the level rendered
-at the fix gave the ground at that pixel (its depth). The ground under the tank's middle lies
-7.9-11.7 m ahead of the camera (median 9.6) and 3.3-4.8 m below it (median 3.7), within a couple
-of metres to the side; the profile takes (9.6, 3.7). The marking is good to a metre or so, and it
-is one vehicle type: a car or a helicopter rides its camera differently. A minimap cannot measure
-it - one of its pixels is about two thirds of a metre, and too few vehicle fixes had a minimap
-beside them to fit an offset to.
+How the Battlefield 6 offset was measured: on right fixes of real third-person frames of a tank,
+the middle of the tank was marked by eye on the frame, and the level rendered at the fix gave the
+ground at that pixel. The profile takes the median: about 10 m ahead of the camera and about 4 m
+below it. The marking is good to a metre or so, and it is one vehicle type: a car or a helicopter
+rides its camera differently.
 
 ### With no prior: frames searched together
 
@@ -319,7 +324,7 @@ nothing. Off with `--no-sequence`.
 ### Frame times
 
 A row's `time` is the frame's own timestamp in the recording, not its count over the nominal frame
-rate. Recordings drift from their nominal rate (by up to 0.37 s within a clip, on the ones
+rate. Recordings drift from their nominal rate (by a few tenths of a second within a clip, on the ones
 measured), and everything that reads a frame back by its time -
 the check pictures, the zoomed pass, `locate train --real`, the minimap from the `hud` verb - seeks
 by timestamp. Counted frames would put the check picture's frame up to that far away from the one
@@ -353,6 +358,14 @@ global descriptor finds the right views of real frames rather than of renders al
 
 `locate build --head <head.pt>` builds the database with it; `frames` then uses it for the frames.
 
+| `locate train` option | Default | Meaning |
+|---|---|---|
+| `-o`, `--out` | required | The head file to write (`.pt`). |
+| `--steps` | 600 | Training steps. |
+| `--real TABLE VIDEO` | none | A `locate frames` table and its recording: its confident fixes join as real pairs. Repeatable. |
+| `--real-confidence` | 0.85 | The confidence a fix needs to join as a real pair. |
+| `--spacing`, `--box`, `--places`, and the profile options | as `build` | Where the training places are, and the game's profile. |
+
 ### Checking by eye
 
 Every visual fix gets a picture in `<out>.check` - `<time>s_<view>_visual.jpg`: the frame, and
@@ -384,17 +397,8 @@ from them. So the minimap is placed by the level itself, in two steps, and nothi
   There the HUD's own track stands in, moved by the offset the nearest reference-map fixes measured
   (`--hud-fill`); it is as good as the mosaic is near those fixes.
 
-On the test level (Battlefield 6, ten clips) the minimap read this way was 3.2 m (median) and
-6.5 m (90th percentile) from 960 confident picture fixes of seven clips - the same inside the area
-the old fitted anchor had fixes in (2.9 / 6.2 m) as outside it (3.4 / 6.6 m), where the anchor was
-10.7 / 24.5 m off. Of those fixes 5 were more than 15 m from it, against 117 for the anchor. The
-fixes still sat about 2.5 m west of it on average: what is left of the reference map's placement.
-The minimap's zoom, measured on every matched minimap, was the same in every view: 0.68 m of the
-level a pixel of a 1080p minimap on foot, in a vehicle and through a sight (10th-90th percentile
-0.65-0.73) - the minimap does not zoom out in vehicles; the varying zoom the mosaic showed was the
-mosaic's own drift. On the held-out clip, with this as the prior, the run placed 117 frames from
-the picture against 50 with the fitted anchor, its own corrections fell from 9.5 m to 2.5 m, and it
-ran a third faster (the disc is smaller).
+On the test level the minimap read this way was a few metres (median) from confident picture
+fixes, as good outside the area the reference map was fitted in as inside it.
 
 ### The minimap as a search prior
 
@@ -459,8 +463,8 @@ not guess: both sides are kept and marked `jump without detected death` (a misse
 teleport), and listed in the summary. The minimap fallback follows the same lives.
 
 Battlefield 6: the tanks' first-person view shows the speed (`<n> KPH`, right of the sight; read
-with the HUD reader's OCR); the third-person view does not. The fastest reading on the clips was
-36 km/h, so ground vehicles are allowed 15 m/s where nothing is read. Boats, helicopters and jets
+with the HUD reader's OCR); the third-person view does not. The readings on the test clips were
+slow, so ground vehicles are allowed 15 m/s where nothing is read. Boats, helicopters and jets
 get generous limits (20, 90 and 280 m/s) that are not measured: no clip shows one being driven or
 flown, and the view classifier does not tell air from ground - a stretch faster than a ground
 vehicle shows up as a jump, flagged, not trusted.
@@ -516,235 +520,75 @@ as right as the minimap, which is why it is off by default.
 
 ## Accuracy
 
-Measured on **Counter-Strike 2**, because there the truth is exact: a match demo records every
-player's position and view every tick, and the maps can be exported with their textures. CS2 is
-only the bench - its demos already say where everyone was, so `locate` is not for CS2. Nothing of
-the bench (maps, demos, renders) is part of this repository.
+Measured on a **bench** where the truth is exact: a test level exported with its textures, and
+frames rendered from known camera poses *to look like a game, not like the database* - the level's
+own sun and shadows, harder contrast, a random colour grade, vignette and bloom, player-sized shapes
+and smoke in the way, the HUD drawn into the masked boxes, blur, noise and JPEG. Each frame is
+located against the **whole level, with no prior**. Right means within 1 m and 5 degrees. Nothing
+of the bench (levels, renders) is part of this repository.
 
-**The bench.** One competitive map, exported with its base colour textures (4.5 million
-triangles, 243 textures at up to 512 px), in game units (1 unit = 2.54 cm). Two databases of it:
-
-| Database | Places | Views | Size | Built in |
-|---|---|---|---|---|
-| **every floor** - the default | 4,490 (of 7,136 floor points; the rest inside geometry or without headroom) | 107,760 | 319 MB | 23 min |
-| where players stood in recorded matches | 2,637 | 63,288 | 187 MB | 33 min |
-
-Both at 2.5 m spacing, standing and crouched eye height, 12 directions, pitch 0, on an RTX 5080
-that other work was using at the same time (the times are upper bounds).
-
-**Frames.** Poses where players really stood (taken from other moments of the matches), 80%
-standing and 20% crouched, any direction, pitch -30 to +20 degrees, the game's 106.26-degree
-field of view, 960x540. Each is rendered *to look like the game, not like the database*: the map's
-own sun with cast shadows, harder contrast, a random colour grade, vignette and bloom, up to three
-dark player-sized shapes, smoke in one frame of five, the HUD drawn into the masked boxes, blur,
-noise and JPEG. Each frame is located against the **whole map, with no prior**. Right means within
-1 m and 5 degrees.
-
-| 199 frames, no prior | every floor (default) | player places |
-|---|---|---|
-| right | **80.4%** | **88.9%** |
-| `ok` (confidence at least 0.85) | 79.4% | 84.4% |
-| of the `ok` fixes, right | **97.5%** | **98.8%** |
-| error of the right fixes, median / 90% | 3 mm / 1.0 cm; 0.03 / 0.07 degrees | the same |
-| time per frame, median / 90% | 1.0 / 1.4 s | 0.9 / 1.2 s |
-
-On frames rendered exactly like the database (no change of light, nothing in the way, no mask), 91%
-are right (99 frames, player places). Confidence is a usable measure of trust: of the fixes at 0.9
-or above, 99% were right on both databases; of those between 0.7 and 0.85, 2 of 6 (every floor)
-and 7 of 8 (player places) - hence the 0.85 threshold for `ok`.
-
-Where it fails (every floor, 199 frames): retrieval finds no matching view (12), too few inliers
-(9 - a wall a step away, mostly sky, mostly an occluder), ambiguous between two places (3). The
-default database does worse than the player-places one mostly in retrieval: a third more views,
-many of them on roofs and ledges nobody stands on, compete for the shortlist.
-
-**A track.** 80 s of one player's real camera path from a match demo - a round's end, the
-respawn, a death - rendered as above into a 30 fps MP4, with a minimap table made from the same
-path (its own turned, scaled, mirrored frame, 2-pixel noise), then run through `locate frames` at
-2 frames a second and scored with `locate eval`, which also had to find the clock offset:
-
-| 80 s, 160 frames at 2 a second, 127 in play | every floor (default) | player places |
-|---|---|---|
-| frames in play placed | 127 of 127: 125 from the picture, 2 from the minimap | 127 of 127: 126 and 1 |
-| clock offset found (true: 180 s) | 179.996 s | 179.996 s |
-| visual rows, median / 90% error, known offset | 4 mm / 7 mm; 0.03 / 0.06 degrees | 4 mm / 9 mm; 0.03 / 0.06 degrees |
-| the same, offset as found | 1.0 / 2.7 cm | 1.2 / 2.8 cm |
-| visual rows within 1 m | 100% | 96% |
-| minimap rows, median error | 0.79 m | 0.75 m |
-| time per frame | 0.55 s | 0.51 s |
-
-The 4% on the right are five consecutive frames of a player standing still, all one building
-module (3.25 m) off - see below. The minimap rows are where the picture had too few inliers; their
-error is the fit's, from a minimap table with 2-pixel noise.
-
-**What made a difference** (100 frames each, player places; right / `ok` precision):
-
-| Change | Right | Precision | Note |
-|---|---|---|---|
-| none (the setup above) | 82.8% | 95% | |
-| matching against renders lit with the map's own sun and shadows | 84.8% | 96% | a small gain; `--shadows` at build |
-| shortlist of 16 instead of 8 | 84.8% | 95% | 3x the time |
-| shortlist of 4 | 74.7% | 99% | |
-| field of view 3 degrees off | 82.8% | 87% | the error of right fixes grows from 3 mm to 28 cm, and only 30% stay `ok`: pass the real FOV |
-| CLAHE light normalisation | 82.8% | 91% | no gain, worse precision - not the default |
-| heavier occlusion (up to five shapes, smoke in half the frames) | 71.7% | 99% | |
-| matching against renders without textures | 66.7% | 100% | only 26% of frames confident enough to be `ok` |
-
-**What the level file has to carry** (100 frames, databases at 4 m spacing, everything else
-the same; the game-like frames are always rendered from the full textured map):
-
-| Level | Right | `ok` | Precision |
-|---|---|---|---|
-| textured | 75.8% | 74.7% | 96% |
-| cut-out materials (fences, foliage) drawn solid | 75.8% | 74.7% | 96% |
-| floor materials reduced to one flat colour each | 70.7% | 51.5% | 100% |
-| both | 70.7% | 51.5% | 100% |
-| no textures at all | 46.5% | 19.2% | 100% |
-
-Textures are what the matching lives on: without them a fifth of the frames are placed. The floor's
-own texture matters - a flat floor colour costs a third of the confident fixes, because a frame
-often holds more floor than anything else. Solid cut-outs cost nothing measurable here (this map
-has few of them; a level of trees and fences may differ).
-
-Look-alike places are the main source of confident mistakes. Before the strongest three places
-were refined before choosing, and before impossible poses were set aside, 80% of the `ok` fixes
-were right on a small database; after, 93% (same frames). What remains: a pose exactly one
-building module over (128 units, 3.25 m, on this map) along a wall of repeated modules, solved
-consistently over several frames of a player standing still - neither the outlier vote nor the
-confidence sees it.
-
-Two further checks were tried and dropped because they did not separate right fixes from wrong
-ones: the global descriptor of the frame against a render at the solved pose, and whether the
-map's depth edges at the solved pose fall on the frame's edges (10% of right fixes scored as low as
-the wrong ones).
-
-### Battlefield 6: the first real frames
-
-The bench above is renders against renders. The first run on real recordings - the player's own
-Battlefield 6 clips, 4K, on one map exported from the installed game - **does not work yet**,
-and the numbers say where it breaks:
-
-| What | Result |
+| Frames with no prior | Result |
 |---|---|
-| Database of the play area (1.2 x 1.0 km, 12 m spacing, eye heights 1.6 and 3.5 m, 8 directions) | 183,984 views, about 540 MB, 19 min |
-| Whole level, no prior: sampled frames placed | **0 of 10** |
-| A denser database round one stretch (300 m square, 4 m spacing) | 111,632 views, about 330 MB, 12 min |
-| The same, a 36 s stretch at 2 frames a second, no prior | **0 of 63** (37 on foot, 26 vehicle; 10 more zoomed and skipped) |
-| The same frames searched only within 30 m of the true place (what a minimap tied to the level would give) | 6 of 10 on-foot frames solved with 32-121 inliers, the strongest right by eye, but scattered over 20-30 m and none confident enough to be `ok` |
-| A frame matched against a render at its true pose (found by searching the whole area by brute force) | 76-142 matches, 15-59 inliers |
+| placed right | about 4 in 5 |
+| of the `ok` fixes (confidence 0.85 and up), right | about 97-99% |
+| error of the right fixes | millimetres to a centimetre; a few hundredths of a degree |
+| time per frame | about 1 s on a desktop GPU |
 
-- **Retrieval is what fails.** The views that show the frame's place rank 52nd to 83rd of 184,000
-  by the global descriptor: close, but outside the shortlist. The game's light, its effects and
-  the export's coarse textures move the frame further from the renders than the bench's imitation
-  did.
-- **Matching starts only very close to the true pose.** The database views 3-5 m away give 12-44
-  matches, mostly too few to start the refinement that would close the gap; on the bench, a view
-  that far away gave hundreds.
-- **The real frames' reprojection error** is 2-3 pixels against 1 on renders, so `confidence`,
-  calibrated on renders, is too strict for them.
-- **The level file**: this export's terrain had no colour at all (white); it was run with one
-  flat sand colour instead (see [What the level file has to carry](#accuracy)). Textures were at
-  256 pixels.
-- **The field of view**: the settings file gives 69 degrees vertical (101.4 horizontal) on foot and
-  53 (83.1) in vehicles; at the true pose the inliers peak at 90-94 degrees horizontal, so the
-  setting may have been different when the clips were recorded.
+Confidence is a usable measure of trust: almost every fix of 0.9 and up was right, while fixes
+below 0.85 were often wrong - hence the 0.85 threshold for `ok`. Where it fails: no matching view
+is found, too few matches (a wall a step away, mostly sky, mostly an occluder), or two places look
+the same.
 
-#### With a per-map model
+**A track.** A test camera path rendered as above into a 30 fps video, with a minimap table made
+from the same path (its own turned, scaled, mirrored frame, with noise), run through
+`locate frames` at 2 frames a second and scored with `locate eval`, which also had to find the
+clock offset: every frame in play was placed, nearly all from the picture; the clock offset was
+found within hundredths of a second; the picture rows were within a few centimetres, the minimap
+rows within about a metre.
 
-The same map, places only on the walkable ground (the `ground:` parts: 175,360 views at 12 m, 20 min),
-and a head trained on its renders (`locate train`, 600 steps, 29 min; frozen DINOv2); then a
-second head with the six real pseudo-labelled frames added as pairs (28 min). The reference is a
-handful of real frames with a known pose: one found by searching the whole area by brute force,
-and five more the pipeline found itself near it and chose along the sequence (pseudo-labels,
-consistent with each other at walking pace).
+**What makes a difference:**
 
-| Real frames, whole level, no prior | DINOv2 alone | Head, renders only | Head, + real pairs |
-|---|---|---|---|
-| Rank of the right view among 175,360 (six labelled frames), median | 474 | **57** | 3 (in-sample: trained on these frames) |
-| Right view within the shortlist's reach (top 192) | 2 of 6 | 4 of 6 | 6 of 6 (in-sample) |
-| 36 s stretch on foot and in a vehicle (63 frames not zoomed): placed | 0 | **3** (1 on foot, 2 vehicle) | **7** (5 on foot, 2 vehicle; 4 of them frames it was not trained on) |
-| The same, rows the minimap filled once tied to those fixes | - | - | 60 (fit: 6 of 7 pairs, 2.2 m residual, 0.66 m a minimap pixel) |
-| 130 s stretch in a tank, another clip (72 vehicle frames, 59 zoomed and skipped): placed | 0 | 2 (plausible by eye, 26 inliers) | 0 |
+- **Textures** are what the matching lives on. Without them only a small share of frames is placed;
+  a floor reduced to one flat colour costs about a third of the confident fixes.
+- **The right field of view.** 3 degrees off, the error of right fixes grows from millimetres to
+  tens of centimetres and most fixes are no longer `ok`. Pass the real FOV.
+- **Shadows** in the database renders (`--shadows`): a small gain.
+- **A longer shortlist**: a small gain, several times slower. A shorter one: fewer fixes, higher
+  precision.
+- Light normalisation (CLAHE) gave no gain and is not the default.
 
-Every fix in the table was checked by eye against the level rendered at its pose: the container,
-the pallets, the portacabins, the barrier walls and the guard tower line up. These are the first
-frames of real Battlefield 6 footage placed from the picture alone. They are also few: a tenth of
-the frames at best, on the stretch the real pairs came from, and nothing yet on another clip. The
-second round's gain is mostly on the frames round it was trained on, which is what six real pairs
-can teach; it needs pseudo-labels from many clips.
+Look-alike places are the main source of confident mistakes: a pose exactly one building module
+over, along a wall of repeated modules, solved the same way over several frames of a player
+standing still. Refining the strongest three places before choosing, and setting impossible poses
+aside, removed most of the others.
 
-What else was measured on the same frames:
+### Real frames: experimental
 
-- **The field of view, from the frames** (`--fit-fov`): four solid fixes give 94, 96, 96 and 102
-  degrees horizontal, median 96 (64 vertical). The settings file says 101 (69): the clips were
-  probably recorded with a different setting than the one saved now.
-- **Reprojection error**: right fixes of real frames show 2-3 pixels; the Battlefield 6 profile
-  takes 3 as normal (`pixel_noise`). With a handful of labelled frames this is a working value,
-  not a calibration.
-- **Zoomed views** are the largest share of a tank player's frames (59 of 131 on the tank stretch)
-  and are not located.
+On real recordings `locate` **does not work well yet**: it places only a small share of frames
+from the picture, mostly vehicle frames (the third-person camera sees more of the level from
+higher up), and almost no frames on foot (the player looks at walls and the ground from close by).
+What was learned on test recordings:
 
-What it needs next: many more real pseudo-labels, from many clips, to train on and to calibrate the
-confidence on (each round's confident fixes feed the next: `locate train --real <table> <video>`);
-a level with its ground colour and 512-pixel textures; places from the game's own navigation mesh;
-and a way to handle the zoomed views.
+- **Finding the right view is what fails.** The game's light, effects and coarse export textures
+  move a real frame further from the renders than the bench's imitation did, so the right view
+  ranks close to, but outside, the shortlist.
+- **A per-map model helps** (`locate train`): it ranks the right view much higher, and real frames
+  added as training pairs help more on the frames round them.
+- **Frames close together help each other**: at 2 frames a second a stretch in a vehicle had about
+  a third of its frames placed; at one frame every 5 s almost none.
+- **Real frames show 2-3 pixels of reprojection error** against 1 on renders; the profile takes 3
+  as normal (`pixel_noise`).
+- **The field of view** fitted from the frames (`--fit-fov`) can differ from the saved settings:
+  the setting may have changed since the recording.
+- **Weak fixes made `ok` only by distant neighbours** were the wrong ones; neighbours now count only
+  within 6 s, and every fix of confidence 0.7 and up was right.
+- **The level file matters**: untextured ground and foliage drawn as black cards hurt. The renderer
+  honours cut-outs (`alphaMode: MASK`): a texel below the material's `alphaCutoff` (0.5 when not
+  given) is discarded, so the background shows through (`render.py`).
 
-#### At scale: three maps, eleven clips, two rounds
-
-Three maps exported from the player's own install, each with its navigation mesh (`nav:` parts) and
-its ground; places from the navigation mesh for players and from the ground for vehicles
-(`--places auto`). Map A has ten clips: nine to bootstrap on, one held out that never feeds
-training. Maps B and C have one clip each. Every number below is from the picture alone, over the
-whole play area, no prior; every visual fix was looked at on its check picture.
-
-| Map A, ten clips, a frame every 5 s | Round 1 | Round 2 |
-|---|---|---|
-| Head | renders only (600 steps) | + the 11 round-1 fixes of confidence 0.7 and up as real pairs |
-| Database | 220,432 views (players and vehicles, 12 m) | 366,920 views (vehicles at the players' spacing) |
-| Views tried per frame (`--shortlist`) | 8 | 24 |
-| Nine training clips: on foot | 1 of 271 | 0 of 273 |
-| Nine training clips: vehicle | 14 of 906 | 12 of 892 |
-| Nine training clips: zoomed, screen | not run (`--no-zoomed`), skipped | the same |
-| Wrong by eye | 2 of 15 | 0 of 12 |
-| Held-out clip | 0 of 241 (57 on foot, 83 vehicle) | 0 of 241 |
-
-- **The two wrong fixes** of round 1 were both weak fixes made `ok` by the sequence (confidence
-  0.59 and 0.69): one a frame of the death camera, one a vehicle frame half hidden by a wall. Both
-  drew their support from neighbours too far apart in time to say anything (the rule then had no
-  time limit; it now counts neighbours within 6 s). Every fix of confidence 0.7 and up, in both
-  rounds, was right.
-- **The real pairs did not move the placed share.** Eleven real frames among 200,000 rendered
-  ones are too few to teach the head the game's look; the bootstrap would need its first round to
-  place far more than it does at a frame every 5 s.
-- **The same clips at 2 frames a second** (one 75 s stretch in a tank, round-1 database): 37 of 112
-  vehicle frames placed and 4 of 26 zoomed, all 41 right by eye. Frames close together support each
-  other along the sequence; one frame in five seconds stands alone. Where the vehicle moves
-  through a known part of the map, a third of its frames are placed.
-- **The held-out clip at a frame every 2 s** (round-1 database): 2 of 601 frames placed, both
-  wrong, both sequence-supported weak fixes from neighbours 16 s apart: what led to the 6 s rule.
-- **On foot** almost nothing is placed: the player looks at walls and the ground from close by,
-  and the views of a database 12 m apart are never close enough.
-- **Vehicles are placed far more often than players on foot**: the third-person camera sees more
-  of the level from higher up.
-
-Zoomed views, on the 2-frames-a-second stretch: 22 of 26 had a fix within 6 s to start from, 4
-were placed - two through the tank's own view at 1.33 and 1.41 times the field of view on foot,
-two through its sight at 3.49 and 3.47 - all four right by eye (the level's lettering on a wall
-lines up at 3.5x). The rest found too few matches: the sight's black surround, the barrel and
-smoke leave little of the level.
-
-**Map B**: 0 of 151 frames placed (133 on foot, 1 vehicle, 17 menus). The best frames solve to the
-right place by eye - the buildings, a truck and the mountains line up - but with 75
-inliers and a reprojection error too large to be `ok`. The export's ground is untextured grey.
-
-**Map C**: its one clip is mostly the desktop and menus; of about 40 frames of
-play, none was placed (16 inliers at best), with the database rebuilt on the re-export whose
-foliage is cut out (alpha `MASK`, below). Its frames are mostly trees and lawns.
-
-The level files matter: the re-export of map C draws its foliage as cut-outs instead of black
-cards (34 materials with `alphaMode: MASK`). The renderer honours it: a texel whose alpha is below
-the material's `alphaCutoff` (0.5 when not given) is discarded - neither colour nor depth written -
-so the background shows through (`render.py`).
+What it needs next: many more real pseudo-labels from many clips to train on and calibrate the
+confidence on (`locate train --real <table> <video>`), levels with textured ground, and a way to
+handle zoomed views.
 
 ## Renders against frames
 
@@ -762,9 +606,9 @@ or takes it with `--offset`.
 
 ## Limits
 
-- **Real frames are barely placed yet.** With DINOv2 alone no real Battlefield 6 frame was placed
+- **Real frames are barely placed yet.** With DINOv2 alone almost no real frame is placed
   without a prior; with a per-map model a few percent are, right when looked at (see
-  [Battlefield 6: the first real frames](#battlefield-6-the-first-real-frames)). Every
+  [Real frames: experimental](#real-frames-experimental)). Every
   accuracy number above is on renders of the level, made to look like the game (its sun, shadows,
   grading, bloom, noise, players, HUD), against renders of the same level. A real frame differs in ways a render cannot imitate: baked and bounced light,
   ambient occlusion, fog, particles, decals that change, animated foliage. How much that costs is
@@ -785,7 +629,7 @@ or takes it with `--offset`.
   difference - a few metres. The vehicle itself is masked (the profile's `vehicle_hud`).
 - **What the level does not hold**: destruction, vehicles, players, doors that moved. Masked where
   it is the HUD; otherwise RANSAC has to see past it.
-- **Speed.** A frame costs 0.5-1.5 s on an RTX 5080 (more while other work shares the GPU): the
+- **Speed.** A frame costs about 0.5-1.5 s on a desktop GPU (more while other work shares it): the
   renders of a shortlist, the matching, and the render-and-compare. Two frames a second of a
   20-minute match is 2,400 frames, 20 minutes to an hour. The database is built once per level:
   about 20-30 minutes for a level the size of a competitive shooter map at 2.5 m spacing; a
@@ -814,7 +658,8 @@ non-commercial licences. See [Models and licences](models-and-licences.md).
 What is needed, in order:
 
 1. **The level, textured**, from the player's own installed copy, as a `.glb` in metres, Y up, in
-   the frame the HUD reader's and the viewer's tables use. `extras.unit_metres` (1) and, if known,
+   the frame the HUD reader's and the viewer's tables use. `extras.unit_metres` (1 for metres; a
+   GameCapture scan writes 0.01, because it is in centimetres) and, if known,
    `extras.sun` (the direction towards the sun) in the file's top-level `extras`. A level without
    textures loads and renders, but see [Limits](#limits).
 2. **The play area** as a box (`--box X0 Z0 X1 Z1`, metres): Battlefield level files carry the
@@ -830,9 +675,9 @@ What is needed, in order:
 6. Build, then locate with the HUD reader's table as the fallback, and look at a sample of the fixes:
 
 ```bash
-.venv/Scripts/python -m heat3d_capture locate build level.glb -o level.db --game bf6 --box X0 Z0 X1 Z1 --shadows
-.venv/Scripts/python -m heat3d_capture hud "<recording>.mp4" --game bf6 -o out/match
-.venv/Scripts/python -m heat3d_capture locate frames "<recording>.mp4" --db level.db --game bf6 --vfov <yours> --minimap out/match.parquet -o out/match.locate --check-every 20
+.venv\Scripts\python -m heat3d_capture locate build level.glb -o level.db --game bf6 --box X0 Z0 X1 Z1 --shadows
+.venv\Scripts\python -m heat3d_capture hud "<recording>.mp4" --game bf6 -o out/match
+.venv\Scripts\python -m heat3d_capture locate frames "<recording>.mp4" --db level.db --game bf6 --vfov <yours> --minimap out/match.parquet -o out/match.locate --check-every 20
 ```
 
 Every visual fix gets a check picture (`<out>.check`; `--check-every 20` adds every 20th frame,

@@ -40,8 +40,8 @@ from ..pose.solveprep import learn_camera_mask, plan_by_motion
 #: the frames it needs and a slow one does not waste them.
 #:
 #: A clock was the first attempt and it was measurably wrong. At a fixed 1.2 s
-#: the median feature displacement over one lap ran from 13 px where the car
-#: crawled to 149 px where it was quick, and the windows that came out wrong
+#: the median feature displacement over one lap ran from a few pixels where the
+#: car crawled to over a hundred where it was quick, and the windows that came out wrong
 #: were the fast ones — consecutive frames no longer overlapped enough to be
 #: related to each other at all.
 SOLVE_BUDGET = 260
@@ -220,17 +220,17 @@ def reconstruct_video(
     # The camera mask is learned but *not* applied to the solver's frames, and
     # that is a correction rather than an oversight.
     #
-    # Blacking out the cockpit was justified by a feature count: 60-79% of every
+    # Blacking out the cockpit was justified by a feature count: well over half of every
     # feature an ORB detector found sat on camera-attached pixels. That is a true
     # statement about a feature detector and it says nothing about a trained
     # network, which was the thing being fed. Measured on what actually matters —
     # how far the recovered path turns between consecutive steps, where a car is
     # a few degrees and a random walk is ninety:
     #
-    #     raw frames          31.5 degrees
-    #     contrast lifted     34.6
-    #     cockpit masked      45.0
-    #     both                85.4
+    #     raw frames          smallest
+    #     contrast lifted     a little larger
+    #     cockpit masked      clearly larger
+    #     both                close to random
     #
     # So the preprocessing that looked best by feature statistics was the worst
     # by the only measure that counts. The mask is still learned, because the

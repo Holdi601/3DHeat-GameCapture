@@ -1,4 +1,3 @@
-
 # How laps and stages are split
 
 A recorder sees one continuous stream of samples. Turning it into laps is done by one of four
@@ -18,6 +17,8 @@ files are split by the viewer on the sim's lap counter ([iRacing](telemetry-irac
 
 On **Ctrl+C** every recorder calls its splitter's `flush()`, so an open lap or stage is
 written if it passes the same minimums as below.
+
+![Packets go through a splitter into one file per lap; every packet is also kept in the raw sidecar](https://raw.githubusercontent.com/Holdi601/3DHeat-GameCapture/main/docs/assets/img/lap-splitting.svg)
 
 ## LapSplitter (Forza)
 

@@ -24,7 +24,7 @@ three inputs (throttle, brake, steer), lateral and longitudinal g, gear, clutch,
 handbrake, standing water, distance along the course and time since the start.
 Fifteen fields, present in every lap file sampled.
 
-The folder name carries the course's start and finish, rounded — `Mapletree Test Loop
+The folder name carries the course's start and finish, rounded — `Demo Valley Loop
 (course_1200_3400_to_1175_3400)`. `course.json` beside it has them unrounded,
 along with the lap count and the shortest and longest lap seen. Both are read;
 the folder name is the fallback, because a course that has only ever been driven
@@ -376,7 +376,7 @@ def find_course(name: str, root: str | Path | None = None) -> Path:
     A course folder by name, matched loosely.
 
     Loosely because the folder name has the start and finish coordinates glued
-    on - nobody is going to type `Mapletree Test Loop (course_1200_3400_to_1175_3400)`.
+    on - nobody is going to type `Demo Valley Loop (course_1200_3400_to_1175_3400)`.
     """
     wanted = name.strip().lower()
     folders = courses(root)

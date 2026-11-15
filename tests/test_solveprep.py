@@ -4,12 +4,12 @@ Tests for what a frame looks like by the time the solver sees it.
 Two things happen to it, and both were added because of a measurement rather
 than a hunch.
 
-The camera's own furniture is blacked out. On the reference lap, 60–79% of every
+The camera's own furniture is blacked out. On a test lap, well over half of every
 feature a detector found sat on the dashboard, the pillars or the HUD — so the
-median apparent motion between frames a second apart was 0–4 pixels, and the
+median apparent motion between frames a second apart was a few pixels, and the
 model was being told that the scene barely moves.
 
-What remains gets its local contrast lifted, because the reference lap is at
+What remains gets its local contrast lifted, because the test lap is at
 night and there is very little to find outside the headlights.
 
 The tests below check the properties that make those two things safe: that the
@@ -128,9 +128,9 @@ class TestSpacingFramesByMotion:
     A clock is the wrong criterion for spacing frames, and the measurement says
     so plainly.
 
-    On the reference lap, at a fixed 1.17 s the median feature displacement
-    between consecutive frames ran from 13 px where the car crawled to 149 px
-    where it was quick — and the windows that came out wrong were the *fast*
+    On a test lap, at a fixed 1.17 s the median feature displacement
+    between consecutive frames ran from a few pixels where the car crawled to
+    over a hundred where it was quick — and the windows that came out wrong were the *fast*
     ones, where consecutive frames no longer overlapped enough to be related to
     each other. A clock gives the slow sections frames they do not need and
     starves the fast ones of the frames they do.

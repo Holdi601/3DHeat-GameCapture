@@ -1,4 +1,3 @@
-
 # Camera pose and scale
 
 A depth map says how far things are from *a* viewpoint. Turning many of them into one level

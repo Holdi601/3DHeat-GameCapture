@@ -1,4 +1,3 @@
-
 # Offline reconstruction
 
 ```bash
@@ -41,8 +40,8 @@ None of these is in `requirements.txt`, because the scanner does not need them. 
 `huggingface_hub`, `Pillow`):
 
 ```bash
-.venv/Scripts/python -m pip install -r requirements-offline.txt
-.venv/Scripts/python -m pip install --no-deps "vggt @ git+https://github.com/facebookresearch/vggt.git"
+.venv\Scripts\python -m pip install -r requirements-offline.txt
+.venv\Scripts\python -m pip install --no-deps "vggt @ git+https://github.com/facebookresearch/vggt.git"
 ```
 
 VGGT goes in with `--no-deps` because its package metadata pins `numpy<2`, which pip would
@@ -65,6 +64,8 @@ the package's `LICENSE.txt`). See [Models and licences](models-and-licences).
 ## The run, stage by stage
 
 The stage names are what the command prints.
+
+![The five stages of reconstruct: masking, planning, solving, fusing, exporting](https://raw.githubusercontent.com/Holdi601/3DHeat-GameCapture/main/docs/assets/img/reconstruct-stages.svg)
 
 ### masking
 

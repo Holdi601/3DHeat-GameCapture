@@ -1,11 +1,10 @@
-
 # Development
 
 ## Repository layout
 
 | Path | Contents |
 |---|---|
-| `heat3d_capture/__main__.py` | the command line: `route`, `telemetry`, `laps`, `reconstruct` |
+| `heat3d_capture/__main__.py` | the command line: `route`, `telemetry`, `laps`, `reconstruct`, `hud`, `locate` |
 | `heat3d_capture/telemetry/` | `forza.py` (Data Out layout), `fulllap.py` (Forza lap files, relay), `record.py` (`route`), `fhcompanion.py` (`laps`), `kunos.py`, `rally.py`, `beamng.py`, `lapfile.py` (the shared lap document) |
 | `heat3d_capture/capture/` | `sources.py` (live capture, video), `screenmask.py`, `flowmask.py`, `quality.py` |
 | `heat3d_capture/depth/` | `onnx_estimator.py` (what the scanner runs), `estimator.py` (PyTorch path, `fit_scale`) |
@@ -14,15 +13,20 @@
 | `heat3d_capture/geometry/` | `glb.py` (the writer), `reference.py` (synthetic reference level) |
 | `heat3d_capture/scan/` | `session.py` (a scan), `reconstruct.py` (keyframes into geometry), `offline.py` |
 | `heat3d_capture/runtime/` | `preflight.py`, `device.py` |
+| `heat3d_capture/hud/` | `hud`: the HUD of a recording - points popup, death screens, minimap track, kill feed (`profiles.py` per game) |
+| `heat3d_capture/locate/` | `locate`: the level's renders, the database, matching, the per-map model, the minimap |
 | `heat3d_capture/ui/` | `__main__.py` (entry and dependency check), `app.py`, `overlay.py`, `hotkeys.py`, `preview.py` |
 | `heat3d_update/` | the release check and updater |
 | `mods/beamng/heat3d/` | the BeamNG protocol mod |
 | `mods/trackmania/Heat3dRecorder/` | the Openplanet plugin |
 | `tools/export_onnx.py` | the depth model converter |
+| `tools/gen_docs_reference.py` | writes `docs/cli-reference.md` from `--help`; `--check` says whether it is stale |
+| `tools/docs_diagrams.py` | draws the diagrams in `docs/assets/img/` (per language with `--lang`) |
+| `tools/sync_wiki.py` | regenerates `docs/wiki/` from `docs/` |
 | `models/` | converted `.onnx` files (not versioned) |
 | `tests/` | the test suite; `scene.py` and `track_scene.py` render synthetic scenes with known geometry |
 | `docs/` | this documentation; `docs/wiki/` is generated from it |
-| `scan.bat`, `requirements.txt`, `VERSION`, `LICENSE`, `LICENSES.md` | |
+| `scan.bat`, `requirements.txt`, `requirements-offline.txt`, `requirements-locate.txt`, `VERSION`, `CHANGELOG.md`, `LICENSE`, `LICENSES.md` | |
 
 The scan logic has no Qt in it: `ScanSession` and `Reconstructor` take plain callables and can be
 driven from a script or a test. Example:
@@ -47,7 +51,7 @@ that touch the interface need **PySide6** in it, which `requirements.txt` instal
 
 ```bash
 python -m venv .venv
-.venv/Scripts/python -m pip install -r requirements.txt
+.venv\Scripts\python -m pip install -r requirements.txt
 ```
 
 For the model converter, the PyTorch depth tests and the offline path, install PyTorch (matched to
@@ -58,7 +62,7 @@ offline solver, and `onnxscript` for the converter. See
 ## Running the tests
 
 ```bash
-.venv/Scripts/python -m pytest tests/ -q
+.venv\Scripts\python -m pytest tests/ -q
 ```
 
 `pytest.ini` sets `testpaths = tests` and silences `UserWarning`s from `huggingface_hub`. The
@@ -110,7 +114,7 @@ car - the car should sit a ride height above the surface directly beneath it. Po
 exported course's stem (the `.glb` and its `.json` beside it):
 
 ```bash
-HEAT3D_COURSE=.out/courses/my_course .venv/Scripts/python -m pytest tests/test_course_ground.py
+HEAT3D_COURSE=.out/courses/my_course .venv\Scripts\python -m pytest tests/test_course_ground.py
 ```
 
 A course with big jumps can fail by design: the car is in the air over ground that is there.

@@ -34,7 +34,9 @@ scan. `asset.generator` is `heat3d-capture-scan`.
   guessing from geometry. Ground renders solid, structures near-transparent.
 - **Coordinates are viewer space**: Y up, right-handed, and **scaled to centimetres** (metres x
   100) to match the Unreal exporter, so a capture and an engine export of the same place load at
-  the same size with the same camera defaults. A scan placed by Forza telemetry is the exception
+  the same size with the same camera defaults. The file's top-level `extras.unit_metres` is `0.01`
+  (one unit is a centimetre), so a reader working in metres, such as [`locate`](locate.md), takes
+  it at its true size. A scan placed by Forza telemetry is the exception
   in handedness: it stays in the game's own world, Y up and left-handed, exactly as the lap files
   are, so the laps recorded over it land on it. When a scan's scale was found on a later keyframe
   ([Scale](reconstruction-pose.md#scale)), that factor is folded into the scale written.

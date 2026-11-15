@@ -8,19 +8,19 @@ be, and both are fixable before the model ever sees the frame.
 **Half the picture is not the world.** In a cockpit view the dashboard, the
 pillars, the wheel and the HUD are bolted to the camera, and they are exactly the
 kind of thing a feature detector loves: high contrast, corner-rich, and
-absolutely still. Measured on the reference lap, **60–79% of all detected
+absolutely still. Measured on a test lap, **well over half of all detected
 features sat on camera-attached pixels** — so the median apparent motion between
-frames a second apart was 0–4 pixels, and the honest answer for the world behind
+frames a second apart was a few pixels, and the honest answer for the world behind
 it was hidden underneath. A model told that most of the scene never moves will
 conclude the camera barely moved.
 
-**The world that is left is dark.** The reference lap is at night: outside the
+**The world that is left is dark.** The test lap is at night: outside the
 headlight cone there is very little contrast to find anything in at all.
 
 Masking the camera-attached region and lifting local contrast on what remains
 changes the measurement completely. On the same footage, matched world features
-between frames 1.17 s apart went from a median displacement of 0–4 px to 13–245
-px, with 780–970 matches per pair — parallax that was always there, behind an
+between frames 1.17 s apart went from a median displacement of a few pixels to tens
+or hundreds, with hundreds of matches per pair — parallax that was always there, behind an
 instrument panel that was drowning it out.
 
 Local contrast, not global
@@ -239,8 +239,8 @@ def plan_by_motion(
 
     A fixed interval is the wrong criterion for a lap, and the measurement says
     so plainly. At 1.17 s between frames, the median feature displacement over
-    one recording ran from 13 px where the car was crawling to 149 px where it
-    was quick — and the windows that came out wrong were the *fast* ones, where
+    one recording ran from a few pixels where the car was crawling to over a
+    hundred where it was quick — and the windows that came out wrong were the *fast* ones, where
     consecutive frames no longer overlapped enough for the solver to relate them.
     A clock gives the slow sections frames they do not need and starves the fast
     ones of the frames they do.

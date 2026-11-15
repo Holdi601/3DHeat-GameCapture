@@ -85,6 +85,22 @@ def test_scales_metres_to_the_viewers_units(tmp_path):
     assert position["min"] == [0.0, 0.0, 0.0]
 
 
+def test_says_how_many_metres_a_unit_is(tmp_path):
+    # A scan is written in centimetres; without this, `locate` reads it as metres, 100x too big.
+    pos, idx = quad(size=10.0)
+    out = write_glb(tmp_path / "u.glb", [Part("ground", "floor", pos, idx)])
+    gltf, _ = read_glb(out)
+    assert gltf["extras"]["unit_metres"] == pytest.approx(1.0 / METRES_TO_VIEWER)
+    from heat3d_capture.locate.level import load
+
+    assert load(out).unit_metres == pytest.approx(0.01)
+    # A scan's own scale factor folded into `scale` does not change the unit written.
+    folded = write_glb(tmp_path / "f.glb", [Part("ground", "floor", pos, idx)], scale=METRES_TO_VIEWER * 2.5)
+    assert read_glb(folded)[0]["extras"]["unit_metres"] == pytest.approx(0.01)
+    plain = write_glb(tmp_path / "m.glb", [Part("ground", "floor", pos, idx)], scale=1.0, unit_metres=1.0)
+    assert "extras" not in read_glb(plain)[0]
+
+
 def test_position_accessor_carries_min_and_max(tmp_path):
     # Required by the specification, and the viewer derives its camera framing
     # from the bounds, so an absent min/max is not a cosmetic omission.

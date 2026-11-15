@@ -20,7 +20,7 @@ licence of the model that made it:
 
 | Model | Licence | Commercial use | Used by |
 |---|---|---|---|
-| **Depth-Anything-V2-Small** | **Apache-2.0** | **permitted** | the default: the scanner's converted model (`tools/export_onnx.py` defaults to it, and the window's "Set up the depth model" always builds it), and the offline `reconstruct` path |
+| **Depth-Anything-V2-Small** | **Apache-2.0** | **permitted** | the default: the scanner's converted model (`tools/export_onnx.py` defaults to it, and the window's "Set up the depth model" always builds it), and the offline path's depth (fusion); VGGT supplies its poses |
 | Depth-Anything-V2-Base | CC-BY-NC-4.0 | non-commercial only | only if you convert it yourself (`--size base`) |
 | Depth-Anything-V2-Large | CC-BY-NC-4.0 | non-commercial only | only if you convert it yourself (`--size large`) |
 

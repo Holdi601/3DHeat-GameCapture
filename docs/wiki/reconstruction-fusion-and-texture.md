@@ -1,4 +1,3 @@
-
 # Fusion, coverage and colour
 
 Code: [`scan/reconstruct.py`](https://github.com/Holdi601/3DHeat-GameCapture/blob/main/heat3d_capture/scan/reconstruct.py),

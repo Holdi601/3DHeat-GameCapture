@@ -70,6 +70,7 @@ and what is not yet confirmed per game.
 - **Rally games** print `listening for <game> on port <port>`, then `stage written: <file>`;
   on Ctrl+C an open stage long enough to keep is written as `partial stage written: <file>`.
 - **BeamNG** prints `lap written: <file>`, and on Ctrl+C `run written: <file>`.
+- **Trackmania** prints nothing per run: the plugin writes its CSV files itself.
 - At the end every recorder prints how many files it wrote.
 
 A Forza recording, here fed with synthetic Data Out packets of a car driving two laps of a

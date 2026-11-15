@@ -1,6 +1,7 @@
 **3DHeat GameCapture**
 
 - [Home](Home)
+- [Before you start](before-you-start)
 - [The rules](rules)
 - [Telemetry recorders](telemetry)
   - [Forza](telemetry-forza)
@@ -29,3 +30,5 @@
 - [Development](development)
 - [Reading HUD from video](hud-video)
 - [Locating frames in a level](locate)
+- [Command reference](cli-reference)
+- [Maintaining these docs](maintaining)

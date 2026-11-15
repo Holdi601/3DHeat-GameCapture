@@ -1,4 +1,3 @@
-
 # Updates
 
 3DHeat GameCapture checks this repository's GitHub releases when it starts, says when a newer

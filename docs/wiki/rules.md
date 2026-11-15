@@ -1,4 +1,3 @@
-
 # The rules this is built under
 
 Every part of 3DHeat GameCapture follows the same constraints. They are design decisions,

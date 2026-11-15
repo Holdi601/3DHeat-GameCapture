@@ -1,4 +1,3 @@
-
 # Limits and what is verified
 
 An honest list: what the tools do not do, and what has not been checked against a running game.

@@ -1,4 +1,3 @@
-
 # Assetto Corsa, ACC, AC EVO and AC Rally
 
 ```bash

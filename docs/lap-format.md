@@ -6,8 +6,8 @@ nav_order: 9
 
 # The `heat3d-lap` file
 
-Every telemetry recorder in `gamecapture/` writes one file per lap or rally
-stage, in the same shape whatever the game. The course export in `gamefiles/`
+Every telemetry recorder in this repository writes one file per lap or rally
+stage, in the same shape whatever the game. The course export in [3DHeat GameFiles](https://github.com/Holdi601/3DHeat-GameFiles)
 reads it back to find the game, the level and the driven line. Anything that
 reads JSON can read it.
 

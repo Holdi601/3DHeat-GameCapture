@@ -70,7 +70,7 @@ def lap_document(
             "lengthMetres": 1890.0,
             "carOrdinal": ordinal,
             "performanceIndex": 700,
-            "track": "Mapletree Test Loop",
+            "track": "Demo Valley Loop",
             "recordedAt": recorded,
             "StandingStart": False,
             "samples": samples,
@@ -91,12 +91,12 @@ def write_lap(folder, name="lap.json", **kwargs):
 @pytest.fixture
 def library(tmp_path):
     root = tmp_path / "laps"
-    course = root / "Mapletree Test Loop (course_1200_3400_to_1175_3400)"
+    course = root / "Demo Valley Loop (course_1200_3400_to_1175_3400)"
     course.mkdir(parents=True)
     (course / "course.json").write_text(
         json.dumps(
             {
-                "Name": "Mapletree Test Loop",
+                "Name": "Demo Valley Loop",
                 "StartX": 1188.0515,
                 "StartZ": 3390.413,
                 "FinishX": 1183.8538,
@@ -166,7 +166,7 @@ class TestReadingACourse:
     def test_it_finds_laps_however_deep_they_sit(self, library):
         """Class, then car, then tune, then tag - four levels, and the shape of
         that tree is the recording tool's business rather than this one's."""
-        course = read_course(library / "Mapletree Test Loop (course_1200_3400_to_1175_3400)")
+        course = read_course(library / "Demo Valley Loop (course_1200_3400_to_1175_3400)")
 
         assert len(course) == 2
 
@@ -176,7 +176,7 @@ class TestReadingACourse:
         whatever the others did differently - and the interesting laps are
         exactly the ones that went somewhere the quick one did not.
         """
-        course = read_course(library / "Mapletree Test Loop (course_1200_3400_to_1175_3400)")
+        course = read_course(library / "Demo Valley Loop (course_1200_3400_to_1175_3400)")
 
         low, high = course.bounds
 
@@ -184,7 +184,7 @@ class TestReadingACourse:
         assert high[0] == pytest.approx(1373.2)
 
     def test_the_start_and_finish_come_from_the_metadata(self, library):
-        course = read_course(library / "Mapletree Test Loop (course_1200_3400_to_1175_3400)")
+        course = read_course(library / "Demo Valley Loop (course_1200_3400_to_1175_3400)")
 
         assert course.start == pytest.approx((1188.0515, 3390.413))
         assert course.closed, "start and finish a car's length apart is a circuit"
@@ -216,7 +216,7 @@ class TestReadingACourse:
     def test_one_unreadable_lap_does_not_cost_the_course(self, library):
         """One file out of hundreds, and stopping on it would mean a library is all
         or nothing."""
-        folder = library / "Mapletree Test Loop (course_1200_3400_to_1175_3400)"
+        folder = library / "Demo Valley Loop (course_1200_3400_to_1175_3400)"
         (folder / "A" / "car382" / "tune" / "untagged" / "broken.json").write_text(
             "not json at all", encoding="utf-8"
         )
@@ -226,7 +226,7 @@ class TestReadingACourse:
         assert len(course) == 2
 
     def test_the_best_lap_is_the_fastest_one(self, library):
-        course = read_course(library / "Mapletree Test Loop (course_1200_3400_to_1175_3400)")
+        course = read_course(library / "Demo Valley Loop (course_1200_3400_to_1175_3400)")
 
         assert course.best.seconds == pytest.approx(47.737)
 
@@ -234,11 +234,11 @@ class TestReadingACourse:
 class TestFindingACourseByName:
     def test_the_coordinates_glued_to_the_folder_name_can_be_ignored(self, library):
         """Nobody is going to type
-        `Mapletree Test Loop (course_1200_3400_to_1175_3400)`."""
-        assert find_course("Mapletree Test Loop", library).name.startswith("Mapletree Test Loop")
+        `Demo Valley Loop (course_1200_3400_to_1175_3400)`."""
+        assert find_course("Demo Valley Loop", library).name.startswith("Demo Valley Loop")
 
     def test_case_and_partial_names_work(self, library):
-        assert find_course("mapletree", library).name.startswith("Mapletree")
+        assert find_course("demo valley", library).name.startswith("Demo Valley")
 
     def test_an_ambiguous_name_says_what_it_matched(self, tmp_path):
         root = tmp_path / "laps"
@@ -263,9 +263,9 @@ class TestWhatItWritesOut:
         The same shape `heat3d_capture route` writes, so a course from the
         library and a lap driven a minute ago are interchangeable downstream.
         """
-        course = read_course(library / "Mapletree Test Loop (course_1200_3400_to_1175_3400)")
+        course = read_course(library / "Demo Valley Loop (course_1200_3400_to_1175_3400)")
 
-        path = course.save_route(tmp_path / "mapletree", margin=80.0)
+        path = course.save_route(tmp_path / "demo valley", margin=80.0)
         data = json.loads(path.read_text(encoding="utf-8"))
 
         assert set(data["bounds"]) == {"min", "max"}
@@ -282,9 +282,9 @@ class TestWhatItWritesOut:
         for a coordinate: x=1184.97 writes as 1185, the course snaps to a metre
         grid, and the racing line comes out with stairs in it.
         """
-        course = read_course(library / "Mapletree Test Loop (course_1200_3400_to_1175_3400)")
+        course = read_course(library / "Demo Valley Loop (course_1200_3400_to_1175_3400)")
 
-        path = course.save_samples(tmp_path / "mapletree")
+        path = course.save_samples(tmp_path / "demo valley")
         rows = list(csv.DictReader(path.open(encoding="utf-8")))
 
         first = next(r for r in rows if r["car_class"] == "A")
@@ -292,9 +292,9 @@ class TestWhatItWritesOut:
         assert float(first["z"]) == pytest.approx(3394.9365, abs=0.002)
 
     def test_the_csv_holds_every_sample_of_every_lap(self, library, tmp_path):
-        course = read_course(library / "Mapletree Test Loop (course_1200_3400_to_1175_3400)")
+        course = read_course(library / "Demo Valley Loop (course_1200_3400_to_1175_3400)")
 
-        path = course.save_samples(tmp_path / "mapletree")
+        path = course.save_samples(tmp_path / "demo valley")
         rows = list(csv.DictReader(path.open(encoding="utf-8")))
 
         assert len(rows) == course.samples == 6
@@ -306,9 +306,9 @@ class TestWhatItWritesOut:
         work; naming them in lower case with the units spelled out means nobody
         has to ask what `Speed` is in.
         """
-        course = read_course(library / "Mapletree Test Loop (course_1200_3400_to_1175_3400)")
+        course = read_course(library / "Demo Valley Loop (course_1200_3400_to_1175_3400)")
 
-        path = course.save_samples(tmp_path / "mapletree")
+        path = course.save_samples(tmp_path / "demo valley")
         header = next(csv.reader(path.open(encoding="utf-8")))
 
         for wanted in ("x", "y", "z", "speed_kmh", "speed_ms", "throttle", "brake", "lat_g"):
@@ -318,9 +318,9 @@ class TestWhatItWritesOut:
         """Without this the whole course is one undifferentiated cloud, and
         comparing a fast lap with a slow one — the point of the exercise — is
         not possible."""
-        course = read_course(library / "Mapletree Test Loop (course_1200_3400_to_1175_3400)")
+        course = read_course(library / "Demo Valley Loop (course_1200_3400_to_1175_3400)")
 
-        path = course.save_samples(tmp_path / "mapletree")
+        path = course.save_samples(tmp_path / "demo valley")
         rows = list(csv.DictReader(path.open(encoding="utf-8")))
 
         assert len({r["lap"] for r in rows}) == 2
@@ -331,7 +331,7 @@ class TestEverythingKept:
     """3DHeat's converter rule: what a lap file says beyond the samples is carried along, not left behind."""
 
     def test_the_lap_s_own_fields_and_the_unreadable_files_reach_the_route(self, library, tmp_path):
-        folder = library / "Mapletree Test Loop (course_1200_3400_to_1175_3400)"
+        folder = library / "Demo Valley Loop (course_1200_3400_to_1175_3400)"
         doc = lap_document()
         doc["Lap"]["carName"] = "Test Car '08"
         doc["Lap"]["WetFraction"] = 0.25

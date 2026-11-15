@@ -1,4 +1,3 @@
-
 # Capture, masks and frame quality
 
 Code: [`capture/sources.py`](https://github.com/Holdi601/3DHeat-GameCapture/blob/main/heat3d_capture/capture/sources.py),

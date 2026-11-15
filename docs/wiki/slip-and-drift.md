@@ -1,4 +1,3 @@
-
 # Slip, drift and derived channels
 
 The car-control analysis in the viewer's Race tab wants the same few quantities from every

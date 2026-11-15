@@ -73,11 +73,11 @@ Every field of the packet is decoded (`decode_full`) and converted:
   world's), is written straight under the canonical names `latVel`, `vertVel` and `longVel`, so
   the viewer reads the drift angle off it rather than estimating it from heading and path.
 
-The lap file's channels are all of these except the per-lap and bookkeeping fields:
+The lap file's channels are all of these except the per-lap fields:
 
 | Group | Channels |
 |---|---|
-| Time and place | `time`, `distance`, `x`, `y`, `z`, `distanceTravelled`, `currentLap`, `lapNumber`, `racePosition` |
+| Time and place | `time`, `distance`, `x`, `y`, `z`, `distanceTravelled`, `currentLap`, `lapNumber`, `racePosition`, `timestampMs`, `raceTime`, `bestLap`, `lastLap` |
 | Motion | `speed`, `yaw`, `pitch`, `roll`, `accelX/Y/Z`, `latVel`, `vertVel`, `longVel`, `angVelX/Y/Z`, `latAcc`, `longAcc`, `vertAcc`, `yawRate` |
 | Engine | `rpm`, `power` (W), `torque` (N m), `boost`, `fuel` |
 | Driver | `throttle`, `brake`, `clutch`, `handbrake`, `steer`, `gear`, `drivingLine`, `aiBrakeDifference` |
@@ -90,8 +90,8 @@ coordinates in metres, unchanged (y is up; the world is left-handed).
 
 Taken once per lap rather than per sample, under `car`: `carOrdinal`, `carClass`, `carPI`,
 `drivetrain`, `cylinders`, `rpmMax`, `rpmIdle`. FM2023's track id goes in once too, as
-`lap.trackOrdinal`. Not kept at all: `isRaceOn`, `timestampMs`, `bestLap`, `lastLap`,
-`raceTime`.
+`lap.trackOrdinal`. Not kept per sample: `isRaceOn` (1 in every frame of a lap). `timestampMs`,
+`raceTime`, `bestLap` and `lastLap` are kept as channels.
 
 The rest of the document is filled like every other recorder's:
 

@@ -8,7 +8,7 @@ nav_order: 5
 All commands run from the repository folder, with the project's environment:
 
 ```bash
-.venv/Scripts/python -m heat3d_capture <verb> [options]
+.venv\Scripts\python -m heat3d_capture <verb> [options]
 ```
 
 | Command | Does |
@@ -207,6 +207,8 @@ track and the kill feed. Writes `<out>.parquet` (track and events, a 3DHeat tabl
 `<out>.events.jsonl`, `<out>.summary.json`, and `<out>.map.png` + `.map.json` (the minimap mosaic
 and its anchors for the viewer's Map image). Battlefield 6 (`bf6`) is the only profile so far.
 
+Needs **ffmpeg and ffprobe** on PATH (`winget install Gyan.FFmpeg`, then a new terminal).
+
 | Option | Default | Meaning |
 |---|---|---|
 | `video` | required | The recording. |
@@ -237,8 +239,9 @@ minimap track as the fallback; `eval` compares a result with known camera poses;
 per-map place model on renders of the level (and on frames a run already located), for `build --head`;
 `refmap` places the game's own map (its deploy screen) on the level, and `minimap` reads a
 recording's minimap against it, frame by frame - the prior `frames --minimap` can take. Needs PyTorch
-and `requirements-locate.txt`. Every option, the outputs and the method:
-[Locating frames in a level](locate.md).
+and `requirements-locate.txt`. **Experimental:** on real recordings it places only a small share of
+frames so far. Every option, the outputs and the method:
+[Locating frames in a level](locate.md); the full option list: [Command reference](cli-reference.md).
 
 ## The scan window
 

@@ -69,8 +69,8 @@ importable (for instance `onnxruntime-gpu`), nothing is installed: the check is 
 
 ```bash
 python -m venv .venv
-.venv/Scripts/python -m pip install -r requirements.txt
-.venv/Scripts/python -m heat3d_capture.ui
+.venv\Scripts\python -m pip install -r requirements.txt
+.venv\Scripts\python -m heat3d_capture.ui
 ```
 
 `requirements.txt` pins: `numpy>=2.0,<2.8`, `opencv-python>=4.10`, `windows-capture>=1.4`
@@ -146,13 +146,13 @@ Same ONNX file, same output, RTX 5080:
 | DirectML | 54 fps |
 | CPU | 3.5 fps |
 
-A 120-frame clip through the shipped ONNX path:
+A test clip through the shipped ONNX path:
 
 | Preset | Views kept | Depth throughput |
 |---|---|---|
-| Draft | 17 of 120 | 49 /s |
-| Balanced | 31 of 120 | 50 /s |
-| Detailed | 58 of 120 | 42 /s |
+| Draft | about 1 in 7 | about 50 /s |
+| Balanced | about 1 in 4 | about 50 /s |
+| Detailed | about 1 in 2 | about 40 /s |
 
 Depth is comfortably faster than capture, so live scanning is not depth-bound. The app's
 environment is about 349 MiB with no PyTorch, against roughly 3.5 GB for torch with CUDA.

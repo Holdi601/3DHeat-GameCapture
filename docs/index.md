@@ -5,90 +5,90 @@ nav_order: 1
 
 # 3DHeat GameCapture
 
-3DHeat GameCapture is one of the free tools around the 3DHeat telemetry viewer. It does two
-separate jobs:
+**What is it?** A tool that writes down what a racing game tells it about your driving, one file
+per lap. It can also rebuild a rough 3D model of a level from a video of you playing.
 
-1. **Lap telemetry recorders.** It records every channel a racing game publishes - Forza's
-   Data Out, the Assetto Corsa games' shared memory, the rally games' UDP feeds, a BeamNG
-   protocol mod, a Trackmania Openplanet plugin - and writes one `heat3d-lap` file per lap
-   or stage. The viewer's Race tab reads those files directly. iRacing needs no recorder:
-   the viewer reads its own `.ibt` files.
-2. **Level reconstruction from gameplay.** It turns what the screen showed while you walked
-   or drove through a level into a `.glb` mesh that the viewer loads as 3D context under the
-   telemetry. Frames come from Windows Graphics Capture, depth is estimated by a neural
-   network, the camera path comes from visual odometry, from Forza's telemetry, or from an
-   offline feed-forward solve.
-3. **The player's own match, after it.** `hud` reads the HUD of the player's own recording - own
-   actions, deaths, the minimap track, the kill feed - and `locate` places each frame on a level
-   exported by GameFiles, for games that keep no record of where the player was.
+**Why would I use it?** To see your laps in the [3DHeat viewer](https://holdi601.github.io/3DHeat/):
+where you braked, where you were slow, how two laps differ. And to have the level under your
+heatmap when nobody has a 3D model of it.
 
-Both follow one rule: **nothing is injected into a game and nothing is hooked**. Frames come
+**Example:** turn on Forza's Data Out, run one command, drive two laps. Two lap files appear in
+`laps\`. Drop them on the viewer's Race tab.
+
+![telemetry recording two laps of a synthetic Forza feed](assets/img/telemetry-run.svg)
+
+New to the command line? Read [Before you start](before-you-start.md) first.
+
+## The three jobs
+
+1. **Lap telemetry.** It records every channel a racing game publishes - Forza's Data Out, the
+   Assetto Corsa games' shared memory, the rally games' network feeds, a BeamNG mod, a
+   Trackmania plugin - and writes one `heat3d-lap` file per lap or stage, for the viewer's Race
+   tab. iRacing needs no recorder: the viewer reads its own `.ibt` files.
+2. **Levels from gameplay.** It turns what the screen showed while you walked or drove through a
+   level into a `.glb` 3D model, which the viewer lays under the heatmap.
+3. **Your own match, after it.** `hud` reads the HUD of your own recording - your actions, deaths,
+   minimap track and kill feed. `locate` (experimental: it places few real frames so far) works
+   out where each frame was taken, on a level's 3D model.
+
+All three follow one rule: **nothing is injected into a game and nothing is hooked**. Frames come
 from the public screen-capture API, telemetry from interfaces the games publish for it. See
 [The rules](rules.md).
 
 ![What goes in, which command, what comes out, where the viewer shows it](assets/img/overview.svg)
 
-The code is Python (package `heat3d_capture`), MIT licensed, in
-[Holdi601/3DHeat-GameCapture](https://github.com/Holdi601/3DHeat-GameCapture). The depth and
-pose models it can run carry their own licences - see
-[Models and licences](models-and-licences.md).
+The code is Python (package `heat3d_capture`), MIT licensed. The depth and pose models it can
+run have their own licences - see [Models and licences](models-and-licences.md).
 
 ## Quick start
 
 ### Record laps
 
-Requirements: Python 3 (developed and tested on 3.13; `scan.bat` offers 3.12), and `numpy`
-for the Forza `route` and `laps` commands. The `telemetry` recorders themselves use only the
-standard library. The minimum Python version has not been pinned or checked.
+You need Python 3.10 or later ([Before you start](before-you-start.md)). In PowerShell:
 
-```bash
+```powershell
 git clone https://github.com/Holdi601/3DHeat-GameCapture
 cd 3DHeat-GameCapture
 python -m venv .venv
-.venv/Scripts/python -m pip install -r requirements.txt
+.venv\Scripts\python -m pip install -r requirements.txt
 
 # Forza: Settings -> HUD and Gameplay -> Data Out = ON, IP 127.0.0.1, port 5300
-.venv/Scripts/python -m heat3d_capture telemetry -o laps
+.venv\Scripts\python -m heat3d_capture telemetry -o laps
 ```
 
-Drive; each lap is written to `laps/` as it finishes. Press Ctrl+C to stop. Drop the files
-on the viewer's Race tab. Every other game is one `--game` away:
+**You should see** `listening on port 5300. Laps go to laps. Ctrl+C to stop.`, then a line per lap as you cross the line, as
+in the picture above. Press Ctrl+C to stop. Drop the files from `laps\` on the viewer's Race tab.
+Every other game is one `--game` away:
 
-```bash
-.venv/Scripts/python -m heat3d_capture telemetry --game acc -o laps
-.venv/Scripts/python -m heat3d_capture telemetry --game dirtrally2 -o laps
+```powershell
+.venv\Scripts\python -m heat3d_capture telemetry --game acc -o laps
+.venv\Scripts\python -m heat3d_capture telemetry --game dirtrally2 -o laps
 ```
 
 See [Telemetry recorders](telemetry.md) for every game and option.
 
 ### Scan a level
 
-Double-click **`scan.bat`** in the repository folder. It finds Python (and offers to install
-Python 3.12 with winget if there is none), creates a private `.venv`, and starts the scan
-window, `python -m heat3d_capture.ui`. The window checks what is missing, says what each
-package is for and how large the download is, and installs nothing without a yes. On the
-first run it also offers to convert the depth model once. See
-[Runtime and dependencies](runtime.md) and [The scan window](reconstruction-scan-ui.md).
+Double-click **`scan.bat`** in the tool's folder. It finds Python (and offers to install it with
+winget if there is none), makes a private `.venv`, and opens the scan window. The window says
+what is missing, what each package is for and how big the download is, and installs nothing
+without a yes. See [Runtime and dependencies](runtime.md) and
+[The scan window](reconstruction-scan-ui.md).
 
-By hand:
+By hand: `.venv\Scripts\python -m heat3d_capture.ui`.
 
-```bash
-python -m venv .venv
-.venv/Scripts/python -m pip install -r requirements.txt
-.venv/Scripts/python -m heat3d_capture.ui
-```
+To rebuild a recording offline, with the camera path solved all at once (needs PyTorch, the
+`vggt` package and a GPU - see [Offline reconstruction](reconstruction-offline.md)):
 
-To reconstruct a recording offline with the camera path solved all at once (needs PyTorch,
-the `vggt` package and a GPU):
-
-```bash
-.venv/Scripts/python -m heat3d_capture reconstruct lap.mp4 -o lap.glb
+```powershell
+.venv\Scripts\python -m heat3d_capture reconstruct lap.mp4 -o lap.glb
 ```
 
 ## Map of the documentation
 
 | Page | What it covers |
 |---|---|
+| [Before you start](before-you-start.md) | Python, a terminal, the first command, common errors |
 | [The rules](rules.md) | No injection, published interfaces only, and what that costs |
 | [Telemetry recorders](telemetry.md) | The `telemetry` command and an overview of every game |
 | [Forza](telemetry-forza.md) | Data Out, layout detection, the FH Companion relay and its `.tele.gz` |
@@ -101,7 +101,8 @@ the `vggt` package and a GPU):
 | [Slip, drift and derived channels](slip-and-drift.md) | How slip is scaled, and what the viewer derives |
 | [The heat3d-lap file](lap-format.md) | The lap file format, channels, units, `meta` |
 | [Games](games.md) | Per game: how to record, what is sent, which courses can be exported |
-| [Command reference](commands.md) | `route`, `telemetry`, `laps`, `reconstruct`, `hud`, `locate` and every option |
+| [Commands](commands.md) | `route`, `telemetry`, `laps`, `reconstruct`, `hud`, `locate`, step by step |
+| [Command reference](cli-reference.md) | every option, generated from `--help` |
 | [Reading the HUD from a recording](hud-video.md) | `hud`: own actions, deaths, minimap track and kill feed from a recording |
 | [Locating frames in a level](locate.md) | `locate`: where each frame was taken, against the level's geometry |
 | [Level reconstruction](reconstruction.md) | The pipeline from frames to a `.glb` |
@@ -117,6 +118,7 @@ the `vggt` package and a GPU):
 | [Limits and verification](limits.md) | What is not done, and what has not been checked |
 | [Updates](updates.md) | The release check and `python -m heat3d_update` |
 | [Development](development.md) | Tests, the virtual environment, repository layout |
+| [Maintaining these docs](maintaining.md) | The release checklist for code and documentation |
 
 ## Part of 3DHeat
 
@@ -127,13 +129,20 @@ its Heatmap tab; how the viewer reads tables and match files is in
 [One file a match (.3dheat)](https://holdi601.github.io/3DHeat/container.html) and
 [Getting data in](https://holdi601.github.io/3DHeat/getting-data-in.html).
 
-| Tool | What it does |
-|---|---|
-| [3DHeat GameFiles](https://github.com/Holdi601/3DHeat-GameFiles) | courses and levels out of the archives games ship, as glTF |
-| [3DHeat GameCapture](https://github.com/Holdi601/3DHeat-GameCapture) | lap telemetry from racing games' published interfaces; levels reconstructed from gameplay video |
-| [3DHeat Unreal Exporter](https://github.com/Holdi601/3DHeat-UnrealExporter) | an Unreal Editor plugin that exports a level as glTF |
-| [3DHeat CS2](https://github.com/Holdi601/3DHeat-CS2) | Counter-Strike 2 demos into heatmap tables and match summaries; maps into geometry |
-| [3DHeat Watcher](https://github.com/Holdi601/3DHeat-Watcher) | records your play in the background from what games publish, for your own statistics |
+| Tool | What it does | Docs |
+|---|---|---|
+| [3DHeat viewer](https://github.com/Holdi601/3DHeat) | shows heatmaps, races and matches in 3D, in the browser | [docs](https://holdi601.github.io/3DHeat/) |
+| [GameFiles](https://github.com/Holdi601/3DHeat-GameFiles) | courses and levels out of the files games ship, as 3D models | [docs](https://holdi601.github.io/3DHeat-GameFiles/) |
+| [GameCapture](https://github.com/Holdi601/3DHeat-GameCapture) | lap telemetry from racing games; levels rebuilt from gameplay video | [docs](https://holdi601.github.io/3DHeat-GameCapture/) |
+| [Unreal Exporter](https://github.com/Holdi601/3DHeat-UnrealExporter) | an Unreal Editor plugin that exports a level as a 3D model | [docs](https://holdi601.github.io/3DHeat-UnrealExporter/) |
+| [CS2](https://github.com/Holdi601/3DHeat-CS2) | Counter-Strike 2 demos into match files; maps into 3D models | [docs](https://holdi601.github.io/3DHeat-CS2/) |
+| [Watcher](https://github.com/Holdi601/3DHeat-Watcher) | records your play in the background from what games publish | [docs](https://holdi601.github.io/3DHeat-Watcher/) |
+| [Ext-WarThunder](https://github.com/Holdi601/3DHeat-Ext-WarThunder) | War Thunder replays into match files | [docs](https://holdi601.github.io/3DHeat-Ext-WarThunder/) |
+| [Ext-WoT](https://github.com/Holdi601/3DHeat-Ext-WoT) | World of Tanks replays into match files | [docs](https://holdi601.github.io/3DHeat-Ext-WoT/) |
+| [Ext-WoWs](https://github.com/Holdi601/3DHeat-Ext-WoWs) | World of Warships replays into match files | [docs](https://holdi601.github.io/3DHeat-Ext-WoWs/) |
+| [Ext-Squad](https://github.com/Holdi601/3DHeat-Ext-Squad) | Squad server demos into match files | [docs](https://holdi601.github.io/3DHeat-Ext-Squad/) |
+| [Ext-DCS](https://github.com/Holdi601/3DHeat-Ext-DCS) | DCS World maps into 3D models | [docs](https://holdi601.github.io/3DHeat-Ext-DCS/) |
+| [Ext-IL2](https://github.com/Holdi601/3DHeat-Ext-IL2) | IL-2 Sturmovik maps into 3D models | [docs](https://holdi601.github.io/3DHeat-Ext-IL2/) |
 
 A developer with the game's project open should use the Unreal exporter, which reads the real
 geometry and is exact. Where a game's own archives can be read, GameFiles extracts the exact

@@ -188,9 +188,13 @@ def write_glb(
     *,
     scale: float = METRES_TO_VIEWER,
     generator: str = "heat3d-capture",
+    unit_metres: float | None = 1.0 / METRES_TO_VIEWER,
 ) -> Path:
     """
     Write `parts` as a GLB the viewer will classify from its labels.
+
+    `unit_metres` is how many metres one written unit is, stored as the file's
+    `extras.unit_metres`; None (or 1) leaves it out.
 
     Returns the path written, so a caller can log it without rebuilding it.
     """
@@ -323,6 +327,12 @@ def write_glb(
         "bufferViews": bin_.views,
         "buffers": [{"byteLength": len(bin_.data)}],
     }
+    if unit_metres is not None and float(unit_metres) != 1.0:
+        # How many metres one written unit is (a centimetre, by default), so a
+        # reader that works in metres (the `locate` verb's level reader) takes a
+        # scan at its true size. `scale` may fold in a scan's own scale factor,
+        # so the unit is said separately rather than derived from it.
+        gltf["extras"] = {"unit_metres": float(unit_metres)}
     if materials:
         gltf["materials"] = materials
         gltf["textures"] = textures

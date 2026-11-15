@@ -1,4 +1,3 @@
-
 # Games: recording and courses
 
 How each supported game is recorded, what it sends, and which of their courses
@@ -18,7 +17,7 @@ Every game ends up as `heat3d-lap` files ([`lap-format.md`](lap-format)),
 with canonical channel names and a `meta` block saying what its numbers mean -
 how its slip is scaled, circuit or rally or arcade, the surface when known - so
 a reader treats them all alike. All commands are `python -m heat3d_capture ...`
-in `gamecapture/`.
+in this repository.
 
 | Game | How to record | Position | Tyres and slip | Drift angle | Status |
 |---|---|---|---|---|---|
@@ -86,104 +85,32 @@ water temperatures, and every other channel it logs under its own name.
   limits online play; the plugin can be signed on openplanet.dev.
 
 None of the recorders has yet been run against the live games here; the first
-real session of each is the test that matters, and `gamecapture/tests/test_kunos.py`,
+real session of each is the test that matters, and `tests/test_kunos.py`,
 `test_rally.py` and `test_beamng.py` pin the layouts they were built
 to. Each recorder checks its packets as they come - the velocity against the
 speed, the struct's size - and says so when a layout does not match.
 
 ## Courses: what is exported, per game
 
-A course adds the kerbs, walls and run-off that explain a line.
-`python -m heat3d_gamefiles course <lap>` (in `gamefiles/`)
-exports one from the game's own files where that has been built and checked on
-an installed copy; where it has not, the reason is below, and the lap says so
-when it is given to `course`.
+A course adds the kerbs, walls and run-off that explain a line. Courses are exported by
+[3DHeat GameFiles](https://github.com/Holdi601/3DHeat-GameFiles) (`python -m heat3d_gamefiles course <lap>`), from the game's own files, where that
+has been built and checked on an installed copy. Details are in the
+[GameFiles documentation](https://holdi601.github.io/3DHeat-GameFiles/).
 
-| Game | Course from a lap | Why, or what it takes |
-|---|---|---|
-| Forza Horizon | yes | ForzaTech archives; see `gamefiles/README.md` |
-| BeamNG.drive | yes | the level archives, read as the game mounts them |
-| Assetto Corsa Rally | yes | Unreal 5 IoStore, not encrypted; the frame found from the lap |
-| Assetto Corsa EVO | no | its content is one package obfuscated with a key; this tool recovers none |
-| iRacing | no | track models ship in a protected format that is not a file-extraction target |
-| Forza Motorsport | not yet | same engine as Horizon; needs an installed copy to map its track folders |
-| Assetto Corsa | not yet | `.kn5` is described publicly; needs an installed copy to build and check against |
-| Assetto Corsa Competizione | not yet | Unreal 4 `.pak` (the reader lists and extracts them); needs a UE4 static-mesh reader, checked on an installed copy |
-| EA SPORTS WRC | not yet | Unreal; whether its archives are encrypted is unknown until checked on an installed copy |
-| DiRT Rally 2.0 / 1 / DiRT 4, Richard Burns Rally | not yet | their own engines' formats; need installed copies |
-| Trackmania | not yet | a map file lists blocks whose models live in the game's packs; needs an installed copy |
+| Game | Course from a lap |
+|---|---|
+| Forza Horizon | yes |
+| BeamNG.drive | yes |
+| Assetto Corsa Rally | yes |
+| Assetto Corsa EVO | no: its content is not readable as files |
+| iRacing | no: track models ship in a protected format |
+| Forza Motorsport, Assetto Corsa, Assetto Corsa Competizione, EA SPORTS WRC, DiRT Rally 2.0 / 1 / DiRT 4, Richard Burns Rally, Trackmania | not yet: each needs an installed copy to build and check against |
 
-None of the "not yet" readers is written blind: a format reader that has not
-been checked against the game's own files produces plausible rubbish as
-readily as a course, so each waits for a copy to check it on. The gameplay
-route below works for all of them meanwhile.
-
-### BeamNG.drive
-
-A level's terrain heightfield, its road decals (drawn on the terrain, as most
-of BeamNG's roads are), circuits modelled as meshes, and every placed model -
-static objects, prefabs, forest items - from the compiled `.cdae` shapes, or
-from Collada for a mod that ships no cache. The ground is baked per 512 m tile
-the way the game draws it: each terrain layer's base colour map with its detail
-and macro overlays, the road decals over it in the game's order, the modelled
-road surfaces from above. Positions come out in the frame the telemetry
-recorder writes (`(x, z, -y)` of BeamNG's Z-up world), so a recorded lap sits
-on the course; the level is found from the lap. Checked on six shipped levels;
-how each convention was settled is in `gamefiles/README.md`.
-
-### Assetto Corsa Rally
-
-The stage's own ground - track tiles split into road and terrain, the far
-terrain beyond - and the models placed along it, read from the game's IoStore
-containers: package by package, with the properties that place a model decoded
-by a schema derived from Unreal's engine headers and checked against every
-component of every stage. The ground is textured from the stage's baked
-virtual texture (13-59 cm a pixel) and its satellite image around it.
-
-The telemetry's frame is not documented, so it is not assumed: of the eight
-ways Unreal's horizontal axes can map onto the lap's, the one that puts the lap
-on the stage's road tiles is used, and the export says which. Built and tested
-with laps generated on all nine stages in random frames, each found right; a
-lap recorded in the game is still to come.
-
-### Assetto Corsa EVO
-
-All of the game's content is one package of about 69 GB. Parts of it are
-plain - texture blocks, readable as they are - but its structure and the
-padding at its end are XOR-ed with a repeating eight-byte key: the end of the
-file, where padding would be zeros, repeats one eight-byte pattern. Reading it
-would mean recovering that key, which this project does not do. The gameplay
-route is the way to a course.
-
-### Forza Motorsport
-
-The same engine as Forza Horizon (ForzaTech), the same archive formats
-(`.minizip`, `.modelbin`, the texture and material chain in
-`gamefiles/`). Data Out positions are the game's world frame, so the
-route-to-archive search that `course` does for Horizon applies once the
-Motorsport track folders are mapped - and FM2023's Data Out carries the track
-id outright. Needs an installed copy.
-
-### Assetto Corsa and Assetto Corsa Competizione
-
-Assetto Corsa's tracks are folders under `content/tracks/<track>/<layout>`:
-`.kn5` models (textures, materials and a node tree of meshes, described
-publicly), `ai/fast_lane.ai` (the AI racing line as a world-space spline - a
-reference line) and `data/surfaces.ini` (which surfaces are
-road, kerb or grass). ACC is Unreal 4: the `.pak` reader here lists and
-extracts its archives; turning a UE4 static mesh into geometry is the part
-still to write, and the Unreal 5 reader built for AC Rally is most of the way
-there. Both need an installed copy to build against.
-
-### iRacing
-
-Track models are shipped in a protected format and are not a file-extraction
-target. The gameplay route, with poses from iRacing's own live telemetry
-(latitude, longitude, altitude, yaw, pitch and roll at 60 Hz).
+The gameplay route below works for all of them meanwhile.
 
 ## The route that works for every game
 
-`gamecapture/` reconstructs a level from gameplay video. Its hard part
+GameCapture reconstructs a level from gameplay video. Its hard part
 is the camera path, and for Forza it is exact because the telemetry gives the
 car's pose every frame. Every game above now has the same thing: position and
 attitude, live, from a documented interface. Feeding those into

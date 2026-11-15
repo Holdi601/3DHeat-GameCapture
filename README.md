@@ -1,63 +1,69 @@
-# Game capture → level geometry
+# 3DHeat GameCapture
 
-> **This is a separate project from the viewer and from the Unreal exporter**,
-> with its own obligations. What a reconstruction may be used for depends on the
-> depth model chosen: the default is Apache-2.0 and unrestricted, the larger and
-> more accurate variants are CC-BY-NC-4.0 and non-commercial. Full detail in
-> [`LICENSES.md`](LICENSES.md).
->
-> The division is not administrative. A developer with the project open should use
-> `unreal/` — it reads the real geometry and is exact. This is for
-> people who have only what the screen shows.
+**What is it?** A tool that writes down what a racing game tells it about your driving, one file
+per lap. It can also rebuild a rough 3D model of a level from a video of you playing.
 
+**Why would I use it?** To see your laps in the [3DHeat viewer](https://github.com/Holdi601/3DHeat):
+where you braked, where you were slow, how two laps differ. And to have the level under your
+heatmap when nobody has a 3D model of it.
 
-Reconstructs a level from gameplay, so a map nobody exported can still be loaded
-into the viewer as 3D context under the telemetry.
+**Example:** turn on Forza's Data Out, run `python -m heat3d_capture telemetry -o laps`, drive two
+laps. Two lap files appear in `laps`. Drop them on the viewer's Race tab.
 
-Walk a Battlefield level slowly, or drive a Forza track, and this turns what the
-screen showed into a `.glb` the viewer reads with no special handling — the same
-file contract `unreal/` writes.
+![What goes in, which command, what comes out, where the viewer shows it](docs/assets/img/overview.svg)
 
-## At a glance
+- **Documentation, a page per command:** [holdi601.github.io/3DHeat-GameCapture](https://holdi601.github.io/3DHeat-GameCapture/)
+- **Documentation in your language:** the same site, language menu at the top.
+- **The 3DHeat viewer:** [source](https://github.com/Holdi601/3DHeat), [documentation](https://holdi601.github.io/3DHeat/)
 
-3DHeat GameCapture is one of the free tools around the
-[3DHeat viewer](https://github.com/Holdi601/3DHeat) ([documentation](https://holdi601.github.io/3DHeat/)).
-Full documentation of this tool, a page per command:
-**[holdi601.github.io/3DHeat-GameCapture](https://holdi601.github.io/3DHeat-GameCapture/)**.
+> **Licences.** The code is MIT. What a reconstruction may be used for depends on the depth model
+> chosen: the default is Apache-2.0 and unrestricted, the larger variants and the offline VGGT
+> model are non-commercial. Details in [`LICENSES.md`](LICENSES.md).
 
-What it is useful for:
+## What it is useful for
 
 - **Lap telemetry** - record every channel a racing game publishes (Forza Data Out, the Assetto
-  Corsa games' shared memory, the rally games' UDP, a BeamNG mod, a Trackmania plugin), one
-  `heat3d-lap` file per lap, for the viewer's Race tab: lines, speed traces, slip, braking zones.
-- **Levels nobody exported** - turn what the screen showed into a `.glb` the viewer lays under
-  the heatmap.
+  Corsa games' shared memory, the rally games' network feeds, a BeamNG mod, a Trackmania plugin),
+  one `heat3d-lap` file per lap, for the viewer's Race tab: lines, speed traces, slip, braking
+  zones.
+- **Levels nobody exported** - turn what the screen showed into a `.glb` the viewer lays under the
+  heatmap. If you have the game's project, use the
+  [Unreal Exporter](https://github.com/Holdi601/3DHeat-UnrealExporter) instead; if the game's own
+  files can be read, [GameFiles](https://github.com/Holdi601/3DHeat-GameFiles). Both are exact.
 - **Your own match, after it** - read the HUD of your own recording (actions, deaths, minimap
-  track, kill feed), and place each frame on a level, for games that keep no record of where you
-  were.
+  track, kill feed), and place each frame on a level (`locate`, experimental), for games that
+  keep no record of where you were.
 
 Nothing is injected into a game and nothing is hooked: frames come from the public screen-capture
 API, telemetry from interfaces the games publish for it.
 
-![What goes in, which command, what comes out, where the viewer shows it](docs/assets/img/overview.svg)
+## Install
 
-### Install
+New to the command line? Read [Before you start](https://holdi601.github.io/3DHeat-GameCapture/before-you-start.html) first.
 
-Python 3 (developed on 3.13), Windows for screen capture and the Assetto Corsa recorders.
+Python 3.10 or later (developed on 3.13), Windows for screen capture and the Assetto Corsa
+recorders. In PowerShell:
 
-```bash
+```powershell
 git clone https://github.com/Holdi601/3DHeat-GameCapture
 cd 3DHeat-GameCapture
 python -m venv .venv
-.venv/Scripts/python -m pip install -r requirements.txt          # telemetry, the scan window
-.venv/Scripts/python -m pip install -r requirements-offline.txt  # reconstruct (PyTorch, VGGT)
-.venv/Scripts/python -m pip install -r requirements-locate.txt   # locate (PyTorch)
+.venv\Scripts\python -m pip install -r requirements.txt          # telemetry, hud, the scan window
+```
+
+You should see `Successfully installed ...` at the end. `hud` also needs ffmpeg
+(`winget install Gyan.FFmpeg`). For `reconstruct` and `locate`, install PyTorch for your GPU from
+[pytorch.org](https://pytorch.org/get-started/locally/) **first**, then:
+
+```powershell
+.venv\Scripts\python -m pip install -r requirements-offline.txt  # reconstruct (needs PyTorch first; see Offline reconstruction)
+.venv\Scripts\python -m pip install -r requirements-locate.txt   # locate (needs PyTorch first)
 ```
 
 Or double-click `scan.bat`, which checks what is missing and asks before installing anything
 (below, [Running it](#running-it)).
 
-### Commands
+## Commands
 
 | Command | Does | Docs |
 |---|---|---|
@@ -66,11 +72,11 @@ Or double-click `scan.bat`, which checks what is missing and asks before install
 | `laps` | reads an FH Companion lap library, writes one course | [Commands](https://holdi601.github.io/3DHeat-GameCapture/commands.html#laps) |
 | `reconstruct` | solves a recording offline into a `.glb` | [Offline reconstruction](https://holdi601.github.io/3DHeat-GameCapture/reconstruction-offline.html) |
 | `hud` | own actions, deaths, minimap track and kill feed from a recording | [Reading the HUD](https://holdi601.github.io/3DHeat-GameCapture/hud-video.html) |
-| `locate build/frames/train/refmap/minimap/eval` | where each frame of a recording was taken | [Locating frames](https://holdi601.github.io/3DHeat-GameCapture/locate.html) |
+| `locate build/frames/train/refmap/minimap/eval` | where each frame of a recording was taken (experimental: places few real frames so far) | [Locating frames](https://holdi601.github.io/3DHeat-GameCapture/locate.html) |
 | `python -m heat3d_capture.ui` | the live scan window | [The scan window](https://holdi601.github.io/3DHeat-GameCapture/reconstruction-scan-ui.html) |
 | `python -m heat3d_update [--check]` | checks for and applies an update | [Updates](https://holdi601.github.io/3DHeat-GameCapture/updates.html) |
 
-Every option of every command: [Command reference](https://holdi601.github.io/3DHeat-GameCapture/commands.html),
+Every option of every command: [Command reference](https://holdi601.github.io/3DHeat-GameCapture/cli-reference.html),
 or `--help` after any verb.
 
 ```bash
@@ -89,7 +95,10 @@ python -m heat3d_capture locate frames "<recording>.mp4" --db level.db -o out/ma
 
 ![telemetry recording two laps of a synthetic Forza feed](docs/assets/img/telemetry-run.svg)
 
-### Output
+## Output
+
+GameCapture writes ordinary loose files (no `.3dheat` container): JSON lap files, Parquet tables
+and `.glb` 3D models, as below.
 
 | File | From | Holds | In the viewer |
 |---|---|---|---|
@@ -173,8 +182,8 @@ to make again.
 **Most of the picture is not the world.** In a cockpit view the dashboard, the
 pillars, the wheel and the HUD are bolted to the camera, and they are exactly
 what a feature detector likes: high contrast, corner-rich, perfectly still. On
-the reference lap, **60–79% of every feature found sat on camera-attached
-pixels**, so the median apparent motion between frames a second apart was 0–4 px.
+a test lap, **well over half of every feature found sat on camera-attached
+pixels**, so the median apparent motion between frames a second apart was a few pixels.
 
 `FlowMask` finds that region by asking which features persist *without
 travelling*, and three things make its answer trustworthy:
@@ -186,8 +195,8 @@ travelling*, and three things make its answer trustworthy:
   being the geometry most wanted — and what is bolted to the camera always
   touches an edge, while a vanishing point does not;
 - the limit on how much may be masked is applied to the region *after* it is
-  grown. It was not, which is how a night lap came to have 70% of every frame
-  discarded while the interface reported 31%.
+  grown. It was not, which is how a night lap came to have most of every frame
+  discarded while the interface reported far less.
 
 **But masking it out makes the feed-forward solve worse.** The feature count
 above is a true statement about an ORB detector and says nothing about a trained
@@ -197,10 +206,10 @@ degrees and a random direction is ninety:
 
 | frames given to the solver | mean turn |
 |---|---|
-| raw | **31.5°** |
-| local contrast lifted | 34.6° |
-| cockpit masked | 45.0° |
-| both | 85.4° |
+| raw | **smallest** |
+| local contrast lifted | a little larger |
+| cockpit masked | clearly larger |
+| both | close to a random direction |
 
 The preprocessing that looked best by feature statistics was the worst by the
 only measure that counts. So the solver gets raw frames. The mask is still
@@ -213,25 +222,25 @@ justifies a change only if it measures the thing the change is supposed to help.
 ### Frames are spaced by motion, not by the clock
 
 The remaining failure was subtler. At a fixed 1.2 s interval, median displacement
-across one lap ran from **13 px where the car crawled to 149 px where it was
+across one lap ran from **a few pixels where the car crawled to over a hundred where it was
 quick** — and the windows that came out wrong were the *fast* ones, where
 consecutive frames no longer overlapped enough to be related to each other. A
 clock gives the slow sections frames they do not need and starves the fast ones.
 
 So the gap is chosen per step to hold the displacement near 5% of frame width.
-On the same footage and the same frame budget that gives a median of 56 px with
-an 11–123 px spread, instead of 124 px with a 13–149 px spread.
+On the same footage and the same frame budget that roughly halves the median
+displacement and narrows its spread.
 
 That is better and it is still not enough, which is the honest state of this
-path. Solving 32-frame windows across the reference lap at a fixed 0.4 s gives a
-coherent camera path on **7 of 15 sections** and a scribble on the rest — and no
+path. Solving 32-frame windows across a test lap at a fixed 0.4 s gives a
+coherent camera path on **about half the sections** and a scribble on the rest — and no
 image statistic tried (brightness, detail, feature count, inlier ratio,
 displacement) predicts which is which. What distinguishes them is visible in the
 footage: the failures are the tight corners, where the view swings hard between
 frames.
 
 Those sections are recoverable by sampling them harder. The worst corner goes
-from 79° of mean turn to **5.9°** by moving from 0.4 s between frames to 0.1 s.
+from a near-random mean turn to **a few degrees** by moving from 0.4 s between frames to 0.1 s.
 So the spacing cannot be planned in advance from the pictures; it has to be
 chosen by solving, measuring the result, and re-solving denser where the path is
 not one a car could have driven. `scan/offline.py` does the planning; the
@@ -248,8 +257,8 @@ does not need and `requirements.txt` therefore does not list. They are in
 install them before it starts:
 
 ```bash
-.venv/Scripts/python -m pip install -r requirements-offline.txt
-.venv/Scripts/python -m pip install --no-deps "vggt @ git+https://github.com/facebookresearch/vggt.git"
+.venv\Scripts\python -m pip install -r requirements-offline.txt
+.venv\Scripts\python -m pip install --no-deps "vggt @ git+https://github.com/facebookresearch/vggt.git"
 ```
 
 `--no-deps` because VGGT's metadata pins numpy below 2, which pip would honour by
@@ -388,8 +397,8 @@ from much earlier to detect a revisit and snap the track back onto where it was 
 and the code for it is there (`VisualOdometry(loop_closure=True)`), but it is
 **off, and nothing in the scanner or the offline path turns it on.** On a rally
 stage every stretch of road looks like every other, feature matching agrees
-anyway, and on a real lap seventy-six false "revisits" kept a hundred-metre drive
-inside a five-metre box (`tests/test_loop_closure_harm.py`). Drift therefore
+anyway, and on a test lap dozens of false "revisits" kept a long drive
+inside a box a few metres wide (`tests/test_loop_closure_harm.py`). Drift therefore
 grows for as long as someone keeps walking; recoveries are counted on screen
 rather than hidden, so a track that is not a straight line has an explanation.
 
@@ -404,7 +413,7 @@ touches the game; only the player's own position is derived. Battlefield 6 is th
 first profile.
 
 ```
-.venv/Scripts/python -m heat3d_capture hud "<recording>.mp4" --game bf6 --player <name> -o out/match
+.venv\Scripts\python -m heat3d_capture hud "<recording>.mp4" --game bf6 --player <name> -o out/match
 ```
 
 Every option, the method, measured accuracy and limits:
@@ -415,12 +424,12 @@ Every option, the method, measured accuracy and limits:
 `locate` works out where each frame of the player's own recording was taken - the
 camera's position and view direction - by matching the picture against renders of
 the level's own geometry, for games that keep no demo or replay of where the player
-was. Battlefield 6 is the first. The minimap track from `hud` is only a fallback,
+was. Battlefield 6 is the first. **Experimental:** it places few real frames so far. The minimap track from `hud` is only a fallback,
 and every row says which of the two placed it.
 
 ```
-.venv/Scripts/python -m heat3d_capture locate build level.glb -o level.db
-.venv/Scripts/python -m heat3d_capture locate frames "<recording>.mp4" --db level.db -o out/match
+.venv\Scripts\python -m heat3d_capture locate build level.glb -o level.db
+.venv\Scripts\python -m heat3d_capture locate frames "<recording>.mp4" --db level.db -o out/match
 ```
 
 Every option, the method, measured accuracy and limits:
@@ -509,18 +518,18 @@ question no synthetic scene can answer.
 
 ### Measured here
 
-A real scan of a 120-frame clip on an RTX 5080, through the shipped ONNX path:
+A test clip on a desktop GPU, through the shipped ONNX path:
 
 | Preset | Views kept | Depth throughput |
 |---|---|---|
-| Draft | 17 of 120 | 49 /s |
-| Balanced | 31 of 120 | 50 /s |
-| Detailed | 58 of 120 | 42 /s |
+| Draft | about 1 in 7 | about 50 /s |
+| Balanced | about 1 in 4 | about 50 /s |
+| Detailed | about 1 in 2 | about 40 /s |
 
 Depth is comfortably faster than capture, so live scanning is not depth-bound —
 which is the result that decides whether the feedback is useful while walking.
 
-A full 150-frame run through the whole pipeline placed 144 of 144 keyframes,
+A full run through the whole pipeline placed every keyframe,
 fused them, and wrote a `.glb` that the viewer's own parser loads and classifies
 from its labels.
 
@@ -564,8 +573,8 @@ By hand:
 
 ```bash
 python -m venv .venv
-.venv/Scripts/python -m pip install -r requirements.txt
-.venv/Scripts/python -m heat3d_capture.ui        # offers to build the model
+.venv\Scripts\python -m pip install -r requirements.txt
+.venv\Scripts\python -m heat3d_capture.ui        # offers to build the model
 ```
 
 Verified here: Python 3.13, onnxruntime-directml 1.24.4, PySide6 6.11,
@@ -601,7 +610,7 @@ on from the last telemetry pose, until the feed answers again.
 ### Recording just the route
 
 ```bash
-.venv/Scripts/python -m heat3d_capture route -o lap     # drive, then Ctrl+C
+.venv\Scripts\python -m heat3d_capture route -o lap     # drive, then Ctrl+C
 ```
 
 No depth model, no GPU, no capture — it listens on the telemetry port and saves
@@ -627,7 +636,7 @@ That exports the track the lap ran over straight out of the shipped archive —
 exact geometry rather than an estimate of it: the ground with its road, verge
 and grass textured, and the kerbs, guardrails, tyre walls and signs placed on
 it. It finds the installed game and the right track by itself. See
-`gamefiles/`.
+[3DHeat GameFiles](https://github.com/Holdi601/3DHeat-GameFiles).
 
 ### Laps somebody already drove
 
@@ -637,20 +646,20 @@ metres. That is better than a fresh drive in the way that matters: the laps are
 already repeated, and repetition is what turns a route into analysis.
 
 ```bash
-.venv/Scripts/python -m heat3d_capture laps                       # what is there
-.venv/Scripts/python -m heat3d_capture laps "Mapletree Test Loop" -o races/mapletree
+.venv\Scripts\python -m heat3d_capture laps                       # what is there
+.venv\Scripts\python -m heat3d_capture laps "<course>" -o races/course
 ```
 
-Two files come out. `mapletree.json` is the same route file as above, so the map
+Two files come out. `course.json` is the same route file as above, so the map
 extractor takes it unchanged — or skip it and name the course, which reads the
 same library directly:
 
 ```bash
 cd ../3DHeat-GameFiles   # https://github.com/Holdi601/3DHeat-GameFiles
-python -m heat3d_gamefiles course "Mapletree Test Loop" -o ../3DHeat-GameCapture/races/mapletree.glb
+python -m heat3d_gamefiles course "<course>" -o ../3DHeat-GameCapture/races/course.glb
 ```
 
-`mapletree.csv` is every sample of every lap — position,
+`course.csv` is every sample of every lap — position,
 speed, throttle, brake, steer, lateral and longitudinal g, gear, standing water,
 distance along the lap and time since its start.
 
@@ -662,22 +671,21 @@ start rather than scattering them across the fortnight they were driven in.
 
 **The check that matters** is whether the extracted ground is really under the
 recorded car. Everything upstream can be wrong and still produce a handsome
-mesh — of somewhere else. On the courses of a recorded library the car sits a
+mesh — of somewhere else. On the test courses the car sits a
 median of a few tenths of a metre above the surface directly beneath it — ride
-height — including under and over a city's expressway decks, and there is no
+height — including under and over bridges, and there is no
 room in it for an error of even a couple of metres. `tests/test_course_ground.py`
 pins it for any exported course:
 
 ```bash
-HEAT3D_COURSE=.out/courses/mapletree_test_loop .venv/Scripts/python -m pytest tests/test_course_ground.py
+HEAT3D_COURSE=.out/courses/<course> .venv\Scripts\python -m pytest tests/test_course_ground.py
 ```
 
-It passes on every course but the cross-country ones, which fail by design: the
-car spends a good part of the lap metres in the air on its jumps, over ground
-that is there.
+It is not meant for courses with big jumps: there the car spends a good part of the
+lap metres in the air, over ground that is there.
 
 The course's shape *is* in the terrain — the corridor and its camber are there
-in the mesh. Kerbs, guardrails, tyre walls and expressway decks are not: they
+in the mesh. Kerbs, guardrails, tyre walls and bridges are not: they
 are separate models placed on it, which the `course` export adds, and the kerbs
 among them sit a median of 3 cm above the terrain. So the height is not a layer
 of track missing from the terrain; it is the car's own reference point above its
@@ -692,8 +700,8 @@ temperature, suspension travel and rotation speed, RPM, power, torque, yaw rate.
 `telemetry` keeps all of it, a file per lap:
 
 ```bash
-.venv/Scripts/python -m heat3d_capture telemetry -o laps                             # game -> 5300
-.venv/Scripts/python -m heat3d_capture telemetry -o laps --forward 127.0.0.1:5301    # and FH Companion keeps working
+.venv\Scripts\python -m heat3d_capture telemetry -o laps                             # game -> 5300
+.venv\Scripts\python -m heat3d_capture telemetry -o laps --forward 127.0.0.1:5301    # and FH Companion keeps working
 ```
 
 The game sends Data Out to one address, so with `--forward` this listens on the
@@ -711,7 +719,7 @@ The Assetto Corsa games publish their telemetry as Windows shared memory, which
 any app may read - nothing is injected into the game:
 
 ```bash
-.venv/Scripts/python -m heat3d_capture telemetry --game acc -o laps       # ac, acc, acevo, acrally
+.venv\Scripts\python -m heat3d_capture telemetry --game acc -o laps       # ac, acc, acevo, acrally
 ```
 
 All four share one physics layout for its first 800 bytes, including each
@@ -728,9 +736,9 @@ car-frame velocity (for the drift angle) and ABS and traction control acting
 The rally games send UDP, each switched on in its own settings:
 
 ```bash
-.venv/Scripts/python -m heat3d_capture telemetry --game wrc --configure "<Documents>/My Games/WRC/telemetry/config.json" -o laps
-.venv/Scripts/python -m heat3d_capture telemetry --game dirtrally2 -o laps   # dirtrally, dirt4: extradata="3" in hardware_settings_config.xml
-.venv/Scripts/python -m heat3d_capture telemetry --game rbr -o laps          # NGP's udpTelemetry=1, port 6776
+.venv\Scripts\python -m heat3d_capture telemetry --game wrc --configure "<Documents>/My Games/WRC/telemetry/config.json" -o laps
+.venv\Scripts\python -m heat3d_capture telemetry --game dirtrally2 -o laps   # dirtrally, dirt4: extradata="3" in hardware_settings_config.xml
+.venv\Scripts\python -m heat3d_capture telemetry --game rbr -o laps          # NGP's udpTelemetry=1, port 6776
 ```
 
 `--configure` switches EA SPORTS WRC's default `wrc` packet on (the file is
@@ -747,8 +755,8 @@ BeamNG.drive has no fixed telemetry packet with wheels in it, so a small
 protocol mod sends one:
 
 ```bash
-.venv/Scripts/python -m heat3d_capture telemetry --game beamng --install     # copies mods/beamng/heat3d into the game's mods
-.venv/Scripts/python -m heat3d_capture telemetry --game beamng -o laps
+.venv\Scripts\python -m heat3d_capture telemetry --game beamng --install     # copies mods/beamng/heat3d into the game's mods
+.venv\Scripts\python -m heat3d_capture telemetry --game beamng -o laps
 ```
 
 then Options > Other > Protocols, "others", port 4460. Trackmania's is an
@@ -842,7 +850,7 @@ zeros, which compress to almost nothing).
 ## Tests
 
 ```bash
-.venv/Scripts/python -m pytest tests/ -q     # 562 checks
+.venv\Scripts\python -m pytest tests/ -q     # several hundred checks
 ```
 
 `tests/test_launch.py` runs the real entry point as a subprocess and asserts the
@@ -868,14 +876,20 @@ language boundary, with no game and no capture hardware.
 3DHeat GameCapture is one of the free tools around the 3DHeat telemetry viewer. Each is its
 own project, with its own releases and licence:
 
-| Tool | What it does |
-|---|---|
-| [3DHeat](https://github.com/Holdi601/3DHeat) ([docs](https://holdi601.github.io/3DHeat/)) | the viewer: realtime 3D heatmaps, race analysis and match review |
-| [3DHeat GameFiles](https://github.com/Holdi601/3DHeat-GameFiles) | courses and levels out of the archives games ship, as glTF |
-| [3DHeat GameCapture](https://github.com/Holdi601/3DHeat-GameCapture) | lap telemetry from racing games' published interfaces; levels reconstructed from gameplay video |
-| [3DHeat Unreal Exporter](https://github.com/Holdi601/3DHeat-UnrealExporter) | an Unreal Editor plugin that exports a level as glTF |
-| [3DHeat CS2](https://github.com/Holdi601/3DHeat-CS2) | Counter-Strike 2 demos into heatmap tables and match summaries; maps into geometry |
-| [3DHeat Watcher](https://github.com/Holdi601/3DHeat-Watcher) | records your play in the background from what games publish, for your own statistics |
+| Tool | What it does | Docs |
+|---|---|---|
+| [3DHeat viewer](https://github.com/Holdi601/3DHeat) | shows heatmaps, races and matches in 3D, in the browser | [docs](https://holdi601.github.io/3DHeat/) |
+| [GameFiles](https://github.com/Holdi601/3DHeat-GameFiles) | courses and levels out of the files games ship, as 3D models | [docs](https://holdi601.github.io/3DHeat-GameFiles/) |
+| [GameCapture](https://github.com/Holdi601/3DHeat-GameCapture) | lap telemetry from racing games; levels rebuilt from gameplay video | [docs](https://holdi601.github.io/3DHeat-GameCapture/) |
+| [Unreal Exporter](https://github.com/Holdi601/3DHeat-UnrealExporter) | an Unreal Editor plugin that exports a level as a 3D model | [docs](https://holdi601.github.io/3DHeat-UnrealExporter/) |
+| [CS2](https://github.com/Holdi601/3DHeat-CS2) | Counter-Strike 2 demos into match files; maps into 3D models | [docs](https://holdi601.github.io/3DHeat-CS2/) |
+| [Watcher](https://github.com/Holdi601/3DHeat-Watcher) | records your play in the background from what games publish | [docs](https://holdi601.github.io/3DHeat-Watcher/) |
+| [Ext-WarThunder](https://github.com/Holdi601/3DHeat-Ext-WarThunder) | War Thunder replays into match files | [docs](https://holdi601.github.io/3DHeat-Ext-WarThunder/) |
+| [Ext-WoT](https://github.com/Holdi601/3DHeat-Ext-WoT) | World of Tanks replays into match files | [docs](https://holdi601.github.io/3DHeat-Ext-WoT/) |
+| [Ext-WoWs](https://github.com/Holdi601/3DHeat-Ext-WoWs) | World of Warships replays into match files | [docs](https://holdi601.github.io/3DHeat-Ext-WoWs/) |
+| [Ext-Squad](https://github.com/Holdi601/3DHeat-Ext-Squad) | Squad server demos into match files | [docs](https://holdi601.github.io/3DHeat-Ext-Squad/) |
+| [Ext-DCS](https://github.com/Holdi601/3DHeat-Ext-DCS) | DCS World maps into 3D models | [docs](https://holdi601.github.io/3DHeat-Ext-DCS/) |
+| [Ext-IL2](https://github.com/Holdi601/3DHeat-Ext-IL2) | IL-2 Sturmovik maps into 3D models | [docs](https://holdi601.github.io/3DHeat-Ext-IL2/) |
 
 ## Updates
 

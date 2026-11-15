@@ -1,10 +1,9 @@
-
 # Command reference
 
 All commands run from the repository folder, with the project's environment:
 
 ```bash
-.venv/Scripts/python -m heat3d_capture <verb> [options]
+.venv\Scripts\python -m heat3d_capture <verb> [options]
 ```
 
 | Command | Does |
@@ -13,13 +12,18 @@ All commands run from the repository folder, with the project's environment:
 | [`telemetry`](#telemetry) | Records every channel, a lap file per lap, for the Race tab |
 | [`laps`](#laps) | Reads an FH Companion lap library and writes one course's route and samples |
 | [`reconstruct`](#reconstruct) | Solves a recording offline and writes a `.glb` |
+| [`hud`](#hud) | Reads the player's own actions, deaths and minimap track, and the kill feed, out of a recording |
 | [`locate`](#locate) | Where each frame of a recording was taken, against renders of the level |
 | [`python -m heat3d_capture.ui`](#the-scan-window) | The scan window |
 | [`python -m heat3d_update`](#updates) | Checks for and applies an update |
 | [`python tools/export_onnx.py`](#the-model-converter) | Converts the depth model to ONNX |
 
 When started as `python -m heat3d_capture`, the tool first checks for a newer release (see
-[Updates](updates)). Code: [`heat3d_capture/__main__.py`](https://github.com/Holdi601/3DHeat-GameCapture/blob/main/heat3d_capture/__main__.py).
+[Updates](updates); `HEAT3D_NO_UPDATE=1` switches it off). `--help` after any verb lists its options:
+
+![heat3d_capture --help](https://raw.githubusercontent.com/Holdi601/3DHeat-GameCapture/main/docs/assets/img/cli-help.svg)
+
+Code: [`heat3d_capture/__main__.py`](https://github.com/Holdi601/3DHeat-GameCapture/blob/main/heat3d_capture/__main__.py).
 
 ## route
 
@@ -186,21 +190,53 @@ It prints the model's licence line first, then each stage (`masking`, `planning`
 solved, closure error, worst seam, notes, and the file written. The exit code is 0 only if a
 file was written.
 
+## hud
+
+```bash
+python -m heat3d_capture hud "<recording>.mp4" --game bf6 --player <name> -o out/match [--fps 5] [--start S] [--seconds S] [--metres-per-pixel M] [--cpu]
+```
+
+Reads the game's HUD out of the player's own recording, after the match: the player's own
+actions from the points popup, deaths and revives from the down and deploy screens, the minimap
+track and the kill feed. Writes `<out>.parquet` (track and events, a 3DHeat table),
+`<out>.events.jsonl`, `<out>.summary.json`, and `<out>.map.png` + `.map.json` (the minimap mosaic
+and its anchors for the viewer's Map image). Battlefield 6 (`bf6`) is the only profile so far.
+
+Needs **ffmpeg and ffprobe** on PATH (`winget install Gyan.FFmpeg`, then a new terminal).
+
+| Option | Default | Meaning |
+|---|---|---|
+| `video` | required | The recording. |
+| `-o`, `--out` | the video's name | Output path without extension. |
+| `--game` | `bf6` | Whose HUD to read. |
+| `--player` | guessed | The player's name as the kill feed shows it, matched loosely. |
+| `--fps` | `5` | Minimap samples per second. |
+| `--start`, `--seconds` | whole video | The part of the recording to read. |
+| `--metres-per-pixel` | none | The minimap's scale, when known; without it positions are in minimap pixels. |
+| `--cpu` | off | Decode on the CPU even when an NVIDIA card is there. |
+
+Full description: [Reading the HUD from a recording](hud-video).
+
 ## locate
 
 ```bash
 python -m heat3d_capture locate build level.glb -o level.db [--game bf6] [--spacing 2.5] [--shadows]
 python -m heat3d_capture locate frames recording.mp4 --db level.db -o out/match [--fps 2] [--minimap match.parquet]
 python -m heat3d_capture locate eval out/match.parquet --truth poses.parquet [--offset S] [--unit-metres 1]
-python -m heat3d_capture locate train level.glb -o level.head.pt [--ground-only] [--real out/match.parquet recording.mp4]
+python -m heat3d_capture locate train level.glb -o level.head.pt [--places auto] [--real out/match.parquet recording.mp4]
+python -m heat3d_capture locate refmap level.glb deploy.png -o out/refmap [--mpp 0.5]
+python -m heat3d_capture locate minimap recording.mp4 --refmap out/refmap -o out/minimap.parquet [--hud out/match.parquet]
 ```
 
 `build` renders a level from every place a player can stand and indexes the renders; `frames`
 places each sampled frame of a recording against it, from the picture, with the `hud` verb's
 minimap track as the fallback; `eval` compares a result with known camera poses; `train` trains a
-per-map place model on renders of the level (and on frames a run already located), for `build --head`. Needs PyTorch
-and `requirements-locate.txt`. Every option, the outputs and the method:
-[Locating frames in a level](locate).
+per-map place model on renders of the level (and on frames a run already located), for `build --head`;
+`refmap` places the game's own map (its deploy screen) on the level, and `minimap` reads a
+recording's minimap against it, frame by frame - the prior `frames --minimap` can take. Needs PyTorch
+and `requirements-locate.txt`. **Experimental:** on real recordings it places only a small share of
+frames so far. Every option, the outputs and the method:
+[Locating frames in a level](locate); the full option list: [Command reference](cli-reference).
 
 ## The scan window
 
