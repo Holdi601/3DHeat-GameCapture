@@ -2,7 +2,7 @@
 <rect width="860" height="598" rx="10" fill="#f7f8fa" stroke="#d0d4db"/>
 <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8a94a3"/></marker></defs>
 <text x="20" y="32" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="18" font-weight="600" fill="#1f2328" text-anchor="start">Què entra, quina ordre, què surt</text>
-<text x="143" y="68" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="15" font-weight="600" fill="#3d4450" text-anchor="middle">Teniu</text>
+<text x="143" y="68" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="15" font-weight="600" fill="#3d4450" text-anchor="middle">Tens</text>
 <text x="430" y="68" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="15" font-weight="600" fill="#3d4450" text-anchor="middle">Executa</text>
 <text x="717" y="68" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="15" font-weight="600" fill="#3d4450" text-anchor="middle">Obté</text>
 <rect x="20" y="84" width="247" height="70" rx="8" fill="#e8f0fe" stroke="#8a94a3"/>

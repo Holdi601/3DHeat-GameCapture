@@ -3,7 +3,7 @@ title: "Avaleht"
 nav_order: 1
 lang: et
 source: index.md
-source_hash: "083becf22379"
+source_hash: "4723321adf14"
 nav_exclude: true
 search_exclude: true
 permalink: /et/
@@ -14,7 +14,7 @@ permalink: /et/
 fail ringi kohta. See võib ka taastada umbkaudse 3D-mudeli tasemest, mängides tehtud videost.
 
 **Miks ma seda kasutaksin?** Et näha oma ringe [3DHeat vaatajas](https://holdi601.github.io/3DHeat/):
-kus pidurdasid, kus olid aeglane, kuidas kaks ringi erinevad. Ja et tasemel oleks 3D-mudel su kuumuskaardi all,
+kus pidurdasid, kus sõitsid aeglaselt, kuidas kaks ringi erinevad. Ja et tasemel oleks 3D-mudel su kuumuskaardi all,
 kui keegi seda mudelit ei ole teinud.
 
 **Näide:** lülita Forza Data Out sisse, käivita üks käsk ja sõida kaks ringi. Kaks ringifaili ilmuvad
@@ -128,7 +128,7 @@ Salvestuse taastamiseks võrguühenduseta, kui kaamera tee on korraga lahendatud
 
 Failid, mida see kirjutab, laadib **3DHeat vaataja**
 ([lähtekood](https://github.com/Holdi601/3DHeat), [dokumentatsioon](https://holdi601.github.io/3DHeat/)).
-Ringifailid lähevad tema võistlusvahelehele, `.glb`-tasemed tema Taseme paneelile, `hud` ja `locate`
+Ringifailid lähevad tema võistlusvahelehele, `.glb`-tasemed tema paneelile **Taust / tase**, `hud` ja `locate`
 tabelid tema Soojuskaardi vahelehele; kuidas vaataja tabeleid ja mängufaile loeb, on kirjas lehtedel
 [Üks fail mängu kohta: `.3dheat`](https://holdi601.github.io/3DHeat/container.html) ja
 [Andmete sisestamine](https://holdi601.github.io/3DHeat/getting-data-in.html).
@@ -141,9 +141,9 @@ tabelid tema Soojuskaardi vahelehele; kuidas vaataja tabeleid ja mängufaile loe
 | [Unreal Exporter](https://github.com/Holdi601/3DHeat-UnrealExporter) | Unreal Editori plugin, mis eksportib taseme 3D-mudelina | [dokumentatsioon](https://holdi601.github.io/3DHeat-UnrealExporter/) |
 | [CS2](https://github.com/Holdi601/3DHeat-CS2) | Counter-Strike 2 demod mängufailideks; kaardid 3D-mudeliteks | [dokumentatsioon](https://holdi601.github.io/3DHeat-CS2/) |
 | [Watcher](https://github.com/Holdi601/3DHeat-Watcher) | salvestab sinu mängu taustal sellest, mida mängud avaldavad | [dokumentatsioon](https://holdi601.github.io/3DHeat-Watcher/) |
-| [Ext-WarThunder](https://github.com/Holdi601/3DHeat-Ext-WarThunder) | War Thunderi replayd mängufailideks | [dokumentatsioon](https://holdi601.github.io/3DHeat-Ext-WarThunder/) |
-| [Ext-WoT](https://github.com/Holdi601/3DHeat-Ext-WoT) | World of Tanksi replayd mängufailideks | [dokumentatsioon](https://holdi601.github.io/3DHeat-Ext-WoT/) |
-| [Ext-WoWs](https://github.com/Holdi601/3DHeat-Ext-WoWs) | World of Warshipsi replayd mängufailideks | [dokumentatsioon](https://holdi601.github.io/3DHeat-Ext-WoWs/) |
+| [Ext-WarThunder](https://github.com/Holdi601/3DHeat-Ext-WarThunder) | War Thunderi kordused mängufailideks | [dokumentatsioon](https://holdi601.github.io/3DHeat-Ext-WarThunder/) |
+| [Ext-WoT](https://github.com/Holdi601/3DHeat-Ext-WoT) | World of Tanksi kordused mängufailideks | [dokumentatsioon](https://holdi601.github.io/3DHeat-Ext-WoT/) |
+| [Ext-WoWs](https://github.com/Holdi601/3DHeat-Ext-WoWs) | World of Warshipsi kordused mängufailideks | [dokumentatsioon](https://holdi601.github.io/3DHeat-Ext-WoWs/) |
 | [Ext-Squad](https://github.com/Holdi601/3DHeat-Ext-Squad) | Squadi serverdemod mängufailideks | [dokumentatsioon](https://holdi601.github.io/3DHeat-Ext-Squad/) |
 | [Ext-DCS](https://github.com/Holdi601/3DHeat-Ext-DCS) | DCS Worldi kaardid 3D-mudeliteks | [dokumentatsioon](https://holdi601.github.io/3DHeat-Ext-DCS/) |
 | [Ext-IL2](https://github.com/Holdi601/3DHeat-Ext-IL2) | IL-2 Sturmovigi kaardid 3D-mudeliteks | [dokumentatsioon](https://holdi601.github.io/3DHeat-Ext-IL2/) |

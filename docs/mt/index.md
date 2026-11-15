@@ -3,7 +3,7 @@ title: Dar
 nav_order: 1
 lang: mt
 source: index.md
-source_hash: "083becf22379"
+source_hash: "4723321adf14"
 nav_exclude: true
 search_exclude: true
 permalink: /mt/
@@ -11,14 +11,14 @@ permalink: /mt/
 # 3DHeat GameCapture {#dheat-gamecapture}
 
 **X'inhi?** Għodda li tniżżel dak li logħba tat-tlielaq tgħidilha dwar is-sewqan tiegħek, fajl wieħed
-għal kull lapp. Tista' wkoll terġa' tibni mudell 3D mhux perfett ta' livell minn vidjow tiegħek tilgħab.
+għal kull lapp. Tista' wkoll terġa' tibni mudell 3D mhux perfett ta' livell minn vidjo tiegħek tilgħab.
 
 **Għaliex nużaha?** Biex tara l-laps tiegħek fil-[viewer ta' 3DHeat](https://holdi601.github.io/3DHeat/):
 fejn ibbrejkjajt, fejn kont bil-mod, kif jiddiffru żewġ laps. U biex ikollok il-livell taħt
 il-heatmap tiegħek meta ħadd m'għandu mudell 3D tiegħu.
 
 **Eżempju:** ixgħel Data Out ta' Forza, ħaddem kmand wieħed, saq żewġ laps. Jidhru żewġ fajls tal-laps f'
-`laps\`. Itfagħhom fuq it-tab Race tal-viewer.
+`laps\`. Itfagħhom fuq it-tab Analiżi tat-tellieqa tal-viewer.
 
 ![telemetrija tirrekordja żewġ laps ta' feed sintetiku ta' Forza](../assets/img/telemetry-run.svg)
 
@@ -28,7 +28,7 @@ il-heatmap tiegħek meta ħadd m'għandu mudell 3D tiegħu.
 
 1. **Telemetrija tal-laps.** Tirrekordja kull kanal li logħba tat-tlielaq tippubblika - Data Out ta' Forza, il-
    memorja maqsuma tal-logħob ta' Assetto Corsa, il-feeds tan-network tal-logħob tar-rally, mod ta' BeamNG, plugin ta'
-   Trackmania - u tikteb fajl `heat3d-lap` wieħed għal kull lapp jew stage, għat-tab Race
+   Trackmania - u tikteb fajl `heat3d-lap` wieħed għal kull lapp jew stage, għat-tab Analiżi tat-tellieqa
    tal-viewer. iRacing ma jeħtieġ ebda recorder: il-viewer jaqra l-fajls `.ibt` tiegħu stess.
 2. **Livelli mill-gameplay.** Tibdel dak li wriet l-iskrin waqt li mxejt jew saqt f'
    livell f'mudell 3D `.glb`, li l-viewer iqiegħed taħt il-heatmap.
@@ -45,7 +45,7 @@ mill-API pubblika tal-iscreen-capture, it-telemetrija minn interfaces li l-logħ
 Il-kodiċi huwa Python (pakkett `heat3d_capture`), liċenzja MIT. Il-mudelli tal-fond u tal-pose li jista'
 iħaddem għandhom il-liċenzji tagħhom - ara [Mudelli u liċenzji](../models-and-licences.md).
 
-## Tluq malajr {#quick-start}
+## Bidu veloċi {#quick-start}
 
 ### Irrekordja laps {#record-laps}
 
@@ -62,7 +62,7 @@ python -m venv .venv
 ```
 
 **Għandek tara** `listening on port 5300. Laps go to laps. Ctrl+C to stop.`, imbagħad linja għal kull lapp meta taqsam il-linja, bħal
-fl-istampa ta' hawn fuq. Agħfas Ctrl+C biex tieqaf. Itfa' l-fajls minn `laps\` fuq it-tab Race tal-viewer.
+fl-istampa ta' hawn fuq. Agħfas Ctrl+C biex tieqaf. Itfa' l-fajls minn `laps\` fuq it-tab Analiżi tat-tellieqa tal-viewer.
 Kull logħba oħra hija `--game` bogħod:
 
 ```powershell
@@ -129,7 +129,7 @@ pakkett `vggt` u GPU - ara [Rikostruzzjoni offline](../reconstruction-offline.md
 
 Il-fajls li tikteb din jitgħabbew mill-**viewer ta' 3DHeat** -
 [sors](https://github.com/Holdi601/3DHeat), [dokumentazzjoni](https://holdi601.github.io/3DHeat/).
-Il-fajls tal-laps imorru fit-tab Race tiegħu, livelli `.glb` fil-pannell Sfond / livell, it-tabelli `hud` u `locate` fit-tab
+Il-fajls tal-laps imorru fit-tab Analiżi tat-tellieqa tiegħu, livelli `.glb` fil-pannell Sfond / livell, it-tabelli `hud` u `locate` fit-tab
 Heatmap tiegħu; kif jaqra l-viewer it-tabelli u l-fajls tal-partiti hu f'
 [Fajl wieħed għal kull partita (.3dheat)](https://holdi601.github.io/3DHeat/container.html) u
 [Kif iddaħħal id-dejta](https://holdi601.github.io/3DHeat/getting-data-in.html).
@@ -138,7 +138,7 @@ Heatmap tiegħu; kif jaqra l-viewer it-tabelli u l-fajls tal-partiti hu f'
 | --- | --- | --- |
 | [3DHeat viewer](https://github.com/Holdi601/3DHeat) | juri heatmaps, tlielaq u partiti f'3D, fil-browser | [dokumenti](https://holdi601.github.io/3DHeat/) |
 | [GameFiles](https://github.com/Holdi601/3DHeat-GameFiles) | korsijiet u livelli mill-fajls li jipprovdu l-logħob, bħala mudelli 3D | [dokumenti](https://holdi601.github.io/3DHeat-GameFiles/) |
-| [GameCapture](https://github.com/Holdi601/3DHeat-GameCapture) | telemetrija tal-laps minn logħob tat-tlielaq; livelli mibnija mill-ġdid minn vidjow tal-logħba | [dokumenti](https://holdi601.github.io/3DHeat-GameCapture/) |
+| [GameCapture](https://github.com/Holdi601/3DHeat-GameCapture) | telemetrija tal-laps minn logħob tat-tlielaq; livelli mibnija mill-ġdid minn vidjo tal-logħba | [dokumenti](https://holdi601.github.io/3DHeat-GameCapture/) |
 | [Unreal Exporter](https://github.com/Holdi601/3DHeat-UnrealExporter) | plugin ta' Unreal Editor li jesporta livell bħala mudell 3D | [dokumenti](https://holdi601.github.io/3DHeat-UnrealExporter/) |
 | [CS2](https://github.com/Holdi601/3DHeat-CS2) | demos ta' Counter-Strike 2 f'fajls tal-partiti; mapep f'mudelli 3D | [dokumenti](https://holdi601.github.io/3DHeat-CS2/) |
 | [Watcher](https://github.com/Holdi601/3DHeat-Watcher) | jirrekordja l-logħob tiegħek fl-isfond minn dak li jippubblikaw il-logħob | [dokumenti](https://holdi601.github.io/3DHeat-Watcher/) |

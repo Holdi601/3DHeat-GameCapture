@@ -3,7 +3,7 @@ title: Αρχική
 nav_order: 1
 lang: el
 source: index.md
-source_hash: "083becf22379"
+source_hash: "4723321adf14"
 nav_exclude: true
 search_exclude: true
 permalink: /el/
@@ -65,7 +65,7 @@ python -m venv .venv
 **Θα δείτε** `listening on port 5300. Laps go to laps. Ctrl+C to stop.`, και μετά μία γραμμή για κάθε γύρο καθώς
 περνάτε τη γραμμή, όπως στην εικόνα παραπάνω. Πατήστε Ctrl+C για να σταματήσετε. Σύρετε τα αρχεία από το `laps\`
 στην καρτέλα Ανάλυση αγώνα του προβολέα.
-Κάθε άλλο παιχνίδι απέχει ένα `--game`:
+Για κάθε άλλο παιχνίδι, προσθέστε `--game`:
 
 ```powershell
 .venv\Scripts\python -m heat3d_capture telemetry --game acc -o laps
@@ -123,7 +123,7 @@ python -m venv .venv
 | [Χρόνος εκτέλεσης και εξαρτήσεις](../runtime.md) | Προέλεγχος, backends, βαθμίδες απόδοσης |
 | [Όρια και επαλήθευση](../limits.md) | Τι δεν γίνεται, και τι δεν έχει ελεγχθεί |
 | [Ενημερώσεις](../updates.md) | Ο έλεγχος έκδοσης και το `python -m heat3d_update` |
-| [Ανάπτυξη](../development.md) | Τεστ, ο εικονικός περιβάλλον, η δομή του αποθετηρίου |
+| [Ανάπτυξη](../development.md) | Τεστ, το εικονικό περιβάλλον, η δομή του αποθετηρίου |
 | [Συντήρηση αυτών των σελίδων](../maintaining.md) | Η λίστα ελέγχου κυκλοφορίας για κώδικα και τεκμηρίωση |
 
 ## Μέρος του 3DHeat {#part-of-3dheat}
@@ -150,6 +150,6 @@ python -m venv .venv
 | [Ext-DCS](https://github.com/Holdi601/3DHeat-Ext-DCS) | χάρτες του DCS World σε τρισδιάστατα μοντέλα | [τεκμηρίωση](https://holdi601.github.io/3DHeat-Ext-DCS/) |
 | [Ext-IL2](https://github.com/Holdi601/3DHeat-Ext-IL2) | χάρτες του IL-2 Sturmovik σε τρισδιάστατα μοντέλα | [τεκμηρίωση](https://holdi601.github.io/3DHeat-Ext-IL2/) |
 
-Ένας προγραμματιστής με ανοιχτό το project του παιχνιδιού πρέπει να χρησιμοποιεί τον Unreal exporter, που διαβάζει την
+Ένας προγραμματιστής με ανοιχτό το project του παιχνιδιού πρέπει να χρησιμοποιεί τον Unreal Exporter, που διαβάζει την
 πραγματική γεωμετρία και είναι ακριβής. Όπου μπορούν να διαβαστούν τα αρχεία ενός παιχνιδιού, το GameFiles εξάγει την
 ακριβή πίστα. Η ανακατασκευή από το παιχνίδι προορίζεται για την περίπτωση όπου είναι διαθέσιμη μόνο η οθόνη.

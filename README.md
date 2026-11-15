@@ -104,7 +104,7 @@ and `.glb` 3D models, as below.
 |---|---|---|---|
 | `<stamp>_car<n>_lap<k>_<s>s.lap.json` | `telemetry` | one lap: `game`, `car`, `lap`, `meta`, `units`, and every channel as a column (`time`, `distance`, `x`, `y`, `z`, `speed`, per-wheel slip, ...) - [the format](https://holdi601.github.io/3DHeat-GameCapture/lap-format.html) | Race analysis tab |
 | `<stamp>_<game>.raw.parquet`, `.summary.json` | `telemetry` | every packet kept whole; the completeness self-check (below) | skipped |
-| `<level>.glb` | scan window, `reconstruct` | one mesh in the viewer's frame - [the .glb](https://holdi601.github.io/3DHeat-GameCapture/glb-output.html) | Background / Background / level panel |
+| `<level>.glb` | scan window, `reconstruct` | one mesh in the viewer's frame - [the .glb](https://holdi601.github.io/3DHeat-GameCapture/glb-output.html) | Background / level panel |
 | `<out>.parquet` (+ `.events.jsonl`, `.summary.json`, `.map.png`) | `hud` | the player's track and own events, one row each, in minimap or level units | Heatmap tab, Map image |
 | `<out>.parquet` (+ `.summary.json`) | `locate frames` | per frame: time, position, view direction, where the fix came from, confidence | Heatmap tab |
 
@@ -507,7 +507,7 @@ question no synthetic scene can answer.
   price of never touching the game process.
 - **No texture atlas.** Colour is per-vertex (`COLOR_0`), which Blender and other
   glTF tools read, and which the viewer shows behind the *Captured colour*
-  switch in its Background / Background / level panel. Per-vertex rather than an atlas because the viewer's
+  switch in its Background / level panel. Per-vertex rather than an atlas because the viewer's
   default look is a grey map under saturated heat — colour is there to find the
   road on a scanned circuit, where geometry alone does not separate it from the
   verge, and is switched off again to read the heat. An atlas would multiply the

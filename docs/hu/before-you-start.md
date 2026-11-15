@@ -1,5 +1,5 @@
 ---
-title: "Mielőtt elkezdi"
+title: "Mielőtt elkezded"
 nav_order: 1.5
 lang: hu
 source: before-you-start.md
@@ -7,7 +7,7 @@ source_hash: "0c8bf313b1db"
 nav_exclude: true
 search_exclude: true
 ---
-# Mielőtt elkezdi {#before-you-start}
+# Mielőtt elkezded {#before-you-start}
 
 Még nem használt parancssort? Ez az oldal a semmitől az első működő parancsig vezet, körülbelül tíz perc alatt,
 egyszer.
@@ -88,12 +88,12 @@ Ha a PowerShell azt mondja, hogy *a szkriptek futtatása le van tiltva*, futtasd
 
 | Parancs | Szükséges | Telepítés |
 |---|---|---|
-| `hud` | **ffmpeg** és **ffprobe** (videófájlok olvasása) | `winget install Gyan.FFmpeg`, majd nyisson új terminált. Ellenőrzés: `ffmpeg -version`. |
+| `hud` | **ffmpeg** és **ffprobe** (videófájlok olvasása) | `winget install Gyan.FFmpeg`, majd nyiss új terminált. Ellenőrzés: `ffmpeg -version`. |
 | `reconstruct`, `locate` | **PyTorch**, a többi csomag előtt telepítve | a parancs a [pytorch.org](https://pytorch.org/get-started/locally/) oldalról, a saját GPU-dhoz |
 
 ## Ha valami nem jól működik {#when-something-goes-wrong}
 
-| Amit lát | Mit jelent | Mit tegyen |
+| Amit lát | Mit jelent | Mit tegyél |
 |---|---|---|
 | `'python' is not recognized` | a Python nincs a PATH-ban | telepítsd újra a Pythont a PATH-pipával, majd nyiss új terminált. |
 | `No module named heat3d_capture` | a terminál nincs az eszköz mappájában | lépj a `3DHeat-GameCapture` mappába a `cd` paranccsal. |

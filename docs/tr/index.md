@@ -3,7 +3,7 @@ title: "Ana sayfa"
 nav_order: 1
 lang: tr
 source: index.md
-source_hash: "083becf22379"
+source_hash: "4723321adf14"
 nav_exclude: true
 search_exclude: true
 permalink: /tr/
@@ -14,7 +14,7 @@ permalink: /tr/
 
 **Neden kullanmalıyım?** Turlarınızı [3DHeat görüntüleyicisinde](https://holdi601.github.io/3DHeat/) görmek için: nerede fren yaptığınızı, nerede yavaş olduğunuzu, iki turun nasıl farklı olduğunu. Ayrıca kimsenin 3B modeli olmadığında, seviyeyi ısı haritanızın altında görmek için.
 
-**Örnek:** Forza'nın Data Out özelliğini açın, tek bir komut çalıştırın, iki tur sürün. `laps\` klasöründe iki tur dosyası belirir. Bunları görüntüleyicinin Yarış sekmesine bırakın.
+**Örnek:** Forza'nın Data Out özelliğini açın, tek bir komut çalıştırın, iki tur sürün. `laps\` klasöründe iki tur dosyası belirir. Bunları görüntüleyicinin Yarış analizi sekmesine bırakın.
 
 ![Sentetik bir Forza akışından iki turu kaydeden telemetri](../assets/img/telemetry-run.svg)
 
@@ -22,7 +22,7 @@ Komut satırında yeni misiniz? Önce [Başlamadan önce](before-you-start.md) s
 
 ## Üç iş {#the-three-jobs}
 
-1. **Tur telemetrisi.** Bir yarış oyununun yayımladığı her kanalı kaydeder (Forza'nın Data Out'u, Assetto Corsa oyunlarının paylaşılan belleği, rally oyunlarının ağ akışları, bir BeamNG modu, bir Trackmania eklentisi) ve tur ya da etap başına bir `heat3d-lap` dosyası yazar; görüntüleyicinin Yarış sekmesi için. iRacing'in bir kayıt aracına ihtiyacı yoktur: görüntüleyici kendi `.ibt` dosyalarını okur.
+1. **Tur telemetrisi.** Bir yarış oyununun yayımladığı her kanalı kaydeder (Forza'nın Data Out'u, Assetto Corsa oyunlarının paylaşılan belleği, rally oyunlarının ağ akışları, bir BeamNG modu, bir Trackmania eklentisi) ve tur ya da etap başına bir `heat3d-lap` dosyası yazar; görüntüleyicinin Yarış analizi sekmesi için. iRacing'in bir kayıt aracına ihtiyacı yoktur: görüntüleyici kendi `.ibt` dosyalarını okur.
 2. **Oynanıştan seviyeler.** Bir seviyede yürürken ya da sürerken ekranın gösterdiklerini bir `.glb` 3B modeline çevirir; görüntüleyici bunu ısı haritasının altına yerleştirir.
 3. **Maçınız, sonrasında.** `hud` kendi kaydınızın HUD'unu okur: eylemleriniz, ölümleriniz, mini harita izi ve öldürme akışı. `locate` (deneysel: şimdiye kadar birkaç gerçek kareyi yerleştirir), her karenin bir seviyenin 3B modeli üzerinde nerede çekildiğini bulur.
 
@@ -48,7 +48,7 @@ python -m venv .venv
 .venv\Scripts\python -m heat3d_capture telemetry -o laps
 ```
 
-**Şunu görmelisiniz:** `listening on port 5300. Laps go to laps. Ctrl+C to stop.` ve ardından her turu çizgiden geçtiğinizde bir satır; yukarıdaki resimde olduğu gibi. Durdurmak için Ctrl+C'ye basın. `laps\` klasöründeki dosyaları görüntüleyicinin Yarış sekmesine bırakın. Diğer her oyun bir `--game` uzaklıktadır:
+**Şunu görmelisiniz:** `listening on port 5300. Laps go to laps. Ctrl+C to stop.` ve ardından her turu çizgiden geçtiğinizde bir satır; yukarıdaki resimde olduğu gibi. Durdurmak için Ctrl+C'ye basın. `laps\` klasöründeki dosyaları görüntüleyicinin Yarış analizi sekmesine bırakın. Diğer her oyunda yalnızca `--game` değişir:
 
 ```powershell
 .venv\Scripts\python -m heat3d_capture telemetry --game acc -o laps
@@ -107,7 +107,7 @@ Bir kaydı çevrim dışı yeniden kurmak için, kamera yolu bir kerede çözül
 
 ## 3DHeat'in parçası {#part-of-3dheat}
 
-GameCapture'ın yazdığı dosyaları **3DHeat görüntüleyicisi** yükler: [kaynak](https://github.com/Holdi601/3DHeat), [belgeler](https://holdi601.github.io/3DHeat/). Tur dosyaları Yarış sekmesine, `.glb` seviyeleri Arka plan / bölüm paneline, `hud` ve `locate` tabloları Isı haritası sekmesine gider. Görüntüleyicinin tabloları ve maç dosyalarını nasıl okuduğu [Maç başına tek dosya (.3dheat)](https://holdi601.github.io/3DHeat/container.html) ve [Veri ekleme](https://holdi601.github.io/3DHeat/getting-data-in.html) sayfalarında anlatılır.
+GameCapture'ın yazdığı dosyaları **3DHeat görüntüleyicisi** yükler: [kaynak](https://github.com/Holdi601/3DHeat), [belgeler](https://holdi601.github.io/3DHeat/). Tur dosyaları Yarış analizi sekmesine, `.glb` seviyeleri Arka plan / bölüm paneline, `hud` ve `locate` tabloları Isı haritası sekmesine gider. Görüntüleyicinin tabloları ve maç dosyalarını nasıl okuduğu [Maç başına tek dosya (.3dheat)](https://holdi601.github.io/3DHeat/container.html) ve [Veri ekleme](https://holdi601.github.io/3DHeat/getting-data-in.html) sayfalarında anlatılır.
 
 | Araç | Ne yapar | Belgeler |
 |---|---|---|

@@ -2,9 +2,9 @@
 <rect width="860" height="598" rx="10" fill="#f7f8fa" stroke="#d0d4db"/>
 <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8a94a3"/></marker></defs>
 <text x="20" y="32" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="18" font-weight="600" fill="#1f2328" text-anchor="start">Çfarë hyn, cila komandë, çfarë del</text>
-<text x="143" y="68" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="15" font-weight="600" fill="#3d4450" text-anchor="middle">Keni</text>
-<text x="430" y="68" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="15" font-weight="600" fill="#3d4450" text-anchor="middle">Ekzekutoni</text>
-<text x="717" y="68" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="15" font-weight="600" fill="#3d4450" text-anchor="middle">Merrni</text>
+<text x="143" y="68" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="15" font-weight="600" fill="#3d4450" text-anchor="middle">Ke</text>
+<text x="430" y="68" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="15" font-weight="600" fill="#3d4450" text-anchor="middle">Ekzekuto</text>
+<text x="717" y="68" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="15" font-weight="600" fill="#3d4450" text-anchor="middle">Merr</text>
 <rect x="20" y="84" width="247" height="70" rx="8" fill="#e8f0fe" stroke="#8a94a3"/>
 <text x="143" y="114" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">Telemetria e lojës së garave</text>
 <text x="143" y="134" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">rrjet / memorie e përbashkët / mod</text>
@@ -36,7 +36,7 @@
 <text x="717" y="302" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">GameFiles: course</text>
 <line x1="557" y1="287.0" x2="589" y2="287.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
 <rect x="20" y="336" width="247" height="70" rx="8" fill="#e8f0fe" stroke="#8a94a3"/>
-<text x="143" y="366" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">Ekrani ndërsa luani</text>
+<text x="143" y="366" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">Ekrani ndërsa luan</text>
 <text x="143" y="386" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">Kapja e ekranit të Windows</text>
 <rect x="307" y="336" width="247" height="70" rx="8" fill="#fff4e0" stroke="#8a94a3"/>
 <text x="430" y="376" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">dritarja e skanimit</text>

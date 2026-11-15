@@ -6,8 +6,8 @@
 <text x="430" y="68" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="15" font-weight="600" fill="#3d4450" text-anchor="middle">Tu palaid</text>
 <text x="717" y="68" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="15" font-weight="600" fill="#3d4450" text-anchor="middle">Tu saņem</text>
 <rect x="20" y="84" width="247" height="70" rx="8" fill="#e8f0fe" stroke="#8a94a3"/>
-<text x="143" y="114" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">Sacensību spēles telemetrija</text>
-<text x="143" y="134" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">tīkls / koplietotā atmiņa / modifikācija</text>
+<text x="143" y="114" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">Sacensību telemetrija</text>
+<text x="143" y="134" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">tīkls / kopatmiņa / mods</text>
 <rect x="307" y="84" width="247" height="70" rx="8" fill="#fff4e0" stroke="#8a94a3"/>
 <text x="430" y="124" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">telemetrija</text>
 <line x1="271" y1="119.0" x2="303" y2="119.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
@@ -26,7 +26,7 @@
 <text x="717" y="218" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">GameFiles: trase</text>
 <line x1="557" y1="203.0" x2="589" y2="203.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
 <rect x="20" y="252" width="247" height="70" rx="8" fill="#e8f0fe" stroke="#8a94a3"/>
-<text x="143" y="282" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">FH Companion braucienu bibliotēka</text>
+<text x="143" y="282" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">FH Companion bibliotēka</text>
 <text x="143" y="302" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">jau nobrauktie braucieni</text>
 <rect x="307" y="252" width="247" height="70" rx="8" fill="#fff4e0" stroke="#8a94a3"/>
 <text x="430" y="292" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">laps</text>
@@ -64,6 +64,6 @@
 <line x1="271" y1="539.0" x2="303" y2="539.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
 <rect x="593" y="504" width="247" height="70" rx="8" fill="#e6f4ea" stroke="#8a94a3"/>
 <text x="717" y="534" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">savas trases .parquet</text>
-<text x="717" y="554" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">3DHeat: Siltumkartes cilne</text>
+<text x="717" y="554" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">3DHeat: Siltumkarte</text>
 <line x1="557" y1="539.0" x2="589" y2="539.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
 </svg>

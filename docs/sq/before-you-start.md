@@ -9,7 +9,7 @@ search_exclude: true
 ---
 # Para se të fillosh {#before-you-start}
 
-Je i ri me vijën e komandës? Kjo faqe të çon nga zero te një komandë e parë që funksionon. Duhen
+Je i ri me rreshtin e komandave? Kjo faqe të çon nga zero te një komandë e parë që funksionon. Duhen
 rreth dhjetë minuta, vetëm një herë.
 
 ## 1. Instalo Python {#install-python}
@@ -28,7 +28,7 @@ Ose, në një terminal: `winget install Python.Python.3.12`.
 
 Git e shkarkon mjetin. Merre nga [git-scm.com](https://git-scm.com/download/win), ose ekzekuto
 `winget install Git.Git`. Nëse nuk do Git, përdor *Code > Download ZIP* te
-[faqja e GitHub](https://github.com/Holdi601/3DHeat-GameCapture) dhe çzipoje.
+[faqja e GitHub](https://github.com/Holdi601/3DHeat-GameCapture) dhe shpaketoje.
 
 ## 3. Hap një terminal në një dosje {#open-a-terminal-in-a-folder}
 

@@ -3,7 +3,7 @@ title: "Pradžia"
 nav_order: 1
 lang: lt
 source: index.md
-source_hash: "083becf22379"
+source_hash: "4723321adf14"
 nav_exclude: true
 search_exclude: true
 permalink: /lt/
@@ -13,11 +13,11 @@ permalink: /lt/
 **Kas tai?** Įrankis, kuris įrašo, ką lenktynių žaidimas jam pasakoja apie jūsų vairavimą, po vieną failą kiekvienam ratui.
 Jis taip pat gali atkurti apytikslį 3D žaidimo lygio modelį iš jūsų žaidimo vaizdo įrašo.
 
-**Kam tai naudoti?** Norint matyti savo ratus [3DHeat žiūrintuve](https://holdi601.github.io/3DHeat/):
+**Kam tai naudoti?** Norint matyti savo ratus [3DHeat žiūryklėje](https://holdi601.github.io/3DHeat/):
 kur stabdėte, kur buvote lėtesni, kuo du ratai skiriasi. Ir turėti lygį po savo šilumos žemėlapiu, kai niekas neturi jo 3D modelio.
 
 **Pavyzdys:** įjunkite Forza Data Out, paleiskite vieną komandą ir įveikite du ratus. Failai su ratais atsiranda aplanke
-`laps\`. Įmeskite juos į žiūrintojo Lenktynių analizės skirtuką.
+`laps\`. Įmeskite juos į žiūryklės Lenktynių analizės skirtuką.
 
 ![telemetrija, įrašanti du ratus iš sintetinio Forza srauto](../assets/img/telemetry-run.svg)
 
@@ -27,10 +27,10 @@ Nesate įpratę prie komandinės eilutės? Pirmiausia perskaitykite [Prieš prad
 
 1. **Ratų telemetrija.** Įrašo kiekvieną kanalą, kurį skelbia lenktynių žaidimas – Forza Data Out, Assetto Corsa žaidimų
    bendroji atmintis, ralio žaidimų tinklo srautai, BeamNG modas, Trackmania papildinys – ir kiekvienam ratui ar etapui
-   įrašo vieną `heat3d-lap` failą žiūrintojo Lenktynių analizės skirtukui. iRacing nereikia įrašymo įrankio: žiūrintojas
+   įrašo vieną `heat3d-lap` failą žiūryklės Lenktynių analizės skirtukui. iRacing nereikia įrašymo įrankio: žiūryklė
    skaito pats savo `.ibt` failus.
 2. **Lygiai iš žaidimo.** Paverčia tai, ką ekranas rodė, kol vaikščiojote ar važiavote per lygį, į `.glb` 3D modelį,
-   kurį žiūrintojas padeda po šilumos žemėlapiu.
+   kurį žiūryklė padeda po šilumos žemėlapiu.
 3. **Jūsų rungtynės po jų.** `hud` skaito jūsų įrašo HUD – jūsų veiksmus, mirtis, mini žemėlapio trasą ir žudynių sąrašą.
    `locate` (eksperimentinis: kol kas vietą nustato nedaugeliui tikrų kadrų) išsiaiškina, kur buvo įrašytas kiekvienas kadras,
    ant lygio 3D modelio.
@@ -38,7 +38,7 @@ Nesate įpratę prie komandinės eilutės? Pirmiausia perskaitykite [Prieš prad
 Visi trys seka vieną taisyklę: **į žaidimą nieko neįterpiama ir nieko neprijungiama**. Kadrai ateina iš viešos ekrano įrašymo API,
 telemetrija – iš sąsajų, kurias žaidimai skelbia tam tikslui. Žr. [Taisyklės](../rules.md).
 
-![Kas įeina, kuri komanda, kas išeina, kur žiūrintojas tai rodo](../assets/img/lt/overview.svg)
+![Kas įeina, kuri komanda, kas išeina, kur žiūryklė tai rodo](../assets/img/lt/overview.svg)
 
 Kodas yra Python (paketas `heat3d_capture`), licencijuotas pagal MIT. Gylio ir pozos modeliai, kuriuos jis gali paleisti, turi savo
 licencijas – žr. [Modeliai ir licencijos](../models-and-licences.md).
@@ -60,7 +60,7 @@ python -m venv .venv
 ```
 
 **Turėtumėte matyti** `listening on port 5300. Laps go to laps. Ctrl+C to stop.`, o tada po eilutę kiekvienam ratui, kai kertate
-finišo liniją, kaip paveikslėlyje aukščiau. Norėdami sustabdyti, spauskite Ctrl+C. Failus iš `laps\` įmeskite į žiūrintojo
+finišo liniją, kaip paveikslėlyje aukščiau. Norėdami sustabdyti, spauskite Ctrl+C. Failus iš `laps\` įmeskite į žiūryklės
 Lenktynių analizės skirtuką. Kiekvienas kitas žaidimas – tik vienas `--game` žingsnis toliau:
 
 ```powershell
@@ -98,9 +98,9 @@ Norėdami atkurti įrašą neprisijungus, su kameros keliu išspręstu visu iš 
 | [Ralio žaidimai](../telemetry-rally.md) | EA SPORTS WRC, DiRT Rally 2.0 / 1 / DiRT 4, Richard Burns Rally |
 | [BeamNG.drive](../telemetry-beamng.md) | `heat3d` protokolo modas |
 | [Trackmania](../telemetry-trackmania.md) | `Heat3dRecorder` Openplanet papildinys |
-| [iRacing](../telemetry-iracing.md) | `.ibt` failų skaitymas žiūrintuve |
+| [iRacing](../telemetry-iracing.md) | `.ibt` failų skaitymas žiūryklėje |
 | [Rato ir etapo skaidymas](../lap-splitting.md) | `LapSplitter`, `CounterSplitter`, `LineSplitter`, `StageSplitter` |
-| [Slydimas, dreifas ir išvestiniai kanalai](../slip-and-drift.md) | kaip skaliuojamas slydimas ir ką išveda žiūrintojas |
+| [Slydimas, dreifas ir išvestiniai kanalai](../slip-and-drift.md) | kaip skaliuojamas slydimas ir ką išveda žiūryklė |
 | [heat3d-lap failas](../lap-format.md) | rato failo formatas, kanalai, vienetai, `meta` |
 | [Žaidimai](../games.md) | kiekvienam žaidimui: kaip įrašyti, kas siunčiama, kurias trasas galima eksportuoti |
 | [Komandos](../commands.md) | `route`, `telemetry`, `laps`, `reconstruct`, `hud`, `locate`, žingsnis po žingsnio |
@@ -113,7 +113,7 @@ Norėdami atkurti įrašą neprisijungus, su kameros keliu išspręstu visu iš 
 | [Gylis](../reconstruction-depth.md) | Depth Anything V2, ONNX Runtime, modelio kūrimas |
 | [Kameros poza ir mastelis](../reconstruction-pose.md) | odometrija, relokalizavimas, telemetrijos pozos, žemės mastelis, bendras koregavimas |
 | [Sulydymas, aprėptis ir spalva](../reconstruction-fusion-and-texture.md) | tūrio okupacija, aprėpties tinklelis, silpnos vietos, viršūnių spalva |
-| [.glb išvestis](../glb-output.md) | failas, kurį įkelia žiūrintojas |
+| [.glb išvestis](../glb-output.md) | failas, kurį įkelia žiūryklė |
 | [Atkūrimas neprisijungus](../reconstruction-offline.md) | `reconstruct`, VGGT langai ir sujungimas |
 | [Modeliai ir licencijos](../models-and-licences.md) | Depth Anything V2 dydžiai, VGGT, paketai |
 | [Veikimo laikas ir priklausomybės](../runtime.md) | patikra prieš paleidimą, varikliai, našumo lygiai |
@@ -124,16 +124,16 @@ Norėdami atkurti įrašą neprisijungus, su kameros keliu išspręstu visu iš 
 
 ## Dalis 3DHeat {#part-of-3dheat}
 
-Šio įrankio failus įkelia **3DHeat žiūrintojas** –
+Šio įrankio failus įkelia **3DHeat žiūryklė** –
 [šaltinis](https://github.com/Holdi601/3DHeat), [dokumentacija](https://holdi601.github.io/3DHeat/).
 Ratų failai eina į jo Lenktynių analizės skirtuką, `.glb` lygiai – į Lygio skydelį, `hud` ir `locate` lentelės –
-į Šilumos žemėlapio skirtuką; kaip žiūrintojas skaito lenteles ir rungtynių failus, aprašyta
+į Šilumos žemėlapio skirtuką; kaip žiūryklė skaito lenteles ir rungtynių failus, aprašyta
 [Vienas failas rungtynėms: `.3dheat`](https://holdi601.github.io/3DHeat/container.html) ir
 [Duomenų įkėlimas](https://holdi601.github.io/3DHeat/getting-data-in.html).
 
 | Įrankis | Ką daro | Dokumentacija |
 |---|---|---|
-| [3DHeat žiūrintojas](https://github.com/Holdi601/3DHeat) | rodo šilumos žemėlapius, lenktynes ir rungtynes 3D naršyklėje | [dokumentacija](https://holdi601.github.io/3DHeat/) |
+| [3DHeat žiūryklė](https://github.com/Holdi601/3DHeat) | rodo šilumos žemėlapius, lenktynes ir rungtynes 3D naršyklėje | [dokumentacija](https://holdi601.github.io/3DHeat/) |
 | [GameFiles](https://github.com/Holdi601/3DHeat-GameFiles) | trasos ir lygiai iš žaidimų pristatomų failų kaip 3D modeliai | [dokumentacija](https://holdi601.github.io/3DHeat-GameFiles/) |
 | [GameCapture](https://github.com/Holdi601/3DHeat-GameCapture) | ratų telemetrija iš lenktynių žaidimų; lygiai, atkurti iš žaidimo vaizdo | [dokumentacija](https://holdi601.github.io/3DHeat-GameCapture/) |
 | [Unreal Exporter](https://github.com/Holdi601/3DHeat-UnrealExporter) | Unreal Editor papildinys, eksportuojantis lygį kaip 3D modelį | [dokumentacija](https://holdi601.github.io/3DHeat-UnrealExporter/) |
@@ -146,5 +146,5 @@ Ratų failai eina į jo Lenktynių analizės skirtuką, `.glb` lygiai – į Lyg
 | [Ext-DCS](https://github.com/Holdi601/3DHeat-Ext-DCS) | DCS World žemėlapiai į 3D modelius | [dokumentacija](https://holdi601.github.io/3DHeat-Ext-DCS/) |
 | [Ext-IL2](https://github.com/Holdi601/3DHeat-Ext-IL2) | IL-2 Sturmovik žemėlapiai į 3D modelius | [dokumentacija](https://holdi601.github.io/3DHeat-Ext-IL2/) |
 
-Dirbantiems su žaidimo projektu atvirą turėtų naudoti Unreal eksportuotoją, kuris nuskaito tikrą geometriją ir yra tikslus.
-Kai žaidimo archyvai gali būti nuskaityti, GameFiles išgauna tikslią trasą. Atkūrimas iš žaidimo skirtas tam atvejui, kai yra tik ekranas.
+Tas, kas turi atidarytą žaidimo projektą, turėtų naudoti Unreal eksportuotoją: jis nuskaito tikrą geometriją ir yra tikslus.
+Kai žaidimo archyvus galima nuskaityti, GameFiles išgauna tikslią trasą. Atkūrimas iš žaidimo skirtas tam atvejui, kai yra tik ekranas.

@@ -9,7 +9,7 @@ search_exclude: true
 ---
 # Áður en þú byrjar {#before-you-start}
 
-Ertu ný/r í skipanalínunni? Þessi síða kemur þér frá engu að fyrstu virku skipuninni. Það tekur
+Hefurðu aldrei notað skipanalínu? Þessi síða kemur þér frá engu að fyrstu virku skipuninni. Það tekur
 um tíu mínútur, einu sinni.
 
 ## 1. Settu upp Python {#install-python}
@@ -26,7 +26,7 @@ Eða, í skipanalínu: `winget install Python.Python.3.12`.
 
 ## 2. Settu upp Git {#install-git}
 
-Git sækir tólið. Náðu í það á [git-scm.com](https://git-scm.com/download/win), eða keyrðu
+Git sækir verkfærið. Náðu í það á [git-scm.com](https://git-scm.com/download/win), eða keyrðu
 `winget install Git.Git`. Ef þú vilt ekki Git, notaðu *Code > Download ZIP* á
 [GitHub-síðunni](https://github.com/Holdi601/3DHeat-GameCapture) og pakkaðu skránni upp.
 
@@ -52,7 +52,7 @@ cd "C:\Games\Tools"
 - Slóð með bilum þarf gæsalappir: `"C:\My Videos\match1.mp4"`.
 - Línur sem byrja á `#` eru athugasemdir. Þú skrifar þær ekki.
 
-## 5. Náðu í tólið og pakkana þess {#get-the-tool-and-its-packages}
+## 5. Náðu í verkfærið og pakkana þess {#get-the-tool-and-its-packages}
 
 ```powershell
 git clone https://github.com/Holdi601/3DHeat-GameCapture
@@ -61,10 +61,10 @@ python -m venv .venv
 .venv\Scripts\python -m pip install -r requirements.txt
 ```
 
-`python -m venv .venv` býr til einkamöppu fyrir pakka tólsins, svo þeir blandist ekki við
+`python -m venv .venv` býr til einkamöppu fyrir pakka verkfærisins, svo þeir blandist ekki við
 neitt annað á tölvunni þinni. Hver skipun byrjar þá á `.venv\Scripts\python`.
 
-**Þú ættir að sjá** síðustu línuna segja `Successfully installed ...`. Athugaðu að tólið virki:
+**Þú ættir að sjá** síðustu línuna segja `Successfully installed ...`. Athugaðu að verkfærið virki:
 
 ```powershell
 .venv\Scripts\python -m heat3d_capture --help
@@ -96,7 +96,7 @@ Ef PowerShell segir *running scripts is disabled*, keyrðu
 | Þú sérð | Það þýðir | Gerðu þetta |
 |---|---|---|
 | `'python' is not recognized` | Python er ekki á PATH | Settu Python upp aftur með PATH-haki, opnaðu síðan nýja skipanalínu. |
-| `No module named heat3d_capture` | skipanalínan er ekki í möppu tólsins | Farðu með `cd` í `3DHeat-GameCapture` möppuna. |
+| `No module named heat3d_capture` | skipanalínan er ekki í möppu verkfærisins | Farðu með `cd` í `3DHeat-GameCapture` möppuna. |
 | `No module named numpy` (eða annar pakki) | pakkarnir eru ekki uppsettir, eða þú notaðir annað Python | Keyrðu `pip install -r requirements.txt` línuna aftur, með `.venv\Scripts\python`. |
 | `'.venv' is not recognized` | þú skrifaðir `/` í cmd | Notaðu bakstrik: `.venv\Scripts\python`. |
 | `ffmpeg was not found on PATH` | ffmpeg vantar | Sjá skref 6, opnaðu síðan nýja skipanalínu. |

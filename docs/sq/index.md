@@ -3,7 +3,7 @@ title: "Kryefaqja"
 nav_order: 1
 lang: sq
 source: index.md
-source_hash: "083becf22379"
+source_hash: "4723321adf14"
 nav_exclude: true
 search_exclude: true
 permalink: /sq/
@@ -22,7 +22,7 @@ hartën tënde të nxehtësisë kur askush nuk ka një model 3D të tij.
 
 ![telemetria që regjistron dy xhiro të një furnizimi sintetik Forza](../assets/img/telemetry-run.svg)
 
-Je i ri me vijën e komandës? Lexo së pari [Para se të fillosh](before-you-start.md).
+Je i ri me rreshtin e komandave? Lexo së pari [Para se të fillosh](before-you-start.md).
 
 ## Tri punët {#the-three-jobs}
 
@@ -45,7 +45,7 @@ nga API publike e kapjes së ekranit, telemetria nga ndërfaqet që i botojnë l
 Kodi është Python (paketa `heat3d_capture`), me licencë MIT. Modelet e thellësisë dhe të pozës që mund
 t'i ekzekutojë kanë licencat e tyre - shih [Modelet dhe licencat](../models-and-licences.md).
 
-## Fillim i shpejtë {#quick-start}
+## Fillimi i shpejtë {#quick-start}
 
 ### Regjistro xhiro {#record-laps}
 

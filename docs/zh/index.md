@@ -3,7 +3,7 @@ title: 首页
 nav_order: 1
 lang: zh
 source: index.md
-source_hash: "083becf22379"
+source_hash: "4723321adf14"
 nav_exclude: true
 search_exclude: true
 permalink: /zh/
@@ -14,7 +14,7 @@ permalink: /zh/
 
 **我为什么要用它？** 在 [3DHeat 查看器](https://holdi601.github.io/3DHeat/) 中查看你的圈速：你在哪里刹车、哪里开得慢、两圈有何不同。当没有人有某个关卡的 3D 模型时，也可以把关卡放在你的热力图下方。
 
-**示例：** 在 Forza 中打开 Data Out，运行一条命令，然后开两圈。`laps\` 文件夹中会出现两个圈文件。把它们拖到查看器的赛车标签页中即可。
+**示例：** 在 Forza 中打开 Data Out，运行一条命令，然后开两圈。`laps\` 文件夹中会出现两个圈文件。把它们拖到查看器的赛车分析中即可。
 
 ![记录两圈合成 Forza 数据流的遥测](../assets/img/telemetry-run.svg)
 
@@ -22,9 +22,9 @@ permalink: /zh/
 
 ## 三项工作 {#the-three-jobs}
 
-1. **圈速遥测。** 它记录赛车游戏发布的每一个通道：Forza 的 Data Out、Assetto Corsa 系列游戏的共享内存、拉力赛游戏的网络数据流、一个 BeamNG 模组、一个 Trackmania 插件，并为查看器的赛车标签页每圈或每个赛段写出一个 `heat3d-lap` 文件。iRacing 无需记录器：查看器直接读取它自己的 `.ibt` 文件。
+1. **圈速遥测。** 它记录赛车游戏发布的每一个通道：Forza 的 Data Out、Assetto Corsa 系列游戏的共享内存、拉力赛游戏的网络数据流、一个 BeamNG 模组、一个 Trackmania 插件，并为查看器的赛车分析每圈或每个赛段写出一个 `heat3d-lap` 文件。iRacing 无需记录器：查看器直接读取它自己的 `.ibt` 文件。
 2. **从游戏过程中得到关卡。** 它把你在关卡中行走或驾驶时屏幕上显示的内容，转换成一个 `.glb` 3D 模型，查看器会把它铺在热力图下方。
-3. **比赛结束后，你自己的对局。** `hud` 读取你自己录像的 HUD：你的操作、死亡、小地图轨迹和击杀信息。`locate`（实验性功能：目前只能定位少量真实帧）会在关卡的 3D 模型上，算出每一帧是在哪里拍摄的。
+3. **对局结束后，你自己的对局。** `hud` 读取你自己录像的 HUD：你的操作、死亡、小地图轨迹和击杀信息。`locate`（实验性功能：目前只能定位少量真实帧）会在关卡的 3D 模型上，算出每一帧是在哪里拍摄的。
 
 三项工作都遵循同一条规则：**不向游戏注入任何东西，也不挂钩任何东西。** 画面来自公开的屏幕捕获 API，遥测数据来自游戏为此公开的接口。参见 [规则](../rules.md)。
 
@@ -48,7 +48,7 @@ python -m venv .venv
 .venv\Scripts\python -m heat3d_capture telemetry -o laps
 ```
 
-**你应该看到** `listening on port 5300. Laps go to laps. Ctrl+C to stop.`，之后每当你经过终点线，就会出现一行信息，与上图相同。按 Ctrl+C 停止。将 `laps\` 中的文件拖到查看器的赛车标签页中。
+**你应该看到** `listening on port 5300. Laps go to laps. Ctrl+C to stop.`，之后每当你经过终点线，就会出现一行信息，与上图相同。按 Ctrl+C 停止。将 `laps\` 中的文件拖到查看器的赛车分析中。
 其他每款游戏只需使用一个 `--game` 参数即可：
 
 ```powershell
@@ -109,7 +109,7 @@ python -m venv .venv
 ## 属于 3DHeat 的一部分 {#part-of-3dheat}
 
 本工具写出的文件由 **3DHeat 查看器** 加载：[源代码](https://github.com/Holdi601/3DHeat)，[文档](https://holdi601.github.io/3DHeat/)。
-圈文件进入它的赛车标签页，`.glb` 关卡进入它的背景/关卡面板，`hud` 和 `locate` 的表格进入它的热力图标签页；查看器如何读取表格和对局文件，参见
+圈文件进入它的赛车分析，`.glb` 关卡进入它的背景/关卡面板，`hud` 和 `locate` 的表格进入它的热力图标签页；查看器如何读取表格和对局文件，参见
 [一场对局一个文件：`.3dheat`](https://holdi601.github.io/3DHeat/container.html) 和
 [导入数据](https://holdi601.github.io/3DHeat/getting-data-in.html)。
 

@@ -3,26 +3,26 @@ title: Inici
 nav_order: 1
 lang: ca
 source: index.md
-source_hash: "083becf22379"
+source_hash: "4723321adf14"
 nav_exclude: true
 search_exclude: true
 permalink: /ca/
 ---
 # 3DHeat GameCapture {#dheat-gamecapture}
 
-**Què és?** Una eina que anota el que un joc de carreres li explica sobre la vostra conducció, un fitxer
-per volta. També pot reconstruir un model 3D aproximat d'un nivell a partir d'un vídeo de vosaltres jugant.
+**Què és?** Una eina que anota el que un joc de carreres li explica sobre la teva conducció, un fitxer
+per volta. També pot reconstruir un model 3D aproximat d'un nivell a partir d'un vídeo teu jugant.
 
-**Per a què la faria servir?** Per veure les vostres voltes al [visualitzador de 3DHeat](https://holdi601.github.io/3DHeat/):
-on frenàveu, on anàveu lents, en què es diferencien dues voltes. I per tenir el nivell sota el vostre
+**Per a què la faria servir?** Per veure les teves voltes al [visualitzador de 3DHeat](https://holdi601.github.io/3DHeat/):
+on frenàveu, on anàveu lents, en què es diferencien dues voltes. I per tenir el nivell sota el teu
 mapa de calor quan ningú no en té un model 3D.
 
-**Exemple:** activi el Data Out de Forza, executi una ordre, i conduïu dues voltes. Apareixen dos fitxers de volta a
-`laps\`. Deixi'ls a la pestanya Anàlisi de curses del visualitzador.
+**Exemple:** activi el Data Out de Forza, executa una ordre, i conduïu dues voltes. Apareixen dos fitxers de volta a
+`laps\`. Deixa'ls a la pestanya Anàlisi de curses del visualitzador.
 
 ![telemetria que grava dues voltes d'un flux sintètic de Forza](../assets/img/telemetry-run.svg)
 
-Si és nou amb la línia d'ordres, llegeixi primer [Abans de començar](before-you-start.md).
+Si ets nou amb la línia d'ordres, llegeix primer [Abans de començar](before-you-start.md).
 
 ## Les tres tasques {#the-three-jobs}
 
@@ -33,18 +33,18 @@ Si és nou amb la línia d'ordres, llegeixi primer [Abans de començar](before-y
    els seus propis fitxers `.ibt`.
 2. **Nivells a partir del joc.** Converteix el que mostrava la pantalla mentre caminàveu o conduíeu per un
    nivell en un model 3D `.glb`, que el visualitzador col·loca sota el mapa de calor.
-3. **La vostra partida, després.** `hud` llegeix el HUD de la vostra gravació propia: les vostres accions, les morts,
+3. **La teva partida, després.** `hud` llegeix el HUD de la teva gravació propia: les teves accions, les morts,
    el traçat del minimapa i el registre de baixes. `locate` (experimental: de moment situa pocs fotogrames reals)
    calcula on es va prendre cada fotograma, sobre el model 3D d'un nivell.
 
 Les tres segueixen una mateixa norma: **no s'injecta res a cap joc i no s'hi enganxa res**. Els fotogrames
 arriben de l'API pública de captura de pantalla, i la telemetria, de les interfícies que els jocs publiquen
-per a aquest fi. Vegi [Les regles](../rules.md).
+per a aquest fi. Mira [Les regles](../rules.md).
 
 ![Què entra, quina ordre, què surt, on ho mostra el visualitzador](../assets/img/ca/overview.svg)
 
 El codi és Python (paquet `heat3d_capture`), amb llicència MIT. Els models de profunditat i de postura
-que pot executar tenen les seves pròpies llicències: vegi [Models i llicències](../models-and-licences.md).
+que pot executar tenen les seves pròpies llicències: mira [Models i llicències](../models-and-licences.md).
 
 ## Inici ràpid {#quick-start}
 
@@ -62,8 +62,8 @@ python -m venv .venv
 .venv\Scripts\python -m heat3d_capture telemetry -o laps
 ```
 
-**Hauria de veure** `listening on port 5300. Laps go to laps. Ctrl+C to stop.`, i després una línia per volta
-en creuar la línia, com a la imatge de dalt. Premi Ctrl+C per aturar. Deixi els fitxers de `laps\` a la
+**Hauries de veure** `listening on port 5300. Laps go to laps. Ctrl+C to stop.`, i després una línia per volta
+en creuar la línia, com a la imatge de dalt. Prem Ctrl+C per aturar. Deixa els fitxers de `laps\` a la
 pestanya Anàlisi de curses del visualitzador.
 Cada altre joc és a un `--game` de distància:
 
@@ -72,19 +72,19 @@ Cada altre joc és a un `--game` de distància:
 .venv\Scripts\python -m heat3d_capture telemetry --game dirtrally2 -o laps
 ```
 
-Vegi [Gravadors de telemetria](../telemetry.md) per a cada joc i cada opció.
+Mira [Gravadors de telemetria](../telemetry.md) per a cada joc i cada opció.
 
 ### Escanejar un nivell {#scan-a-level}
 
-Faci doble clic a **`scan.bat`** a la carpeta de l'eina. Troba Python (i ofereix instal·lar-lo amb
+Fes doble clic a **`scan.bat`** a la carpeta de l'eina. Troba Python (i ofereix instal·lar-lo amb
 winget si no n'hi ha cap), crea un `.venv` privat, i obre la finestra d'escaneig. La finestra indica
-què falta, per a què serveix cada paquet i quant ocupa la descàrrega, i no instal·la res sense un sí. Vegi
+què falta, per a què serveix cada paquet i quant ocupa la descàrrega, i no instal·la res sense un sí. Mira
 [Entorn d'execució i dependències](../runtime.md) i [La finestra d'escaneig](../reconstruction-scan-ui.md).
 
 Per a fer-ho a mà: `.venv\Scripts\python -m heat3d_capture.ui`.
 
 Per reconstruir una gravació fora de línia, amb la trajectòria de la càmera resolta de cop (necessita PyTorch, el
-paquet `vggt` i una GPU: vegi [Reconstrucció fora de línia](../reconstruction-offline.md)):
+paquet `vggt` i una GPU: mira [Reconstrucció fora de línia](../reconstruction-offline.md)):
 
 ```powershell
 .venv\Scripts\python -m heat3d_capture reconstruct lap.mp4 -o lap.glb
@@ -142,7 +142,7 @@ s'explica a [Un fitxer per partida (.3dheat)](https://holdi601.github.io/3DHeat/
 | [GameCapture](https://github.com/Holdi601/3DHeat-GameCapture) | telemetria de voltes de jocs de carreres; nivells reconstruïts a partir de vídeo de joc | [documentació](https://holdi601.github.io/3DHeat-GameCapture/) |
 | [Unreal Exporter](https://github.com/Holdi601/3DHeat-UnrealExporter) | un connector per a l'editor d'Unreal que exporta un nivell com a model 3D | [documentació](https://holdi601.github.io/3DHeat-UnrealExporter/) |
 | [CS2](https://github.com/Holdi601/3DHeat-CS2) | demos de Counter-Strike 2 en fitxers de partida; mapes en models 3D | [documentació](https://holdi601.github.io/3DHeat-CS2/) |
-| [Watcher](https://github.com/Holdi601/3DHeat-Watcher) | registra la vostra partida en segon pla a partir del que publiquen els jocs | [documentació](https://holdi601.github.io/3DHeat-Watcher/) |
+| [Watcher](https://github.com/Holdi601/3DHeat-Watcher) | registra la teva partida en segon pla a partir del que publiquen els jocs | [documentació](https://holdi601.github.io/3DHeat-Watcher/) |
 | [Ext-WarThunder](https://github.com/Holdi601/3DHeat-Ext-WarThunder) | repeticions de War Thunder en fitxers de partida | [documentació](https://holdi601.github.io/3DHeat-Ext-WarThunder/) |
 | [Ext-WoT](https://github.com/Holdi601/3DHeat-Ext-WoT) | repeticions de World of Tanks en fitxers de partida | [documentació](https://holdi601.github.io/3DHeat-Ext-WoT/) |
 | [Ext-WoWs](https://github.com/Holdi601/3DHeat-Ext-WoWs) | repeticions de World of Warships en fitxers de partida | [documentació](https://holdi601.github.io/3DHeat-Ext-WoWs/) |

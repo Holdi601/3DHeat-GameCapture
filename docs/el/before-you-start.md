@@ -18,7 +18,7 @@ search_exclude: true
 
 1. Πηγαίνετε στο [python.org/downloads](https://www.python.org/downloads/) και κατεβάστε τη νεότερη
    Python για Windows.
-2. Τρέξτε το πρόγραμμα εγκατάστασης. Στην πρώτη οθόνη, **τικάρετε «Add python.exe to PATH»**. Χωρίς το τικ,
+2. Τρέξτε το πρόγραμμα εγκατάστασης. Στην πρώτη οθόνη, **επιλέξτε «Add python.exe to PATH»**. Αν δεν την επιλέξετε,
    το τερματικό δεν θα βρει την Python.
 3. Κάντε κλικ στο *Install Now*.
 
@@ -95,7 +95,7 @@ python -m venv .venv
 
 | Βλέπετε | Σημαίνει | Τι να κάνετε |
 |---|---|---|
-| `'python' is not recognized` | Η Python δεν είναι στο PATH | Εγκαταστήστε ξανά την Python με το τικ στο PATH, και μετά ανοίξτε νέο τερματικό. |
+| `'python' is not recognized` | Η Python δεν είναι στο PATH | Εγκαταστήστε ξανά την Python με το PATH επιλεγμένο, και μετά ανοίξτε νέο τερματικό. |
 | `No module named heat3d_capture` | το τερματικό δεν είναι στον φάκελο του εργαλείου | Κάντε `cd` στον φάκελο `3DHeat-GameCapture`. |
 | `No module named numpy` (ή άλλο πακέτο) | τα πακέτα δεν είναι εγκατεστημένα, ή χρησιμοποιήσατε άλλη Python | Τρέξτε ξανά τη γραμμή `pip install -r requirements.txt`, με `.venv\Scripts\python`. |
 | `'.venv' is not recognized` | γράψατε `/` στο cmd | Χρησιμοποιήστε κάθετες ανάποδες: `.venv\Scripts\python`. |

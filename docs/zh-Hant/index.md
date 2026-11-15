@@ -3,7 +3,7 @@ title: "首頁"
 nav_order: 1
 lang: zh-Hant
 source: index.md
-source_hash: "083becf22379"
+source_hash: "4723321adf14"
 nav_exclude: true
 search_exclude: true
 permalink: /zh-Hant/
@@ -14,7 +14,7 @@ permalink: /zh-Hant/
 
 **為什麼要用它？** 為了在 [3DHeat 檢視器](https://holdi601.github.io/3DHeat/)中檢視你的圈速：你在哪裡煞車、哪裡開得慢、兩圈有什麼不同。並且在沒有人有關卡的 3D 模型時，把關卡放在你的熱圖之下。
 
-**範例：** 開啟 Forza 的 Data Out，執行一個命令，然後開兩圈。兩個圈速檔會出現在 `laps\` 中。把它們拖到檢視器的賽車分頁上。
+**範例：** 開啟 Forza 的 Data Out，執行一個指令，然後開兩圈。兩個圈速檔會出現在 `laps\` 中。把它們拖到檢視器的賽車分析分頁上。
 
 ![遙測記錄了合成 Forza 資料流中的兩圈](../assets/img/telemetry-run.svg)
 
@@ -22,13 +22,13 @@ permalink: /zh-Hant/
 
 ## 三項工作 {#the-three-jobs}
 
-1. **圈速遙測。** 它會記錄賽車遊戲所發布的每一個頻道——Forza 的 Data Out、Assetto Corsa 系列遊戲的共享記憶體、拉力賽遊戲的網路資料流、BeamNG 模組、Trackmania 外掛——並為每一圈或每個賽段寫出一個 `heat3d-lap` 檔案，供檢視器的賽車分頁使用。iRacing 不需要錄製器：檢視器會直接讀取它自己的 `.ibt` 檔案。
+1. **圈速遙測。** 它會記錄賽車遊戲所發布的每一個頻道——Forza 的 Data Out、Assetto Corsa 系列遊戲的共享記憶體、拉力賽遊戲的網路資料流、BeamNG 模組、Trackmania 外掛——並為每一圈或每個賽段寫出一個 `heat3d-lap` 檔案，供檢視器的賽車分析分頁使用。iRacing 不需要錄製器：檢視器會直接讀取它自己的 `.ibt` 檔案。
 2. **從遊玩中建立關卡。** 它會把你在關卡中步行或駕駛時螢幕所呈現的畫面，轉換成 `.glb` 3D 模型，檢視器會把它鋪在熱圖之下。
 3. **比賽結束後的你自己的對戰。** `hud` 會讀取你自己錄影中的 HUD——你的動作、死亡、小地圖軌跡與擊殺訊息。`locate`（實驗性功能：目前只能放置少量真實畫面）會在關卡的 3D 模型上，判斷每一個畫面是在哪裡拍攝的。
 
 三者都遵循同一項規則：**不向遊戲注入任何東西，也不掛鉤任何東西。** 畫面來自公開的螢幕擷取 API，遙測則來自遊戲為此發布的介面。請見[規則](../rules.md)。
 
-![輸入什麼、使用哪個命令、輸出什麼、檢視器在哪裡顯示](../assets/img/zh-Hant/overview.svg)
+![輸入什麼、使用哪個指令、輸出什麼、檢視器在哪裡顯示](../assets/img/zh-Hant/overview.svg)
 
 本程式以 Python 撰寫（套件名稱 `heat3d_capture`），採 MIT 授權。它可以執行的深度與姿態模型，各有其自己的授權——請見[模型與授權](../models-and-licences.md)。
 
@@ -48,7 +48,7 @@ python -m venv .venv
 .venv\Scripts\python -m heat3d_capture telemetry -o laps
 ```
 
-**你應該會看到** `listening on port 5300. Laps go to laps. Ctrl+C to stop.`，然後每當你越過終點線，就會出現一行一圈的紀錄，如上方的圖片所示。按 Ctrl+C 即可停止。將 `laps\` 中的檔案拖到檢視器的賽車分頁上。
+**你應該會看到** `listening on port 5300. Laps go to laps. Ctrl+C to stop.`，然後每當你越過終點線，就會出現一行一圈的紀錄，如上方的圖片所示。按 Ctrl+C 即可停止。將 `laps\` 中的檔案拖到檢視器的賽車分析分頁上。
 其他遊戲只需一個 `--game` 選項：
 
 ```powershell
@@ -74,9 +74,9 @@ python -m venv .venv
 
 | 頁面 | 內容 |
 |---|---|
-| [開始之前](before-you-start.md) | Python、終端機、第一個命令、常見錯誤 |
+| [開始之前](before-you-start.md) | Python、終端機、第一個指令、常見錯誤 |
 | [規則](../rules.md) | 不注入、只使用已發布的介面，以及這樣做的代價 |
-| [遙測錄製器](../telemetry.md) | `telemetry` 命令，以及每個遊戲的概覽 |
+| [遙測錄製器](../telemetry.md) | `telemetry` 指令，以及每個遊戲的概覽 |
 | [Forza](../telemetry-forza.md) | Data Out、版面偵測、FH Companion 轉送及其 `.tele.gz` |
 | [Assetto Corsa 系列遊戲](../telemetry-assetto-corsa.md) | AC、ACC、AC EVO、AC Rally 的共享記憶體 |
 | [拉力賽遊戲](../telemetry-rally.md) | EA SPORTS WRC、DiRT Rally 2.0 / 1 / DiRT 4、Richard Burns Rally |
@@ -87,8 +87,8 @@ python -m venv .venv
 | [滑移、漂移與衍生頻道](../slip-and-drift.md) | 滑移如何縮放，以及檢視器衍生出什麼 |
 | [heat3d-lap 檔案](../lap-format.md) | 圈速檔格式、頻道、單位、`meta` |
 | [遊戲](../games.md) | 每個遊戲：如何錄製、傳送什麼、可以匯出哪些賽道 |
-| [命令](../commands.md) | `route`、`telemetry`、`laps`、`reconstruct`、`hud`、`locate`，逐步說明 |
-| [命令參考](../cli-reference.md) | 每個選項，由 `--help` 產生 |
+| [指令](../commands.md) | `route`、`telemetry`、`laps`、`reconstruct`、`hud`、`locate`，逐步說明 |
+| [指令參考](../cli-reference.md) | 每個選項，由 `--help` 產生 |
 | [從錄影讀取 HUD](../hud-video.md) | `hud`：從錄製中取得你自己的動作、死亡、小地圖軌跡與擊殺訊息 |
 | [在關卡中定位畫面](../locate.md) | `locate`：每個畫面是在哪裡拍攝的，對照關卡幾何 |
 | [關卡重建](../reconstruction.md) | 從畫面到 `.glb` 的流程 |
@@ -110,7 +110,7 @@ python -m venv .venv
 
 本工具寫出的檔案，由 **3DHeat 檢視器**載入——
 [原始碼](https://github.com/Holdi601/3DHeat)、[說明文件](https://holdi601.github.io/3DHeat/)。
-圈速檔送到它的賽車分頁，`.glb` 關卡送到它的關卡面板，`hud` 與 `locate` 的表格送到它的熱圖分頁；檢視器如何讀取表格與對戰檔，見
+圈速檔送到它的賽車分析分頁，`.glb` 關卡送到它的背景／關卡面板，`hud` 與 `locate` 的表格送到它的熱圖分頁；檢視器如何讀取表格與對戰檔，見
 [每場對戰一個檔案（.3dheat）](https://holdi601.github.io/3DHeat/container.html)與
 [載入資料](https://holdi601.github.io/3DHeat/getting-data-in.html)。
 

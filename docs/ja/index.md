@@ -3,7 +3,7 @@ title: "ホーム"
 nav_order: 1
 lang: ja
 source: index.md
-source_hash: "083becf22379"
+source_hash: "4723321adf14"
 nav_exclude: true
 search_exclude: true
 permalink: /ja/
@@ -14,7 +14,7 @@ permalink: /ja/
 
 **何に使うの？** [3DHeat ビューア](https://holdi601.github.io/3DHeat/) で周回を見るためです。どこでブレーキを踏んだか、どこで遅かったか、2つの周回がどう違うかが分かります。また、誰も3Dモデルを持っていないとき、ヒートマップの下にレベルを置くためです。
 
-**例:** Forza の Data Out をオンにし、1つのコマンドを実行して、2周走ります。`laps\` に2つの周回ファイルができます。それらをビューアのレースタブにドロップしてください。
+**例:** Forza の Data Out をオンにし、1つのコマンドを実行して、2周走ります。`laps\` に2つの周回ファイルができます。それらをビューアのレース分析 タブにドロップしてください。
 
 ![合成した Forza のフィードで2周を記録するテレメトリ](../assets/img/telemetry-run.svg)
 
@@ -22,7 +22,7 @@ permalink: /ja/
 
 ## 3つの仕事 {#the-three-jobs}
 
-1. **周回のテレメトリ。** レースゲームが公開するすべてのチャンネルを記録します。Forza の Data Out、Assetto Corsa 系ゲームの共有メモリ、ラリーゲームのネットワークのフィード、BeamNG のMOD、Trackmania のプラグインなどです。そして、周回またはステージごとに1つの `heat3d-lap` ファイルを、ビューアのレースタブ用に書き出します。iRacing は記録ツールが要りません。ビューアが iRacing 自身の `.ibt` ファイルを読みます。
+1. **周回のテレメトリ。** レースゲームが公開するすべてのチャンネルを記録します。Forza の Data Out、Assetto Corsa 系ゲームの共有メモリ、ラリーゲームのネットワークのフィード、BeamNG のMOD、Trackmania のプラグインなどです。そして、周回またはステージごとに1つの `heat3d-lap` ファイルを、ビューアのレース分析 タブ用に書き出します。iRacing は記録ツールが要りません。ビューアが iRacing 自身の `.ibt` ファイルを読みます。
 2. **プレイからのレベル。** 歩いたり運転したりしながら画面に映ったものを、`.glb` の3Dモデルにします。ビューアはそれをヒートマップの下に敷きます。
 3. **あとで、あなた自身の試合。** `hud` は、あなた自身の録画のHUDを読みます。あなたの行動、死亡、ミニマップの軌跡、キルフィードです。`locate`（実験的。今のところ、本物のフレームはわずかしか配置できません）は、各フレームがレベルの3Dモデル上のどこで撮られたかを割り出します。
 
@@ -48,7 +48,7 @@ python -m venv .venv
 .venv\Scripts\python -m heat3d_capture telemetry -o laps
 ```
 
-**次のような表示が出るはずです** `listening on port 5300. Laps go to laps. Ctrl+C to stop.`。その後、ゴールラインを通過するたびに周回ごとの行が出ます（上の図の通りです）。止めるには Ctrl+C を押します。`laps\` のファイルをビューアのレースタブにドロップしてください。ほかのゲームも `--game` 1つで使えます:
+**次のような表示が出るはずです** `listening on port 5300. Laps go to laps. Ctrl+C to stop.`。その後、ゴールラインを通過するたびに周回ごとの行が出ます（上の図の通りです）。止めるには Ctrl+C を押します。`laps\` のファイルをビューアのレース分析 タブにドロップしてください。ほかのゲームも `--game` 1つで使えます:
 
 ```powershell
 .venv\Scripts\python -m heat3d_capture telemetry --game acc -o laps
@@ -107,20 +107,20 @@ python -m venv .venv
 
 ## 3DHeatの一部 {#part-of-3dheat}
 
-このツールが書くファイルは、**3DHeat ビューア** が読み込みます（[ソース](https://github.com/Holdi601/3DHeat)、[ドキュメント](https://holdi601.github.io/3DHeat/)）。周回ファイルはそのレースタブへ、`.glb` のレベルは背景/レベルパネルへ、`hud` と `locate` の表はヒートマップタブへ入ります。ビューアが表と試合ファイルをどう読むかは、[1試合1ファイル (.3dheat)](https://holdi601.github.io/3DHeat/container.html) と [データの取り込み](https://holdi601.github.io/3DHeat/getting-data-in.html) にあります。
+このツールが書くファイルは、**3DHeat ビューア** が読み込みます（[ソース](https://github.com/Holdi601/3DHeat)、[ドキュメント](https://holdi601.github.io/3DHeat/)）。周回ファイルはそのレース分析 タブへ、`.glb` のレベルは背景/レベルパネルへ、`hud` と `locate` のテーブルはヒートマップ タブへ入ります。ビューアがテーブルとマッチファイルをどう読むかは、[1 マッチを 1 ファイルに（.3dheat）](https://holdi601.github.io/3DHeat/container.html) と [データの取り込み](https://holdi601.github.io/3DHeat/getting-data-in.html) にあります。
 
 | ツール | 内容 | ドキュメント |
 |---|---|---|
-| [3DHeat ビューア](https://github.com/Holdi601/3DHeat) | ブラウザで、ヒートマップ、レース、試合を3D表示 | [ドキュメント](https://holdi601.github.io/3DHeat/) |
+| [3DHeat ビューア](https://github.com/Holdi601/3DHeat) | ブラウザで、ヒートマップ、レース分析、マッチを3D表示 | [ドキュメント](https://holdi601.github.io/3DHeat/) |
 | [GameFiles](https://github.com/Holdi601/3DHeat-GameFiles) | ゲームが同梱するファイルから、コースとレベルを3Dモデルとして | [ドキュメント](https://holdi601.github.io/3DHeat-GameFiles/) |
 | [GameCapture](https://github.com/Holdi601/3DHeat-GameCapture) | レースゲームの周回テレメトリ。ゲーム映像から再構築したレベル | [ドキュメント](https://holdi601.github.io/3DHeat-GameCapture/) |
 | [Unreal Exporter](https://github.com/Holdi601/3DHeat-UnrealExporter) | レベルを3Dモデルとして書き出す Unreal Editor のプラグイン | [ドキュメント](https://holdi601.github.io/3DHeat-UnrealExporter/) |
-| [CS2](https://github.com/Holdi601/3DHeat-CS2) | Counter-Strike 2 のデモを表と試合ドキュメントに。マップを3Dモデルに | [ドキュメント](https://holdi601.github.io/3DHeat-CS2/) |
+| [CS2](https://github.com/Holdi601/3DHeat-CS2) | Counter-Strike 2 のデモをテーブルとマッチドキュメントに。マップを3Dモデルに | [ドキュメント](https://holdi601.github.io/3DHeat-CS2/) |
 | [Watcher](https://github.com/Holdi601/3DHeat-Watcher) | ゲームが公開する情報から、あなたのプレイをバックグラウンドで記録 | [ドキュメント](https://holdi601.github.io/3DHeat-Watcher/) |
-| [Ext-WarThunder](https://github.com/Holdi601/3DHeat-Ext-WarThunder) | War Thunder のリプレイを表と試合ドキュメントに | [ドキュメント](https://holdi601.github.io/3DHeat-Ext-WarThunder/) |
-| [Ext-WoT](https://github.com/Holdi601/3DHeat-Ext-WoT) | World of Tanks のリプレイを表と試合ドキュメントに | [ドキュメント](https://holdi601.github.io/3DHeat-Ext-WoT/) |
-| [Ext-WoWs](https://github.com/Holdi601/3DHeat-Ext-WoWs) | World of Warships のリプレイを表と試合ドキュメントに | [ドキュメント](https://holdi601.github.io/3DHeat-Ext-WoWs/) |
-| [Ext-Squad](https://github.com/Holdi601/3DHeat-Ext-Squad) | Squad のサーバーのデモを表と試合ドキュメントに | [ドキュメント](https://holdi601.github.io/3DHeat-Ext-Squad/) |
+| [Ext-WarThunder](https://github.com/Holdi601/3DHeat-Ext-WarThunder) | War Thunder のリプレイをテーブルとマッチドキュメントに | [ドキュメント](https://holdi601.github.io/3DHeat-Ext-WarThunder/) |
+| [Ext-WoT](https://github.com/Holdi601/3DHeat-Ext-WoT) | World of Tanks のリプレイをテーブルとマッチドキュメントに | [ドキュメント](https://holdi601.github.io/3DHeat-Ext-WoT/) |
+| [Ext-WoWs](https://github.com/Holdi601/3DHeat-Ext-WoWs) | World of Warships のリプレイをテーブルとマッチドキュメントに | [ドキュメント](https://holdi601.github.io/3DHeat-Ext-WoWs/) |
+| [Ext-Squad](https://github.com/Holdi601/3DHeat-Ext-Squad) | Squad のサーバーのデモをテーブルとマッチドキュメントに | [ドキュメント](https://holdi601.github.io/3DHeat-Ext-Squad/) |
 | [Ext-DCS](https://github.com/Holdi601/3DHeat-Ext-DCS) | DCS World のマップを3Dモデルに | [ドキュメント](https://holdi601.github.io/3DHeat-Ext-DCS/) |
 | [Ext-IL2](https://github.com/Holdi601/3DHeat-Ext-IL2) | IL-2 Sturmovik のマップを3Dモデルに | [ドキュメント](https://holdi601.github.io/3DHeat-Ext-IL2/) |
 

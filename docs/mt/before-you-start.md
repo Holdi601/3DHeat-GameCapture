@@ -88,7 +88,7 @@ Jekk PowerShell jgħid *running scripts is disabled*, ħaddem
 
 | Kmand | Jeħtieġ | Installa |
 |---|---|---|
-| `hud` | **ffmpeg** u **ffprobe** (jaqraw fajls tal-vidjow) | `winget install Gyan.FFmpeg`, imbagħad iftaħ terminal ġdid. Iċċekkja b'`ffmpeg -version`. |
+| `hud` | **ffmpeg** u **ffprobe** (jaqraw fajls tal-vidjo) | `winget install Gyan.FFmpeg`, imbagħad iftaħ terminal ġdid. Iċċekkja b'`ffmpeg -version`. |
 | `reconstruct`, `locate` | **PyTorch**, installat qabel il-pakketti l-oħra | il-kmand minn [pytorch.org](https://pytorch.org/get-started/locally/) għall-GPU tiegħek |
 
 ## Meta xi ħaġa tmur ħażin {#when-something-goes-wrong}

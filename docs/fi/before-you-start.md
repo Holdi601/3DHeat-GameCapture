@@ -35,7 +35,7 @@ Git lataa työkalun. Hae se osoitteesta [git-scm.com](https://git-scm.com/downlo
 Pääte on ikkuna, johon kirjoitat komentoja. Nämä sivut käyttävät **PowerShellia**, jonka jokaisella
 Windows-koneella on.
 
-- Avaa kansio File Explorerissa, napsauta osoitepalkkiin, kirjoita `powershell` ja paina Enter.
+- Avaa kansio Resurssienhallinnassa, napsauta osoitepalkkiin, kirjoita `powershell` ja paina Enter.
   PowerShell aukeaa **siihen kansioon**.
 - Tai avaa PowerShell Käynnistä-valikosta ja siirry kansioon komennolla `cd`:
 

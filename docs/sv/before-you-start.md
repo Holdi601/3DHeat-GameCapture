@@ -47,7 +47,7 @@ cd "C:\Games\Tools"
 
 - Skriv varje kommandorad och tryck på Enter.
 - Text inom vinkelparenteser är en **platshållare**: skriv ditt eget värde där, utan parenteserna.
-  `<recording>.mp4` betyder en filnamn som `match1.mp4`.
+  `<recording>.mp4` betyder ett filnamn som `match1.mp4`.
 - Text inom hakparenteser, som `[--fps 5]`, är **valfri**.
 - En sökväg med mellanslag behöver citattecken: `"C:\My Videos\match1.mp4"`.
 - Rader som börjar med `#` är kommentarer. Du skriver inte dem.

@@ -1,5 +1,5 @@
 ---
-title: Før du begynner
+title: Før du starter
 nav_order: 1.5
 lang: no
 source: before-you-start.md
@@ -7,7 +7,7 @@ source_hash: "0c8bf313b1db"
 nav_exclude: true
 search_exclude: true
 ---
-# Før du begynner {#before-you-start}
+# Før du starter {#before-you-start}
 
 Ny til kommandolinjen? Denne siden tar deg fra null til en første fungerende kommando. Det tar
 omtrent ti minutter, én gang.

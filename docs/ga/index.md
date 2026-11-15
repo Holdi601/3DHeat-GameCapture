@@ -3,7 +3,7 @@ title: Baile
 nav_order: 1
 lang: ga
 source: index.md
-source_hash: "083becf22379"
+source_hash: "4723321adf14"
 nav_exclude: true
 search_exclude: true
 permalink: /ga/
@@ -13,12 +13,12 @@ permalink: /ga/
 **Cad é?** Uirlis a scríobhann síos an méid a insíonn cluiche rásaíochta di faoi do thiomáint, comhad amháin
 in aghaidh na cuarta. Is féidir léi samhail 3D gharbh de leibhéal a atógáil ó fhíseán díot ag imirt freisin.
 
-**Cén fáth a n-úsáidfinn é?** Chun do chuairteanna a fheiceáil sa [lucht féachana 3DHeat](https://holdi601.github.io/3DHeat/):
+**Cén fáth a n-úsáidfinn é?** Chun do chuairteanna a fheiceáil san [amharcán 3DHeat](https://holdi601.github.io/3DHeat/):
 an áit ar bhrúigh tú na coscáin, an áit a raibh tú mall, conas a dhéanann dhá chuairt difriúil. Agus chun an leibhéal a bheith faoi
 do léarscáil teasa nuair nach bhfuil samhail 3D de ag aon duine.
 
 **Sampla:** cas air Data Out Forza, rith ordú amháin, tiomáin dhá chuairt. Feictear dhá chomhad chuarta i
-`laps\`. Scaoil iad ar chluaisín Anailís rása an lucht féachana.
+`laps\`. Scaoil iad ar chluaisín Anailís rása an amharcáin.
 
 ![telemetry ag taifeadadh dhá chuairt de bhia sintéiseach Forza](../assets/img/telemetry-run.svg)
 
@@ -29,9 +29,9 @@ An bhfuil tú nua leis an líne ordaithe? Léigh [Sula dtosaíonn tú](before-yo
 1. **Telemetry cuarta.** Taifeadann sé gach cainéal a fhoilsíonn cluiche rásaíochta - Data Out Forza,
    cuimhne chomhroinnte na gcluichí Assetto Corsa, bianna líonra na gcluichí rally, mod BeamNG, breiseán
    Trackmania - agus scríobhann sé comhad `heat3d-lap` amháin in aghaidh na cuarta nó na céime, do chluaisín Anailís
-   rása an lucht féachana. Ní theastaíonn taifeadán ó iRacing: léann an lucht féachana a chomhaid `.ibt` féin.
+   rása an amharcáin. Ní theastaíonn taifeadán ó iRacing: léann an t-amharcán a chomhaid `.ibt` féin.
 2. **Leibhéil ó ghameplay.** Casann sé an méid a thaispeáin an scáileán agus tú ag siúl nó ag tiomáint trí
-   leibhéal ina shamhail 3D `.glb`, a leagann an lucht féachana faoin léarscáil teasa.
+   leibhéal ina shamhail 3D `.glb`, a leagann an t-amharcán faoin léarscáil teasa.
 3. **Do chluiche féin, ina dhiaidh.** Léann `hud` HUD do thaifeadta féin - do ghníomhartha, básanna,
    rian mionléarscáile agus fotha maruithe. Oibríonn `locate` (turgnamhach: ní chuireann sé ach cúpla fráma fíor go dtí seo)
    amach cá raibh gach fráma tógtha, ar shamhail 3D leibhéil.
@@ -40,7 +40,7 @@ Leanann an trí cheann riail amháin: **ní instealltar aon rud isteach i gcluic
 ón API poiblí gabhála scáileáin, telemetry ó chomhéadain a fhoilsíonn na cluichí chuige sin. Féach
 [Na rialacha](../rules.md).
 
-![Cad a théann isteach, cén t-ordú, cad a thagann amach, cá dtaispeánann an lucht féachana é](../assets/img/ga/overview.svg)
+![Cad a théann isteach, cén t-ordú, cad a thagann amach, cá dtaispeánann an t-amharcán é](../assets/img/ga/overview.svg)
 
 Is Python é an cód (pacáiste `heat3d_capture`), ceadúnaithe MIT. Tá ceadúnais dá gcuid féin ag na samhlacha doimhneachta agus
 pose is féidir leis a rith - féach [Samhlacha agus ceadúnais](../models-and-licences.md).
@@ -62,7 +62,7 @@ python -m venv .venv
 ```
 
 **Ba chóir duit** `listening on port 5300. Laps go to laps. Ctrl+C to stop.` a fheiceáil, ansin líne in aghaidh na cuarta de réir mar a thrasnaíonn tú an líne, mar atá
-sa phictiúr thuas. Brúigh Ctrl+C chun stopadh. Scaoil na comhaid ó `laps\` ar chluaisín Anailís rása an lucht féachana.
+sa phictiúr thuas. Brúigh Ctrl+C chun stopadh. Scaoil na comhaid ó `laps\` ar chluaisín Anailís rása an amharcáin.
 Tá gach cluiche eile `--game` amháin ar shiúl:
 
 ```powershell
@@ -101,9 +101,9 @@ pacáiste `vggt` agus GPU - féach [Atógáil as líne](../reconstruction-offlin
 | [Cluichí rally](../telemetry-rally.md) | EA SPORTS WRC, DiRT Rally 2.0 / 1 / DiRT 4, Richard Burns Rally |
 | [BeamNG.drive](../telemetry-beamng.md) | An mod prótacail `heat3d` |
 | [Trackmania](../telemetry-trackmania.md) | An breiseán Openplanet `Heat3dRecorder` |
-| [iRacing](../telemetry-iracing.md) | Comhaid `.ibt` a léamh sa lucht féachana |
+| [iRacing](../telemetry-iracing.md) | Comhaid `.ibt` a léamh san amharcán |
 | [Roinnt cuarta agus céime](../lap-splitting.md) | `LapSplitter`, `CounterSplitter`, `LineSplitter`, `StageSplitter` |
-| [Sleamhnú, drif agus cainéil díorthaithe](../slip-and-drift.md) | Conas a scálaítear sleamhnú, agus cad a dhíorthaíonn an lucht féachana |
+| [Sleamhnú, drif agus cainéil díorthaithe](../slip-and-drift.md) | Conas a scálaítear sleamhnú, agus cad a dhíorthaíonn an t-amharcán |
 | [An comhad heat3d-lap](../lap-format.md) | Formáid an chomhaid chuarta, cainéil, aonaid, `meta` |
 | [Cluichí](../games.md) | In aghaidh an chluiche: conas taifeadadh, cad a sheoltar, cé na cúrsaí is féidir a onnmhairiú |
 | [Orduithe](../commands.md) | `route`, `telemetry`, `laps`, `reconstruct`, `hud`, `locate`, céim ar chéim |
@@ -116,7 +116,7 @@ pacáiste `vggt` agus GPU - féach [Atógáil as líne](../reconstruction-offlin
 | [Doimhneacht](../reconstruction-depth.md) | Depth Anything V2, ONNX Runtime, an tsamhail a thógáil |
 | [Pose ceamara agus scála](../reconstruction-pose.md) | Odaiméadracht, athlonnú, poses telemetry, scála talún, coigeartú burla |
 | [Comhleá, clúdach agus dath](../reconstruction-fusion-and-texture.md) | An toirt áitithe, an greille clúdaigh, láithreacha laga, dath rinn |
-| [An t-aschur .glb](../glb-output.md) | An comhad a lódálann an lucht féachana |
+| [An t-aschur .glb](../glb-output.md) | An comhad a lódálann an t-amharcán |
 | [Atógáil as líne](../reconstruction-offline.md) | `reconstruct`, fuinneoga VGGT agus greamú |
 | [Samhlacha agus ceadúnais](../models-and-licences.md) | Méideanna Depth Anything V2, VGGT, na pacáistí |
 | [Am rite agus spleáchais](../runtime.md) | Réamhsheiceáil, cúlchláir, leibhéil feidhmíochta |
@@ -127,16 +127,16 @@ pacáiste `vggt` agus GPU - féach [Atógáil as líne](../reconstruction-offlin
 
 ## Cuid de 3DHeat {#part-of-3dheat}
 
-Lódálann **lucht féachana 3DHeat** na comhaid a scríobhann sé seo -
+Lódálann **an t-amharcán 3DHeat** na comhaid a scríobhann sé seo -
 [foinse](https://github.com/Holdi601/3DHeat), [doiciméadúchán](https://holdi601.github.io/3DHeat/).
 Téann comhaid chuarta chuig a chluaisín Anailís rása, leibhéil `.glb` chuig a phainéal Cúlra / leibhéal, na táblaí `hud` agus `locate` chuig
-a chluaisín Léarscáil teasa; tá conas a léann an lucht féachana táblaí agus comhaid chluiche i
+a chluaisín Léarscáil teasa; tá conas a léann an t-amharcán táblaí agus comhaid chluiche i
 [Comhad amháin in aghaidh an chluiche (.3dheat)](https://holdi601.github.io/3DHeat/container.html) agus
 [Sonraí a thabhairt isteach](https://holdi601.github.io/3DHeat/getting-data-in.html).
 
 | Uirlis | Cad a dhéanann sí | Doiciméid |
 |---|---|---|
-| [Lucht féachana 3DHeat](https://github.com/Holdi601/3DHeat) | taispeánann sé léarscáileanna teasa, rásaí agus cluichí i 3D, sa bhrabhsálaí | [docs](https://holdi601.github.io/3DHeat/) |
+| [Amharcán 3DHeat](https://github.com/Holdi601/3DHeat) | taispeánann sé léarscáileanna teasa, rásaí agus cluichí i 3D, sa bhrabhsálaí | [docs](https://holdi601.github.io/3DHeat/) |
 | [GameFiles](https://github.com/Holdi601/3DHeat-GameFiles) | cúrsaí agus leibhéil as na comhaid a sheolann cluichí, mar shamhlacha 3D | [docs](https://holdi601.github.io/3DHeat-GameFiles/) |
 | [GameCapture](https://github.com/Holdi601/3DHeat-GameCapture) | telemetry cuarta ó chluichí rásaíochta; leibhéil atógtha ó fhíseán cluiche | [docs](https://holdi601.github.io/3DHeat-GameCapture/) |
 | [Unreal Exporter](https://github.com/Holdi601/3DHeat-UnrealExporter) | breiseán d'Unreal Editor a onnmhairíonn leibhéal mar shamhail 3D | [docs](https://holdi601.github.io/3DHeat-UnrealExporter/) |

@@ -3,7 +3,7 @@ title: "Startsäit"
 nav_order: 1
 lang: lb
 source: index.md
-source_hash: "083becf22379"
+source_hash: "4723321adf14"
 nav_exclude: true
 search_exclude: true
 permalink: /lb/
@@ -74,7 +74,7 @@ Kuckt [Telemetrie-Recorder](../telemetry.md) fir all Spill an Optioun.
 
 ### E Level scannen {#scan-a-level}
 
-Duebelklickt op **`scan.bat`** am Ordner vum Tool. Et fënnt Python (a bitt un, et mat
+Duebelklickt op **`scan.bat`** am Dossier vum Tool. Et fënnt Python (a bitt un, et mat
 winget ze installéieren, wann et keen gëtt), mécht e private `.venv` an mécht d'Scan-Fënster op. D'Fënster seet,
 wat feelt, wofir all Package gebraucht gëtt a wéi grouss den Download ass, an installéiert näischt
 ouni e Jo. Kuckt [Runtime an Ofhängegkeeten](../runtime.md) an
@@ -129,7 +129,7 @@ Fir eng Opnam offline nei opzebauen, mam Kamerawee op eemol geléist (brauch PyT
 
 D'Dateien, déi dëst schreift, gi vum **3DHeat-Viewer** gelueden -
 [Quell](https://github.com/Holdi601/3DHeat), [Dokumentatioun](https://holdi601.github.io/3DHeat/).
-Ronn-Dateie ginn op säi Course-Analys-Tab, `.glb`-Levelen an säi Level-Panneau, d'`hud`- an `locate`-Tabellen an
+Ronn-Dateie ginn op säi Course-Analys-Tab, `.glb`-Levelen an säi Panel „Hannergrond / Level“, d'`hud`- an `locate`-Tabellen an
 säi Heatmap-Tab; wéi de Viewer Tabellen a Match-Dateien liest, steet an
 [Eng Datei pro Match (.3dheat)](https://holdi601.github.io/3DHeat/container.html) an
 [Daten eran kréien](https://holdi601.github.io/3DHeat/getting-data-in.html).

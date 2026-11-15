@@ -1,7 +1,7 @@
 # The .glb output
 
 A reconstruction is written as a binary glTF 2.0 file (`.glb`) that the 3DHeat viewer loads
-through its Background / Background / level panel with no special handling - the same contract the Unreal exporter
+through its Background / level panel with no special handling - the same contract the Unreal exporter
 writes. Code: [`geometry/glb.py`](https://github.com/Holdi601/3DHeat-GameCapture/blob/main/heat3d_capture/geometry/glb.py).
 
 It is written by hand rather than through a glTF library: the output is a narrow subset (one
@@ -34,7 +34,7 @@ scan. `asset.generator` is `heat3d-capture-scan`.
   in handedness: it stays in the game's own world, Y up and left-handed, exactly as the lap files
   are, so the laps recorded over it land on it. When a scan's scale was found on a later keyframe
   ([Scale](reconstruction-pose#scale)), that factor is folded into the scale written.
-- `COLOR_0` is read by the viewer, which shades the ground with it when its Background / Background / level panel's
+- `COLOR_0` is read by the viewer, which shades the ground with it when its Background / level panel's
   *Captured colour* switch is on (off by default).
 - A scan with spots marked by hand gets `<name>.marks.json` beside it; see
   [Saving](reconstruction-scan-ui#saving).

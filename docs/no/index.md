@@ -3,7 +3,7 @@ title: Hjem
 nav_order: 1
 lang: no
 source: index.md
-source_hash: "083becf22379"
+source_hash: "4723321adf14"
 nav_exclude: true
 search_exclude: true
 permalink: /no/
@@ -22,7 +22,7 @@ varmekartet ditt når ingen har en 3D-modell av det.
 
 ![telemetri som tar opp to runder fra en syntetisk Forza-strøm](../assets/img/telemetry-run.svg)
 
-Ny til kommandolinjen? Les [Før du begynner](before-you-start.md) først.
+Ny til kommandolinjen? Les [Før du starter](before-you-start.md) først.
 
 ## De tre jobbene {#the-three-jobs}
 
@@ -48,7 +48,7 @@ kjøre har sine egne lisenser - se [Modeller og lisenser](../models-and-licences
 
 ### Ta opp runder {#record-laps}
 
-Du trenger Python 3.10 eller nyere ([Før du begynner](before-you-start.md)). I PowerShell:
+Du trenger Python 3.10 eller nyere ([Før du starter](before-you-start.md)). I PowerShell:
 
 ```powershell
 git clone https://github.com/Holdi601/3DHeat-GameCapture
@@ -92,7 +92,7 @@ og en GPU - se [Frakoblet rekonstruksjon](../reconstruction-offline.md)):
 
 | Side | Hva den dekker |
 |---|---|
-| [Før du begynner](before-you-start.md) | Python, en terminal, den første kommandoen, vanlige feil |
+| [Før du starter](before-you-start.md) | Python, en terminal, den første kommandoen, vanlige feil |
 | [Reglene](../rules.md) | Ingen injeksjon, bare publiserte grensesnitt, og hva det koster |
 | [Telemetriopptakere](../telemetry.md) | `telemetry`-kommandoen og en oversikt over hvert spill |
 | [Forza](../telemetry-forza.md) | Data Out, oppsettsgjenkjenning, FH Companion-videresendingen og dens `.tele.gz` |
@@ -122,13 +122,13 @@ og en GPU - se [Frakoblet rekonstruksjon](../reconstruction-offline.md)):
 | [Begrensninger og verifisering](../limits.md) | Hva som ikke er gjort, og hva som ikke er kontrollert |
 | [Oppdateringer](../updates.md) | Utgivelsessjekken og `python -m heat3d_update` |
 | [Utvikling](../development.md) | Tester, det virtuelle miljøet, repositoriets oppsett |
-| [Vedlikehold av disse dokumentene](../maintaining.md) | Utgivelsessjekklisten for kode og dokumentasjon |
+| [Vedlikeholde dokumentasjonen](../maintaining.md) | Utgivelsessjekklisten for kode og dokumentasjon |
 
 ## Del av 3DHeat {#part-of-3dheat}
 
 Filene dette skriver lastes av **3DHeat-visningsprogrammet** -
 [kilde](https://github.com/Holdi601/3DHeat), [dokumentasjon](https://holdi601.github.io/3DHeat/).
-Rundefiler går til Løp-fanen, `.glb`-nivåer til Bane-panelet, og `hud`- og `locate`-tabellene til
+Rundefiler går til Løp-fanen, `.glb`-nivåer til Bakgrunn / nivå-panelet, og `hud`- og `locate`-tabellene til
 Varmekart-fanen; hvordan visningsprogrammet leser tabeller og kampfiler står i
 [Én fil per kamp (.3dheat)](https://holdi601.github.io/3DHeat/container.html) og
 [Få data inn](https://holdi601.github.io/3DHeat/getting-data-in.html).
@@ -146,7 +146,7 @@ Varmekart-fanen; hvordan visningsprogrammet leser tabeller og kampfiler står i
 | [Ext-WoWs](https://github.com/Holdi601/3DHeat-Ext-WoWs) | World of Warships-replayer til tabeller og kampdokumenter | [dokumentasjon](https://holdi601.github.io/3DHeat-Ext-WoWs/) |
 | [Ext-Squad](https://github.com/Holdi601/3DHeat-Ext-Squad) | Squad-serverdemoer til tabeller og kampdokumenter | [dokumentasjon](https://holdi601.github.io/3DHeat-Ext-Squad/) |
 | [Ext-DCS](https://github.com/Holdi601/3DHeat-Ext-DCS) | DCS World-kart til 3D-modeller | [dokumentasjon](https://holdi601.github.io/3DHeat-Ext-DCS/) |
-| [Ext-IL2](https://github.com/Holdi601/3DHeat-Ext-IL2) | IL-2 Sturmovik-kart til 3D-modeller | [dokumentasjon](https://holdi601.github.io/3DHeat-Ext-IL2/) |
+| [Ext-IL2](https://github.com/Holdi601/3DHeat-Ext-IL2) | IL-2 Great Battles-kart til 3D-modeller | [dokumentasjon](https://holdi601.github.io/3DHeat-Ext-IL2/) |
 
 En utvikler med spillets prosjekt åpent bør bruke Unreal-eksportøren, som leser den virkelige
 geometrien og er eksakt. Der et spills egne arkiver kan leses, henter GameFiles ut den eksakte

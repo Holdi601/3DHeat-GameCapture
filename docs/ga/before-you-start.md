@@ -52,7 +52,7 @@ cd "C:\Games\Tools"
 - Teastaíonn comharthaí athfhriotail ó chosán a bhfuil spásanna ann: `"C:\My Videos\match1.mp4"`.
 - Is nótaí iad línte a thosaíonn le `#`. Ní chlóscríobhann tú iad.
 
-## 5. Faigh an uirlis agus a pacáistí {#get-the-tool-and-its-packages}
+## 5. Faigh an uirlis agus a phacáistí {#get-the-tool-and-its-packages}
 
 ```powershell
 git clone https://github.com/Holdi601/3DHeat-GameCapture
@@ -101,4 +101,4 @@ Má deir PowerShell *running scripts is disabled*, rith
 | `'.venv' is not recognized` | chlóscríobh tú `/` i cmd | Úsáid cúlslaiseanna: `.venv\Scripts\python`. |
 | `ffmpeg was not found on PATH` | tá ffmpeg ar iarraidh | Féach céim 6, ansin oscail teirminéal nua. |
 
-Ar aghaidh: tá chéad sampla do gach jab ar an [Leathanach baile](index.md).
+Ar aghaidh: tá an chéad sampla do gach jab ar an [Leathanach baile](index.md).

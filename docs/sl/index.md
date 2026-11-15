@@ -3,7 +3,7 @@ title: "Začetna stran"
 nav_order: 1
 lang: sl
 source: index.md
-source_hash: "083becf22379"
+source_hash: "4723321adf14"
 nav_exclude: true
 search_exclude: true
 permalink: /sl/

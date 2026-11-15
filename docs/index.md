@@ -124,7 +124,7 @@ To rebuild a recording offline, with the camera path solved all at once (needs P
 
 The files this writes are loaded by the **3DHeat viewer** -
 [source](https://github.com/Holdi601/3DHeat), [documentation](https://holdi601.github.io/3DHeat/).
-Lap files go to its Race analysis tab, `.glb` levels to its Background / Background / level panel, the `hud` and `locate` tables to
+Lap files go to its Race analysis tab, `.glb` levels to its Background / level panel, the `hud` and `locate` tables to
 its Heatmap tab; how the viewer reads tables and match files is in
 [One file a match (.3dheat)](https://holdi601.github.io/3DHeat/container.html) and
 [Getting data in](https://holdi601.github.io/3DHeat/getting-data-in.html).

@@ -3,7 +3,7 @@ title: "Kezdőlap"
 nav_order: 1
 lang: hu
 source: index.md
-source_hash: "083becf22379"
+source_hash: "4723321adf14"
 nav_exclude: true
 search_exclude: true
 permalink: /hu/
@@ -22,7 +22,7 @@ körfájl jelenik meg a `laps\` mappában. Dobd őket a megjelenítő Versenyele
 
 ![Telemetria, amely egy szintetikus Forza-adatfolyamból két kört rögzít](../assets/img/telemetry-run.svg)
 
-Még nem használt parancssort? Kezdd a [Mielőtt elkezdi](before-you-start.md) oldallal.
+Még nem használt parancssort? Kezdd a [Mielőtt elkezded](before-you-start.md) oldallal.
 
 ## A három feladat {#the-three-jobs}
 
@@ -49,7 +49,7 @@ saját licencekkel rendelkeznek – lásd: [Modellek és licencek](../models-and
 
 ### Körök rögzítése {#record-laps}
 
-Python 3.10 vagy újabb kell ([Mielőtt elkezdi](before-you-start.md)). PowerShellben:
+Python 3.10 vagy újabb kell ([Mielőtt elkezded](before-you-start.md)). PowerShellben:
 
 ```powershell
 git clone https://github.com/Holdi601/3DHeat-GameCapture
@@ -93,7 +93,7 @@ kell – lásd: [Offline újjáépítés](../reconstruction-offline.md)):
 
 | Oldal | Mit tartalmaz |
 |---|---|
-| [Mielőtt elkezdi](before-you-start.md) | Python, egy terminál, az első parancs, gyakori hibák |
+| [Mielőtt elkezded](before-you-start.md) | Python, egy terminál, az első parancs, gyakori hibák |
 | [A szabályok](../rules.md) | Nincs injektálás, csak közzétett felületek, és ennek ára |
 | [Telemetriai rögzítők](../telemetry.md) | A `telemetry` parancs és minden játék áttekintése |
 | [Forza](../telemetry-forza.md) | Data Out, formátumfelismerés, a FH Companion továbbító és annak `.tele.gz` fájlja |
@@ -105,7 +105,7 @@ kell – lásd: [Offline újjáépítés](../reconstruction-offline.md)):
 | [Kör- és szakaszfelosztás](../lap-splitting.md) | `LapSplitter`, `CounterSplitter`, `LineSplitter`, `StageSplitter` |
 | [Csúszás, sodródás és származtatott csatornák](../slip-and-drift.md) | Hogyan skálázódik a csúszás, és mit származtat a megjelenítő |
 | [A heat3d-lap fájl](../lap-format.md) | A körfájl formátuma, csatornák, mértékegységek, `meta` |
-| [Játékok](../games.md) | Játékonként: hogyan rögzítsen, mit küld, mely pályák exportálhatók |
+| [Játékok](../games.md) | Játékonként: hogyan rögzíts, mit küld, mely pályák exportálhatók |
 | [Parancsok](../commands.md) | `route`, `telemetry`, `laps`, `reconstruct`, `hud`, `locate`, lépésről lépésre |
 | [Parancsleírás](../cli-reference.md) | minden kapcsoló, a `--help` alapján generálva |
 | [Olvasás a HUD-ból egy felvételről](../hud-video.md) | `hud`: saját tettek, halálok, kismap-nyomvonal és gyilkossági lista egy felvételből |

@@ -9,7 +9,7 @@ search_exclude: true
 ---
 # 開始之前 {#before-you-start}
 
-第一次使用命令列？這一頁會帶你從零開始，約十分鐘內完成第一個可用的命令。
+第一次使用命令列？這一頁會帶你從零開始，約十分鐘內完成第一個可用的指令。
 
 ## 1. 安裝 Python {#install-python}
 
@@ -29,7 +29,7 @@ Git 用來下載這個工具。可以從 [git-scm.com](https://git-scm.com/downl
 
 ## 3. 在資料夾中開啟終端機 {#open-a-terminal-in-a-folder}
 
-終端機是讓你輸入命令的視窗。這些頁面使用 **PowerShell**，每台 Windows 電腦都有它。
+終端機是讓你輸入指令的視窗。這些頁面使用 **PowerShell**，每台 Windows 電腦都有它。
 
 - 在檔案總管中開啟該資料夾，點一下網址列，輸入 `powershell` 再按 Enter。
   PowerShell 會**在該資料夾中**開啟。
@@ -39,9 +39,9 @@ Git 用來下載這個工具。可以從 [git-scm.com](https://git-scm.com/downl
 cd "C:\Games\Tools"
 ```
 
-## 4. 閱讀這些頁面中的命令 {#read-the-commands-on-these-pages}
+## 4. 閱讀這些頁面中的指令 {#read-the-commands-on-these-pages}
 
-- 輸入每一行命令，然後按 Enter。
+- 輸入每一行指令，然後按 Enter。
 - 角括號中的文字是**佔位符**：請在那裡放入你自己的值，不要輸入括號。
   `<recording>.mp4` 表示像 `match1.mp4` 這樣的檔名。
 - 方括號中的文字，例如 `[--fps 5]`，是**選用**的。
@@ -57,7 +57,7 @@ python -m venv .venv
 .venv\Scripts\python -m pip install -r requirements.txt
 ```
 
-`python -m venv .venv` 會為工具的套件建立一個私人資料夾，讓它們不會與電腦上的其他東西混在一起。之後每個命令都以 `.venv\Scripts\python` 開頭。
+`python -m venv .venv` 會為工具的套件建立一個私人資料夾，讓它們不會與電腦上的其他東西混在一起。之後每個指令都以 `.venv\Scripts\python` 開頭。
 
 **你應該會看到**最後一行顯示 `Successfully installed ...`。確認工具可以運作：
 
@@ -65,9 +65,9 @@ python -m venv .venv
 .venv\Scripts\python -m heat3d_capture --help
 ```
 
-**你應該會看到**以 `usage: heat3d_capture` 開頭的命令清單。
+**你應該會看到**以 `usage: heat3d_capture` 開頭的指令清單。
 
-![--help 所印出的命令清單](../assets/img/cli-help.svg)
+![--help 所印出的指令清單](../assets/img/cli-help.svg)
 
 你也可以*啟用*該資料夾一次，之後只需輸入 `python`：
 
@@ -79,12 +79,12 @@ python -m venv .venv
 若 PowerShell 顯示 *running scripts is disabled*，請執行一次
 `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`，或略過啟用這一步。
 
-## 6. 部分命令需要的額外程式 {#extra-programs-some-commands-need}
+## 6. 部分指令需要的額外程式 {#extra-programs-some-commands-need}
 
-| 命令 | 需要 | 安裝方式 |
+| 指令 | 需要 | 安裝方式 |
 |---|---|---|
 | `hud` | **ffmpeg** 與 **ffprobe**（讀取影片檔） | `winget install Gyan.FFmpeg`，然後開啟新的終端機。以 `ffmpeg -version` 檢查。 |
-| `reconstruct`、`locate` | **PyTorch**，需在其他套件之前安裝 | 到 [pytorch.org](https://pytorch.org/get-started/locally/) 取得適合你 GPU 的命令 |
+| `reconstruct`、`locate` | **PyTorch**，需在其他套件之前安裝 | 到 [pytorch.org](https://pytorch.org/get-started/locally/) 取得適合你 GPU 的指令 |
 
 ## 出問題時 {#when-something-goes-wrong}
 

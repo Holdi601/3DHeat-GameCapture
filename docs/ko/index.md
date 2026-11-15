@@ -3,28 +3,28 @@ title: 홈
 nav_order: 1
 lang: ko
 source: index.md
-source_hash: "083becf22379"
+source_hash: "4723321adf14"
 nav_exclude: true
 search_exclude: true
 permalink: /ko/
 ---
 # 3DHeat GameCapture {#dheat-gamecapture}
 
-**무엇인가요?** 레이싱 게임이 여러분의 운전에 대해 알려 주는 내용을 기록하는 도구입니다. 랩마다 파일 하나씩 씁니다. 여러분이 플레이하는 영상으로 레벨의 대략적인 3D 모델을 다시 만들 수도 있습니다.
+**무엇입니까?** 레이싱 게임이 여러분의 운전에 대해 알려 주는 내용을 기록하는 도구입니다. 랩마다 파일 하나씩 씁니다. 여러분이 플레이하는 영상으로 레벨의 대략적인 3D 모델을 다시 만들 수도 있습니다.
 
-**왜 쓰나요?** [3DHeat 뷰어](https://holdi601.github.io/3DHeat/)에서 랩을 보기 위해서입니다. 어디서 브레이크를 밟았는지, 어디서 느렸는지, 두 랩이 어떻게 다른지 볼 수 있습니다. 그리고 아무도 3D 모델을 가지고 있지 않은 레벨이라도, 히트맵 아래에 그 레벨을 깔 수 있습니다.
+**왜 씁니까?** [3DHeat 뷰어](https://holdi601.github.io/3DHeat/)에서 랩을 보기 위해서입니다. 어디서 브레이크를 밟았는지, 어디서 느렸는지, 두 랩이 어떻게 다른지 볼 수 있습니다. 그리고 아무도 3D 모델을 가지고 있지 않은 레벨이라도, 히트맵 아래에 그 레벨을 깔 수 있습니다.
 
 **예시:** Forza의 Data Out을 켜고, 명령 하나를 실행한 뒤, 랩 두 개를 달리세요. `laps\` 폴더에 랩 파일 두 개가 생깁니다. 이것을 뷰어의 레이스 분석 탭에 끌어다 놓으세요.
 
 ![가상 Forza 데이터 흐름의 두 랩을 기록하는 텔레메트리](../assets/img/telemetry-run.svg)
 
-명령줄이 처음이신가요? 먼저 [시작하기 전에](before-you-start.md)를 읽으세요.
+명령줄이 처음입니까? 먼저 [시작하기 전에](before-you-start.md)를 읽으세요.
 
 ## 세 가지 일 {#the-three-jobs}
 
 1. **랩 텔레메트리.** 레이싱 게임이 공개하는 모든 채널을 기록합니다. Forza의 Data Out, Assetto Corsa 게임들의 공유 메모리, 랠리 게임들의 네트워크 피드, BeamNG 모드, Trackmania 플러그인 등입니다. 랩 또는 스테이지마다 `heat3d-lap` 파일 하나를 쓰며, 이것은 뷰어의 레이스 분석 탭용입니다. iRacing은 기록 도구가 필요 없습니다. 뷰어가 iRacing 자체의 `.ibt` 파일을 읽습니다.
 2. **플레이에서 얻은 레벨.** 여러분이 레벨을 걷거나 달리는 동안 화면에 보인 것을 `.glb` 3D 모델로 바꿉니다. 뷰어는 이것을 히트맵 아래에 깝니다.
-3. **경기가 끝난 뒤의 여러분의 경기.** `hud`는 여러분 자신의 녹화에서 HUD를 읽습니다. 여러분의 행동, 사망, 미니맵의 주행 선, 킬 피드입니다. `locate`(실험적: 지금은 실제 프레임을 적게 배치합니다)는 각 프레임이 레벨의 3D 모델의 어디에서 찍혔는지 알아냅니다.
+3. **매치가 끝난 뒤의 여러분의 매치.** `hud`는 여러분 자신의 녹화에서 HUD를 읽습니다. 여러분의 행동, 사망, 미니맵의 주행 선, 킬 피드입니다. `locate`(실험적: 지금은 실제 프레임을 적게 배치합니다)는 각 프레임이 레벨의 3D 모델의 어디에서 찍혔는지 알아냅니다.
 
 세 가지 모두 한 가지 규칙을 따릅니다. **게임에 아무것도 주입하지 않으며, 아무것도 후킹하지 않습니다.** 프레임은 공개된 화면 캡처 API에서, 텔레메트리는 게임이 그 목적으로 공개한 인터페이스에서 가져옵니다. [규칙](../rules.md)을 보세요.
 
@@ -70,7 +70,7 @@ python -m venv .venv
 .venv\Scripts\python -m heat3d_capture reconstruct lap.mp4 -o lap.glb
 ```
 
-## 문서 지도 {#map-of-the-documentation}
+## 이 문서의 목차 {#map-of-the-documentation}
 
 | 페이지 | 내용 |
 |---|---|
@@ -108,20 +108,20 @@ python -m venv .venv
 
 ## 3DHeat의 일부 {#part-of-3dheat}
 
-이 도구가 쓰는 파일은 **3DHeat 뷰어**가 불러옵니다([소스](https://github.com/Holdi601/3DHeat), [문서](https://holdi601.github.io/3DHeat/)). 랩 파일은 뷰어의 레이스 분석 탭으로, `.glb` 레벨은 배경 / 레벨 패널로, `hud`와 `locate` 표는 히트맵 탭으로 갑니다. 뷰어가 표와 경기 파일을 읽는 방법은 [경기 하나를 파일 하나로 `.3dheat`](https://holdi601.github.io/3DHeat/container.html)와 [데이터 넣기](https://holdi601.github.io/3DHeat/getting-data-in.html)에 있습니다.
+이 도구가 쓰는 파일은 **3DHeat 뷰어**가 불러옵니다([소스](https://github.com/Holdi601/3DHeat), [문서](https://holdi601.github.io/3DHeat/)). 랩 파일은 뷰어의 레이스 분석 탭으로, `.glb` 레벨은 배경 / 레벨 패널로, `hud`와 `locate` 표는 히트맵 탭으로 갑니다. 뷰어가 표와 매치 파일을 읽는 방법은 [매치 하나를 파일 하나로 `.3dheat`](https://holdi601.github.io/3DHeat/container.html)와 [데이터 넣기](https://holdi601.github.io/3DHeat/getting-data-in.html)에 있습니다.
 
 | 도구 | 하는 일 | 문서 |
 |---|---|---|
-| [3DHeat 뷰어](https://github.com/Holdi601/3DHeat) | 브라우저에서 히트맵, 레이스, 경기를 3D로 보여 줍니다 | [문서](https://holdi601.github.io/3DHeat/) |
+| [3DHeat 뷰어](https://github.com/Holdi601/3DHeat) | 브라우저에서 히트맵, 레이스, 매치를 3D로 보여 줍니다 | [문서](https://holdi601.github.io/3DHeat/) |
 | [GameFiles](https://github.com/Holdi601/3DHeat-GameFiles) | 게임이 배포하는 파일에서 코스와 레벨을 3D 모델로 | [문서](https://holdi601.github.io/3DHeat-GameFiles/) |
 | [GameCapture](https://github.com/Holdi601/3DHeat-GameCapture) | 레이싱 게임의 랩 텔레메트리. 게임플레이 영상에서 다시 만든 레벨 | [문서](https://holdi601.github.io/3DHeat-GameCapture/) |
 | [Unreal Exporter](https://github.com/Holdi601/3DHeat-UnrealExporter) | 레벨을 3D 모델로 내보내는 Unreal 에디터 플러그인 | [문서](https://holdi601.github.io/3DHeat-UnrealExporter/) |
-| [CS2](https://github.com/Holdi601/3DHeat-CS2) | Counter-Strike 2 데모를 경기 파일로, 맵을 3D 모델로 | [문서](https://holdi601.github.io/3DHeat-CS2/) |
+| [CS2](https://github.com/Holdi601/3DHeat-CS2) | Counter-Strike 2 데모를 매치 파일로, 맵을 3D 모델로 | [문서](https://holdi601.github.io/3DHeat-CS2/) |
 | [Watcher](https://github.com/Holdi601/3DHeat-Watcher) | 게임이 공개하는 것을 바탕으로 백그라운드에서 플레이를 기록 | [문서](https://holdi601.github.io/3DHeat-Watcher/) |
-| [Ext-WarThunder](https://github.com/Holdi601/3DHeat-Ext-WarThunder) | War Thunder 리플레이를 경기 파일로 | [문서](https://holdi601.github.io/3DHeat-Ext-WarThunder/) |
-| [Ext-WoT](https://github.com/Holdi601/3DHeat-Ext-WoT) | World of Tanks 리플레이를 경기 파일로 | [문서](https://holdi601.github.io/3DHeat-Ext-WoT/) |
-| [Ext-WoWs](https://github.com/Holdi601/3DHeat-Ext-WoWs) | World of Warships 리플레이를 경기 파일로 | [문서](https://holdi601.github.io/3DHeat-Ext-WoWs/) |
-| [Ext-Squad](https://github.com/Holdi601/3DHeat-Ext-Squad) | Squad 서버 데모를 경기 파일로 | [문서](https://holdi601.github.io/3DHeat-Ext-Squad/) |
+| [Ext-WarThunder](https://github.com/Holdi601/3DHeat-Ext-WarThunder) | 워 썬더 리플레이를 매치 파일로 | [문서](https://holdi601.github.io/3DHeat-Ext-WarThunder/) |
+| [Ext-WoT](https://github.com/Holdi601/3DHeat-Ext-WoT) | 월드 오브 탱크 리플레이를 매치 파일로 | [문서](https://holdi601.github.io/3DHeat-Ext-WoT/) |
+| [Ext-WoWs](https://github.com/Holdi601/3DHeat-Ext-WoWs) | 월드 오브 워십 리플레이를 매치 파일로 | [문서](https://holdi601.github.io/3DHeat-Ext-WoWs/) |
+| [Ext-Squad](https://github.com/Holdi601/3DHeat-Ext-Squad) | Squad 서버 데모를 매치 파일로 | [문서](https://holdi601.github.io/3DHeat-Ext-Squad/) |
 | [Ext-DCS](https://github.com/Holdi601/3DHeat-Ext-DCS) | DCS World 맵을 3D 모델로 | [문서](https://holdi601.github.io/3DHeat-Ext-DCS/) |
 | [Ext-IL2](https://github.com/Holdi601/3DHeat-Ext-IL2) | IL-2 Sturmovik 맵을 3D 모델로 | [문서](https://holdi601.github.io/3DHeat-Ext-IL2/) |
 

@@ -3,7 +3,7 @@ title: Startsida
 nav_order: 1
 lang: sv
 source: index.md
-source_hash: "083becf22379"
+source_hash: "4723321adf14"
 nav_exclude: true
 search_exclude: true
 permalink: /sv/
@@ -123,7 +123,7 @@ och en GPU - se [Offline-rekonstruktion](../reconstruction-offline.md)):
 
 Filerna det här skriver läses in av **3DHeat-visaren** -
 [källkod](https://github.com/Holdi601/3DHeat), [dokumentation](https://holdi601.github.io/3DHeat/).
-Varvfiler går till dess Racinganalys-flik, `.glb`-nivåer till dess nivåpanel, och `hud`- och `locate`-tabellerna till
+Varvfiler går till dess Racinganalys-flik, `.glb`-nivåer till dess panel Bakgrund / nivå, och `hud`- och `locate`-tabellerna till
 dess Värmekarta-flik; hur visaren läser tabeller och matchfiler beskrivs i
 [En fil per match (.3dheat)](https://holdi601.github.io/3DHeat/container.html) och
 [Hämta data](https://holdi601.github.io/3DHeat/getting-data-in.html).

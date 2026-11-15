@@ -3,7 +3,7 @@ title: "Etusivu"
 nav_order: 1
 lang: fi
 source: index.md
-source_hash: "083becf22379"
+source_hash: "4723321adf14"
 nav_exclude: true
 search_exclude: true
 permalink: /fi/
@@ -11,10 +11,10 @@ permalink: /fi/
 # 3DHeat GameCapture {#dheat-gamecapture}
 
 **Mitä se on?** Työkalu, joka kirjaa ylös, mitä kilpailupeli kertoo ajotavastasi, yksi
-tiedosto kierrosta kohden. Se voi myös rakentaa karkean 3D-mallin tasosta videosta, jossa pelaat.
+tiedosto kierrosta kohden. Se voi myös rakentaa karkean 3D-mallin kentästä videosta, jossa pelaat.
 
 **Miksi käyttäisin sitä?** Nähdäksesi kierroksesi [3DHeat-katselimessa](https://holdi601.github.io/3DHeat/):
-missä jarrutit, missä olit hidas, miten kaksi kierrosta eroavat. Ja saadaksesi tason
+missä jarrutit, missä olit hidas, miten kaksi kierrosta eroavat. Ja saadaksesi kentän
 lämpökartan alle, kun kukaan ei ole tehnyt sille 3D-mallia.
 
 **Esimerkki:** kytke Forzan Data Out päälle, suorita yksi komento ja aja kaksi kierrosta.
@@ -30,11 +30,11 @@ Uusi komentorivin kanssa? Lue ensin [Ennen aloittamista](before-you-start.md).
    Assetto Corsa -pelien jaettu muisti, rally-pelien verkkosyötteet, BeamNG-modi, Trackmania-liitännäinen –
    ja kirjoittaa yhden `heat3d-lap`-tiedoston kierrosta tai osuutta kohden katselimen Kilpa-välilehteä varten.
    iRacing ei tarvitse tallentajaa: katselin lukee sen omat `.ibt`-tiedostot.
-2. **Tasot pelistä.** Se muuttaa sen, mitä näyttö näytti, kun kuljit tai ajoit tason läpi,
+2. **Kentät pelistä.** Se muuttaa sen, mitä näyttö näytti, kun kuljit tai ajoit kentän läpi,
    `.glb`-3D-malliksi, jonka katselin asettaa lämpökartan alle.
 3. **Oma ottelu jälkikäteen.** `hud` lukee oman tallenteesi HUD-näytön – omat toimet, kuolemat,
    tutkan radan ja tappolokin. `locate` (kokeellinen: se sijoittaa toistaiseksi vain harvat todelliset
-   kehykset) selvittää, mistä kohdasta kukin kehys on otettu tason 3D-mallilla.
+   kehykset) selvittää, mistä kohdasta kukin kehys on otettu kentän 3D-mallilla.
 
 Kaikki kolme noudattavat yhtä sääntöä: **mihinkään peliin ei injektoida mitään eikä mitään kiinnitetä
 koukulla**. Kehykset tulevat julkisesta näytönkaappaus-rajapinnasta, telemetria rajapinnoista, jotka pelit
@@ -72,7 +72,7 @@ tiedostot katselimen Kilpa-välilehdelle. Jokainen muu peli on yhden `--game`-as
 
 Katso [Telemetriatallentajat](../telemetry.md) jokaiselle pelille ja asetukselle.
 
-### Skannaa taso {#scan-a-level}
+### Skannaa kenttä {#scan-a-level}
 
 Kaksoisnapsauta **`scan.bat`** työkalun kansiossa. Se löytää Pythonin (ja tarjoutuu asentamaan sen
 wingetillä, jos sitä ei ole), luo yksityisen `.venv`-kansion ja avaa skannausikkunan. Ikkuna kertoo,
@@ -108,8 +108,8 @@ Rakentaaksesi tallenteen uudelleen offline, kameran reitti ratkaistuna kerralla 
 | [Komennot](../commands.md) | `route`, `telemetry`, `laps`, `reconstruct`, `hud`, `locate`, vaihe vaiheelta |
 | [Komentoviite](../cli-reference.md) | jokainen asetus, luotu `--help`-tulosteesta |
 | [HUD-tallenteen lukeminen](../hud-video.md) | `hud`: omat toimet, kuolemat, tutkan rata ja tappolokki tallenteesta |
-| [Kehysten paikantaminen tasossa](../locate.md) | `locate`: mistä kohdasta kukin kehys on otettu, tason geometriaa vasten |
-| [Tason rekonstruktio](../reconstruction.md) | putki kehyksistä `.glb`-tiedostoon |
+| [Kehysten paikantaminen kentässä](../locate.md) | `locate`: mistä kohdasta kukin kehys on otettu, kentän geometriaa vasten |
+| [Kentän rekonstruktio](../reconstruction.md) | putki kehyksistä `.glb`-tiedostoon |
 | [Skannausikkuna](../reconstruction-scan-ui.md) | jokainen säädin, pikanäppäin ja peittokuvan elementti |
 | [Kaappaus, maskit ja kehyksen laatu](../reconstruction-capture.md) | Windows Graphics Capture, avainkehykset, HUD-maskit, laatuneuvot |
 | [Syvyys](../reconstruction-depth.md) | Depth Anything V2, ONNX Runtime, mallin rakentaminen |
@@ -128,7 +128,7 @@ Rakentaaksesi tallenteen uudelleen offline, kameran reitti ratkaistuna kerralla 
 
 Tiedostot, joita tämä kirjoittaa, lataa **3DHeat-katselin** –
 [lähdekoodi](https://github.com/Holdi601/3DHeat), [dokumentaatio](https://holdi601.github.io/3DHeat/).
-Kierrostiedostot menevät sen Kilpa-välilehdelle, `.glb`-tasot sen Taso-paneeliin, `hud`- ja `locate`-taulukot
+Kierrostiedostot menevät sen Kilpa-välilehdelle, `.glb`-kentät sen Tausta / kenttä -paneeliin, `hud`- ja `locate`-taulukot
 sen Lämpökartta-välilehdelle. Miten katselin lukee taulukot ja ottelutiedostot, on kuvattu sivuilla
 [Yksi tiedosto ottelua kohden: `.3dheat`](https://holdi601.github.io/3DHeat/container.html) ja
 [Tietojen tuominen](https://holdi601.github.io/3DHeat/getting-data-in.html).
@@ -136,9 +136,9 @@ sen Lämpökartta-välilehdelle. Miten katselin lukee taulukot ja ottelutiedosto
 | Työkalu | Mitä se tekee | Dokumentaatio |
 |---|---|---|
 | [3DHeat-katselin](https://github.com/Holdi601/3DHeat) | näyttää lämpökartat, kilpailut ja ottelut 3D:nä selaimessa | [dokumentaatio](https://holdi601.github.io/3DHeat/) |
-| [GameFiles](https://github.com/Holdi601/3DHeat-GameFiles) | radat ja tasot pelien toimittamista tiedostoista 3D-malleina | [dokumentaatio](https://holdi601.github.io/3DHeat-GameFiles/) |
-| [GameCapture](https://github.com/Holdi601/3DHeat-GameCapture) | kierrosten telemetria kilpailupeleistä; tasot rakennettu pelivideosta | [dokumentaatio](https://holdi601.github.io/3DHeat-GameCapture/) |
-| [Unreal Exporter](https://github.com/Holdi601/3DHeat-UnrealExporter) | Unreal Editor -liitännäinen, joka vie tason yhtenä 3D-mallina | [dokumentaatio](https://holdi601.github.io/3DHeat-UnrealExporter/) |
+| [GameFiles](https://github.com/Holdi601/3DHeat-GameFiles) | radat ja kentät pelien toimittamista tiedostoista 3D-malleina | [dokumentaatio](https://holdi601.github.io/3DHeat-GameFiles/) |
+| [GameCapture](https://github.com/Holdi601/3DHeat-GameCapture) | kierrosten telemetria kilpailupeleistä; kentät rakennettu pelivideosta | [dokumentaatio](https://holdi601.github.io/3DHeat-GameCapture/) |
+| [Unreal Exporter](https://github.com/Holdi601/3DHeat-UnrealExporter) | Unreal Editor -liitännäinen, joka vie kentän yhtenä 3D-mallina | [dokumentaatio](https://holdi601.github.io/3DHeat-UnrealExporter/) |
 | [CS2](https://github.com/Holdi601/3DHeat-CS2) | Counter-Strike 2 -demot taulukoiksi ja ottelutiedostoiksi; kartat 3D-malleiksi | [dokumentaatio](https://holdi601.github.io/3DHeat-CS2/) |
 | [Watcher](https://github.com/Holdi601/3DHeat-Watcher) | tallentaa pelaamisesi taustalla pelien julkaisemasta datasta | [dokumentaatio](https://holdi601.github.io/3DHeat-Watcher/) |
 | [Ext-WarThunder](https://github.com/Holdi601/3DHeat-Ext-WarThunder) | War Thunder -tallenteet taulukoiksi ja ottelutiedostoiksi | [dokumentaatio](https://holdi601.github.io/3DHeat-Ext-WarThunder/) |

@@ -3,14 +3,14 @@ title: "Heim"
 nav_order: 1
 lang: is
 source: index.md
-source_hash: "083becf22379"
+source_hash: "4723321adf14"
 nav_exclude: true
 search_exclude: true
 permalink: /is/
 ---
 # 3DHeat GameCapture {#dheat-gamecapture}
 
-**Hvað er þetta?** Tól sem skrifar niður það sem kappakstursleikur segir því um aksturinn þinn, ein skrá
+**Hvað er þetta?** Verkfæri sem skrifar niður það sem kappakstursleikur segir því um aksturinn þinn, ein skrá
 fyrir hvern hring. Það getur líka endurbyggt gróft 3D líkan af borði úr myndbandi af þér að spila.
 
 **Hvers vegna ætti ég að nota það?** Til að sjá hringina þína í [3DHeat-skoðaranum](https://holdi601.github.io/3DHeat/):
@@ -22,7 +22,7 @@ hitakortinu þínu þegar enginn á 3D líkan af því.
 
 ![mælingaupptaka tveggja hringja úr gervistreymi Forza](../assets/img/telemetry-run.svg)
 
-Ertu ný/r í skipanalínunni? Lestu fyrst [Áður en þú byrjar](before-you-start.md).
+Hefurðu aldrei notað skipanalínu? Lestu fyrst [Áður en þú byrjar](before-you-start.md).
 
 ## Verkefnin þrjú {#the-three-jobs}
 
@@ -73,7 +73,7 @@ Sjá [Mælingaskráarar](../telemetry.md) fyrir hvern leik og valkost.
 
 ### Skannaðu borð {#scan-a-level}
 
-Tvísmelltu á **`scan.bat`** í möppu tólsins. Það finnur Python (og býðst til að setja það upp með
+Tvísmelltu á **`scan.bat`** í möppu verkfærisins. Það finnur Python (og býðst til að setja það upp með
 winget ef ekkert er til), býr til einkarekið `.venv`, og opnar skönnunargluggann. Glugginn segir
 hvað vantar, til hvers hver pakki er og hversu stórt niðurhalið er, og setur ekkert upp
 án þess að þú svarir já. Sjá [Keyrsluumhverfi og ósjálfstæði](../runtime.md) og
@@ -133,9 +133,9 @@ flipann Hitakort; hvernig skoðarinn les töflur og leikskrár er í
 [Ein skrá fyrir hvern leik (.3dheat)](https://holdi601.github.io/3DHeat/container.html) og
 [Að koma gögnum inn](https://holdi601.github.io/3DHeat/getting-data-in.html).
 
-| Tól | Hvað það gerir | Skjöl |
+| Verkfæri | Hvað það gerir | Skjöl |
 |---|---|---|
-| [3DHeat viewer](https://github.com/Holdi601/3DHeat) | sýnir hitakort, kappakstur og leiki í 3D, í vafranum | [skjöl](https://holdi601.github.io/3DHeat/) |
+| [3DHeat-skoðari](https://github.com/Holdi601/3DHeat) | sýnir hitakort, kappakstur og leiki í 3D, í vafranum | [skjöl](https://holdi601.github.io/3DHeat/) |
 | [GameFiles](https://github.com/Holdi601/3DHeat-GameFiles) | brautir og borð úr skrám sem leikir senda með, sem 3D líkön | [skjöl](https://holdi601.github.io/3DHeat-GameFiles/) |
 | [GameCapture](https://github.com/Holdi601/3DHeat-GameCapture) | hringmælingagögn úr kappakstursleikjum; borð endurbyggð úr leikmyndbandi | [skjöl](https://holdi601.github.io/3DHeat-GameCapture/) |
 | [Unreal Exporter](https://github.com/Holdi601/3DHeat-UnrealExporter) | viðbót fyrir Unreal Editor sem flytur borð út sem 3D líkan | [skjöl](https://holdi601.github.io/3DHeat-UnrealExporter/) |
@@ -144,7 +144,7 @@ flipann Hitakort; hvernig skoðarinn les töflur og leikskrár er í
 | [Ext-WarThunder](https://github.com/Holdi601/3DHeat-Ext-WarThunder) | War Thunder upptökur í leikskrár | [skjöl](https://holdi601.github.io/3DHeat-Ext-WarThunder/) |
 | [Ext-WoT](https://github.com/Holdi601/3DHeat-Ext-WoT) | World of Tanks upptökur í leikskrár | [skjöl](https://holdi601.github.io/3DHeat-Ext-WoT/) |
 | [Ext-WoWs](https://github.com/Holdi601/3DHeat-Ext-WoWs) | World of Warships upptökur í leikskrár | [skjöl](https://holdi601.github.io/3DHeat-Ext-WoWs/) |
-| [Ext-Squad](https://github.com/Holdi601/3DHeat-Ext-Squad) | Squad þjónadem í leikskrár | [skjöl](https://holdi601.github.io/3DHeat-Ext-Squad/) |
+| [Ext-Squad](https://github.com/Holdi601/3DHeat-Ext-Squad) | Squad þjónsdemo í leikskrár | [skjöl](https://holdi601.github.io/3DHeat-Ext-Squad/) |
 | [Ext-DCS](https://github.com/Holdi601/3DHeat-Ext-DCS) | DCS World kort í 3D líkön | [skjöl](https://holdi601.github.io/3DHeat-Ext-DCS/) |
 | [Ext-IL2](https://github.com/Holdi601/3DHeat-Ext-IL2) | IL-2 Sturmovik kort í 3D líkön | [skjöl](https://holdi601.github.io/3DHeat-Ext-IL2/) |
 

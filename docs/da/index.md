@@ -3,7 +3,7 @@ title: Start
 nav_order: 1
 lang: da
 source: index.md
-source_hash: "083becf22379"
+source_hash: "4723321adf14"
 nav_exclude: true
 search_exclude: true
 permalink: /da/
@@ -13,12 +13,12 @@ permalink: /da/
 **Hvad er det?** Et værktøj, der skriver ned, hvad et løbsspil fortæller det om din kørsel, én fil
 pr. omgang. Det kan også genskabe en grov 3D-model af en bane ud fra en video af dig, der spiller.
 
-**Hvorfor skulle jeg bruge det?** For at se dine omgange i [3DHeat-fremviseren](https://holdi601.github.io/3DHeat/):
+**Hvorfor skulle jeg bruge det?** For at se dine omgange i [3DHeat-vieweren](https://holdi601.github.io/3DHeat/):
 hvor du bremsede, hvor du var langsom, og hvordan to omgange adskiller sig. Og for at have banen under dit
 varmekort, når ingen har en 3D-model af den.
 
-**Eksempel:** slå Forzas Data Out til, kør ét kommando, og kør to omgange. To omgangsfiler dukker op i
-`laps\`. Læg dem på fremviserens Løbsfane.
+**Eksempel:** slå Forzas Data Out til, kør én kommando, og kør to omgange. To omgangsfiler dukker op i
+`laps\`. Læg dem på viewerens Løbsanalyse-fanen.
 
 ![telemetri, der optager to omgange af et syntetisk Forza-signal](../assets/img/telemetry-run.svg)
 
@@ -28,10 +28,10 @@ Ny til kommandolinjen? Læs [Før du går i gang](before-you-start.md) først.
 
 1. **Omgangstelemetri.** Det optager hver kanal, et løbsspil udgiver - Forzas Data Out, Assetto Corsa-
    spillenes delte hukommelse, rally-spillenes netværksfeeds, en BeamNG-mod, et Trackmania-plugin - og skriver
-   én `heat3d-lap`-fil pr. omgang eller etape til fremviserens Løbsfane. iRacing kræver ingen optager: fremviseren læser
+   én `heat3d-lap`-fil pr. omgang eller etape til viewerens Løbsanalyse-fanen. iRacing kræver ingen optager: vieweren læser
    sine egne `.ibt`-filer.
 2. **Baner fra spil.** Det gør det, skærmen viste, mens du gik eller kørte gennem en
-   bane, til en 3D-model i `.glb`, som fremviseren lægger under varmekortet.
+   bane, til en 3D-model i `.glb`, som vieweren lægger under varmekortet.
 3. **Din egen kamp, bagefter.** `hud` læser HUD'et i din egen optagelse - dine handlinger, dødsfald,
    minikortets spor og dræbningsfeed. `locate` (eksperimentelt: den placerer endnu få rigtige billeder)
    finder ud af, hvor hvert billede er taget, på en banes 3D-model.
@@ -40,7 +40,7 @@ Alle tre følger én regel: **intet indsprøjtes i et spil, og intet hookes**. B
 offentlige API til skærmoptagelse, telemetrien fra grænseflader, spillene udgiver til det. Se
 [Reglerne](../rules.md).
 
-![Hvad der går ind, hvilken kommando, hvad der kommer ud, hvor fremviseren viser det](../assets/img/da/overview.svg)
+![Hvad der går ind, hvilken kommando, hvad der kommer ud, hvor vieweren viser det](../assets/img/da/overview.svg)
 
 Koden er Python (pakken `heat3d_capture`), MIT-licenseret. De dybde- og positionsmodeller, den kan
 køre, har deres egne licenser - se [Modeller og licenser](../models-and-licences.md).
@@ -62,8 +62,8 @@ python -m venv .venv
 ```
 
 **Du bør se** `listening on port 5300. Laps go to laps. Ctrl+C to stop.`, derefter en linje pr. omgang, når du
-krydser målstregen, som på billedet ovenfor. Tryk Ctrl+C for at stoppe. Læg filerne fra `laps\` på fremviserens
-Løbsfane. Alle andre spil er ét `--game` væk:
+krydser målstregen, som på billedet ovenfor. Tryk Ctrl+C for at stoppe. Læg filerne fra `laps\` på viewerens
+Løbsanalyse-fanen. Alle andre spil er ét `--game` væk:
 
 ```powershell
 .venv\Scripts\python -m heat3d_capture telemetry --game acc -o laps
@@ -100,9 +100,9 @@ og en GPU - se [Offline-rekonstruktion](../reconstruction-offline.md)):
 | [Rally-spil](../telemetry-rally.md) | EA SPORTS WRC, DiRT Rally 2.0 / 1 / DiRT 4, Richard Burns Rally |
 | [BeamNG.drive](../telemetry-beamng.md) | `heat3d`-protokolmodden |
 | [Trackmania](../telemetry-trackmania.md) | `Heat3dRecorder`-pluginnet til Openplanet |
-| [iRacing](../telemetry-iracing.md) | Læsning af `.ibt`-filer i fremviseren |
+| [iRacing](../telemetry-iracing.md) | Læsning af `.ibt`-filer i vieweren |
 | [Opdeling i omgange og etaper](../lap-splitting.md) | `LapSplitter`, `CounterSplitter`, `LineSplitter`, `StageSplitter` |
-| [Slip, drift og afledte kanaler](../slip-and-drift.md) | Hvordan slip skaleres, og hvad fremviseren udleder |
+| [Slip, drift og afledte kanaler](../slip-and-drift.md) | Hvordan slip skaleres, og hvad vieweren udleder |
 | [Filen heat3d-lap](../lap-format.md) | Omgangsfilens format, kanaler, enheder, `meta` |
 | [Spil](../games.md) | Pr. spil: hvordan man optager, hvad der sendes, hvilke baner der kan eksporteres |
 | [Kommandoer](../commands.md) | `route`, `telemetry`, `laps`, `reconstruct`, `hud`, `locate`, trin for trin |
@@ -115,7 +115,7 @@ og en GPU - se [Offline-rekonstruktion](../reconstruction-offline.md)):
 | [Dybde](../reconstruction-depth.md) | Depth Anything V2, ONNX Runtime, opbygning af modellen |
 | [Kameraposition og skala](../reconstruction-pose.md) | Odometri, relokalisering, telemetripositioner, jordskala, bundle adjustment |
 | [Sammensmeltning, dækning og farve](../reconstruction-fusion-and-texture.md) | Belægningsvolumen, dækningsgitteret, svage steder, vertexfarve |
-| [.glb-outputtet](../glb-output.md) | Filen, fremviseren indlæser |
+| [.glb-outputtet](../glb-output.md) | Filen, vieweren indlæser |
 | [Offline-rekonstruktion](../reconstruction-offline.md) | `reconstruct`, VGGT-vinduer og sammensyning |
 | [Modeller og licenser](../models-and-licences.md) | Størrelser af Depth Anything V2, VGGT, pakkerne |
 | [Kørsel og afhængigheder](../runtime.md) | Preflight, backends, ydelsesniveauer |
@@ -126,16 +126,16 @@ og en GPU - se [Offline-rekonstruktion](../reconstruction-offline.md)):
 
 ## Del af 3DHeat {#part-of-3dheat}
 
-Filerne, dette skriver, indlæses af **3DHeat-fremviseren** -
+Filerne, dette skriver, indlæses af **3DHeat-vieweren** -
 [kilde](https://github.com/Holdi601/3DHeat), [dokumentation](https://holdi601.github.io/3DHeat/).
-Omgangsfiler går til dens Løbsfane, `.glb`-baner til dens Baggrund / bane-panel, og `hud`- og `locate`-tabellerne til
-dens Heatmap-fane; hvordan fremviseren læser tabeller og kampfiler, står i
+Omgangsfiler går til dens Løbsanalyse-fanen, `.glb`-baner til dens Baggrund / bane-panel, og `hud`- og `locate`-tabellerne til
+dens Heatmap-fane; hvordan vieweren læser tabeller og kampfiler, står i
 [Én fil pr. kamp (.3dheat)](https://holdi601.github.io/3DHeat/container.html) og
 [Hent data ind](https://holdi601.github.io/3DHeat/getting-data-in.html).
 
 | Værktøj | Hvad det gør | Dokumentation |
 |---|---|---|
-| [3DHeat-fremviser](https://github.com/Holdi601/3DHeat) | viser varmekort, løb og kampe i 3D, i browseren | [dokumentation](https://holdi601.github.io/3DHeat/) |
+| [3DHeat-viewer](https://github.com/Holdi601/3DHeat) | viser varmekort, løb og kampe i 3D, i browseren | [dokumentation](https://holdi601.github.io/3DHeat/) |
 | [GameFiles](https://github.com/Holdi601/3DHeat-GameFiles) | baner og kort ud af de filer, spil leverer, som 3D-modeller | [dokumentation](https://holdi601.github.io/3DHeat-GameFiles/) |
 | [GameCapture](https://github.com/Holdi601/3DHeat-GameCapture) | omgangstelemetri fra løbsspil; baner genskabt ud fra spilvideo | [dokumentation](https://holdi601.github.io/3DHeat-GameCapture/) |
 | [Unreal Exporter](https://github.com/Holdi601/3DHeat-UnrealExporter) | et Unreal Editor-plugin, der eksporterer en bane som en 3D-model | [dokumentation](https://holdi601.github.io/3DHeat-UnrealExporter/) |

@@ -18,7 +18,7 @@ GameCapture ass e Python-Programm. Dir braucht **Python 3.10 oder méi nei**.
 
 1. Gitt op [python.org/downloads](https://www.python.org/downloads/) a luet dat neist
    Python fir Windows erof.
-2. Start den Installer. Um éischte Bildschierm **"Add python.exe to PATH" ukräizen**. Ouni d'Kräiz
+2. Startt den Installer. Um éischte Bildschierm **"Add python.exe to PATH" ukräizen**. Ouni d'Kräiz
    fënnt d'Terminal Python net.
 3. Klickt op *Install Now*.
 
@@ -30,14 +30,14 @@ Git lued d'Tool erof. Hollt et vu [git-scm.com](https://git-scm.com/download/win
 `winget install Git.Git` aus. Wann Dir Git net wëllt, benotzt *Code > Download ZIP* op der
 [GitHub-Säit](https://github.com/Holdi601/3DHeat-GameCapture) an entzippt et.
 
-## 3. E Terminal an engem Ordner opmaachen {#open-a-terminal-in-a-folder}
+## 3. E Terminal an engem Dossier opmaachen {#open-a-terminal-in-a-folder}
 
 E Terminal ass e Fënster, wou Dir Kommandoe tippt. Dës Säite benotzen **PowerShell**, dat all
 Windows-PC huet.
 
-- Mécht den Ordner am File Explorer op, klickt an d'Adressleist, tippt `powershell` an dréckt Enter.
-  PowerShell geet **an deem Ordner** op.
-- Oder mécht PowerShell vum Startmenü op a gitt mat `cd` an en Ordner:
+- Mécht den Dossier am File Explorer op, klickt an d'Adressleist, tippt `powershell` an dréckt Enter.
+  PowerShell geet **an deem Dossier** op.
+- Oder mécht PowerShell vum Startmenü op a gitt mat `cd` an en Dossier:
 
 ```powershell
 cd "C:\Games\Tools"
@@ -61,7 +61,7 @@ python -m venv .venv
 .venv\Scripts\python -m pip install -r requirements.txt
 ```
 
-`python -m venv .venv` mécht en privaten Ordner fir d'Packagen vum Tool, sou datt se sech net mat
+`python -m venv .venv` mécht en privaten Dossier fir d'Packagen vum Tool, sou datt se sech net mat
 iergendengem anere vun Ärem PC vermëschen. All Kommando fänkt dann mat `.venv\Scripts\python` un.
 
 **Dir sollt gesinn**, datt déi lescht Zeil `Successfully installed ...` seet. Préift, ob d'Tool funktionéiert:
@@ -74,7 +74,7 @@ iergendengem anere vun Ärem PC vermëschen. All Kommando fänkt dann mat `.venv
 
 ![D'Lëscht vun de Kommandoen, déi --help ausgëtt](../assets/img/cli-help.svg)
 
-Dir kënnt den Ordner och eemol *aktivéieren* an dann just `python` tippen:
+Dir kënnt den Dossier och eemol *aktivéieren* an dann just `python` tippen:
 
 | Terminal | Aktivéieren | Dann |
 |---|---|---|
@@ -96,7 +96,7 @@ Wann PowerShell *running scripts is disabled* seet, féiert eemol
 | Dir gesitt | Et heescht | Maacht dat |
 |---|---|---|
 | `'python' is not recognized` | Python ass net um PATH | Python nach eemol mat der PATH-Kräiz installéieren, dann en neit Terminal opmaachen. |
-| `No module named heat3d_capture` | d'Terminal ass net am Ordner vum Tool | Mat `cd` an den `3DHeat-GameCapture`-Ordner goen. |
+| `No module named heat3d_capture` | d'Terminal ass net am Dossier vum Tool | Mat `cd` an den `3DHeat-GameCapture`-Dossier goen. |
 | `No module named numpy` (oder en anere Package) | d'Packagen sinn net installéiert, oder Dir hutt en anert Python benotzt | D'`pip install -r requirements.txt`-Zeil nach eemol ausféieren, mat `.venv\Scripts\python`. |
 | `'.venv' is not recognized` | Dir hutt `/` an cmd getippt | Backslashes benotzen: `.venv\Scripts\python`. |
 | `ffmpeg was not found on PATH` | ffmpeg feelt | Kuckt Schrëtt 6, dann en neit Terminal opmaachen. |

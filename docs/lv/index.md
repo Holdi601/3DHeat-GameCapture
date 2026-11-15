@@ -3,28 +3,28 @@ title: Sākums
 nav_order: 1
 lang: lv
 source: index.md
-source_hash: "083becf22379"
+source_hash: "4723321adf14"
 nav_exclude: true
 search_exclude: true
 permalink: /lv/
 ---
 # 3DHeat GameCapture {#dheat-gamecapture}
 
-**Kas tas ir?** Rīks, kas ieraksta to, ko sacensību spēle stāsta par tavu braukšanu, pa vienam failam uz braucienu. Tas var arī atjaunot aptuvenu līmeņa 3D modeli no tava spēles video.
+**Kas tas ir?** Rīks, kas ieraksta to, ko sacensību spēle stāsta par jūsu braukšanu, pa vienam failam uz braucienu. Tas var arī atjaunot aptuvenu līmeņa 3D modeli no tava spēles video.
 
-**Kāpēc to lietot?** Lai redzētu savus braucienus [3DHeat skatītājā](https://holdi601.github.io/3DHeat/): kur bremzēji, kur biji lēns, kā atšķiras divi braucieni. Un lai līmenis būtu zem tavas siltumkartes, kad neviens nav to modelējis 3D.
+**Kāpēc to lietot?** Lai redzētu savus braucienus [3DHeat skatītājā](https://holdi601.github.io/3DHeat/): kur bremzējāt, kur bijāt lēns, kā atšķiras divi braucieni. Un lai līmenis būtu zem jūsu siltumkartes, kad neviens nav to modelējis 3D.
 
-**Piemērs:** ieslēdz Forza Data Out, palaid vienu komandu un nobrauc divus braucienus. Mapē `laps\` parādās divi braucienu faili. Ieliec tos skatītāja Sacensību cilnē.
+**Piemērs:** ieslēdziet Forza Data Out, palaidiet vienu komandu un nobrauciet divus braucienus. Mapē `laps\` parādās divi braucienu faili. Ieliekiet tos skatītāja Sacensību cilnē.
 
 ![Telemetrija, kas ieraksta divus braucienus no sintētiska Forza plūsmas](../assets/img/telemetry-run.svg)
 
-Nekad nav strādāts ar komandrindu? Vispirms izlasi [Pirms sākat](before-you-start.md).
+Nekad neesat strādājis ar komandrindu? Vispirms izlasiet [Pirms sākat](before-you-start.md).
 
 ## Trīs darbi {#the-three-jobs}
 
 1. **Braucienu telemetrija.** Tas ieraksta katru kanālu, ko sacensību spēle publicē - Forza Data Out, Assetto Corsa spēļu koplietotā atmiņa, rallija spēļu tīkla plūsmas, BeamNG modifikācija, Trackmania spraudnis - un raksta vienu `heat3d-lap` failu katram braucienam vai posmam skatītāja Sacensību cilnei. iRacing nevajag ierakstītāju: skatītājs lasa pašus `.ibt` failus.
-2. **Līmeņi no spēles.** Tas pārvērš to, ko ekrānā redzēja, kamēr staigāji vai brauci pa līmeni, par `.glb` 3D modeli, ko skatītājs novieto zem siltumkartes.
-3. **Tavs pats maču, pēc tam.** `hud` lasa tava ieraksta HUD - tavas darbības, nāves, mini kartes trasi un nogalinājumu sarakstu. `locate` (eksperimentāls: tas līdz šim novieto nedaudzus reālus kadrus) nosaka, kur katrs kadrs uzņemts, uz līmeņa 3D modeļa.
+2. **Līmeņi no spēles.** Tas pārvērš to, ko ekrānā redzēja, kamēr staigājāt vai braucāt pa līmeni, par `.glb` 3D modeli, ko skatītājs novieto zem siltumkartes.
+3. **Jūsu pats maču, pēc tam.** `hud` lasa jūsu ieraksta HUD - jūsu darbības, nāves, mini kartes trasi un nogalinājumu sarakstu. `locate` (eksperimentāls: tas līdz šim novieto nedaudzus reālus kadrus) nosaka, kur katrs kadrs uzņemts, uz līmeņa 3D modeļa.
 
 Visi trīs ievēro vienu noteikumu: **nekas netiek ievadīts spēlē un nekas netiek aizķerts**. Kadri nāk no publiskā ekrāna uztveres API, telemetrija - no saskarnēm, ko spēles publicē šim nolūkam. Skat. [Noteikumi](../rules.md).
 
@@ -34,7 +34,7 @@ Kods ir Python (pakotne `heat3d_capture`), MIT licence. Dziļuma un pozas modeļ
 
 ## Ātrais sākums {#quick-start}
 
-### Ieraksti braucienus {#record-laps}
+### Ierakstiet braucienus {#record-laps}
 
 Vajag Python 3.10 vai jaunāku ([Pirms sākat](before-you-start.md)). PowerShell:
 
@@ -48,7 +48,7 @@ python -m venv .venv
 .venv\Scripts\python -m heat3d_capture telemetry -o laps
 ```
 
-**Tev vajadzētu redzēt** `listening on port 5300. Laps go to laps. Ctrl+C to stop.`, tad rindu katram braucienam, kad šķērso finišu, kā iepriekš redzamajā attēlā. Lai apturētu, nospied Ctrl+C. Ieliec failus no `laps\` skatītāja Sacensību cilnē.
+**Jums vajadzētu redzēt** `listening on port 5300. Laps go to laps. Ctrl+C to stop.`, tad rindu katram braucienam, kad šķērso finišu, kā iepriekš redzamajā attēlā. Lai apturētu, nospiediet Ctrl+C. Ieliec failus no `laps\` skatītāja Sacensību cilnē.
 Katra cita spēle ir viena `--game` opcija attālumā:
 
 ```powershell
@@ -58,9 +58,9 @@ Katra cita spēle ir viena `--game` opcija attālumā:
 
 Katrai spēlei un iespējai skat. [Telemetrijas ierakstītāji](../telemetry.md).
 
-### Skenē līmeni {#scan-a-level}
+### Skenējiet līmeni {#scan-a-level}
 
-Divreiz noklikšķini uz **`scan.bat`** rīka mapē. Tas atrod Python (un, ja tā nav, piedāvā uzstādīt to ar winget), izveido privātu `.venv` un atver skenēšanas logu. Logs pasaka, kas trūkst, kam kalpo katra pakotne un cik liela ir lejupielāde, un neuzstāda neko bez apstiprinājuma. Skat. [Izpildlaiks un atkarības](../runtime.md) un [Skenēšanas logs](../reconstruction-scan-ui.md).
+Divreiz noklikšķiniet uz **`scan.bat`** rīka mapē. Tas atrod Python (un, ja tā nav, piedāvā uzstādīt to ar winget), izveido privātu `.venv` un atveriet skenēšanas logu. Logs pasaka, kas trūkst, kam kalpo katra pakotne un cik liela ir lejupielāde, un neuzstāda neko bez apstiprinājuma. Skat. [Izpildlaiks un atkarības](../runtime.md) un [Skenēšanas logs](../reconstruction-scan-ui.md).
 
 Ar roku: `.venv\Scripts\python -m heat3d_capture.ui`.
 
@@ -74,7 +74,7 @@ Lai atjaunotu ierakstu bezsaistē, ar kameras ceļu atrisinātu vienlaikus (vaja
 
 | Lapa | Ko tā aptver |
 |---|---|
-| [Pirms sākat](before-you-start.md) | Python, terminālis, pirmā komanda, biežākās kļūdas |
+| [Pirms sākat](before-you-start.md) | Python, termināls, pirmā komanda, biežākās kļūdas |
 | [Noteikumi](../rules.md) | Nav ievadīšanas, tikai publicētas saskarnes, un ko tas maksā |
 | [Telemetrijas ierakstītāji](../telemetry.md) | Komanda `telemetry` un pārskats par katru spēli |
 | [Forza](../telemetry-forza.md) | Data Out, izkārtojuma noteikšana, FH Companion relejs un tā `.tele.gz` |
@@ -89,7 +89,7 @@ Lai atjaunotu ierakstu bezsaistē, ar kameras ceļu atrisinātu vienlaikus (vaja
 | [Spēles](../games.md) | Katrai spēlei: kā ierakstīt, kas tiek sūtīts, kuras trases var eksportēt |
 | [Komandas](../commands.md) | `route`, `telemetry`, `laps`, `reconstruct`, `hud`, `locate`, soli pa solim |
 | [Komandu atsauce](../cli-reference.md) | katra iespēja, ģenerēta no `--help` |
-| [Lasīt HUD no ieraksta](../hud-video.md) | `hud`: tavas darbības, nāves, mini kartes trase un nogalinājumu saraksts no ieraksta |
+| [Lasīt HUD no ieraksta](../hud-video.md) | `hud`: jūsu darbības, nāves, mini kartes trase un nogalinājumu saraksts no ieraksta |
 | [Kadru atrašana līmenī](../locate.md) | `locate`: kur uzņemts katrs kadrs, pret līmeņa ģeometriju |
 | [Līmeņa rekonstrukcija](../reconstruction.md) | Cauruļvads no kadriem līdz `.glb` |
 | [Skenēšanas logs](../reconstruction-scan-ui.md) | Katra vadība, karsttaustiņš un pārklājuma elements |
@@ -122,7 +122,7 @@ tā Siltumkartes cilni; kā skatītājs lasa tabulas un maču failus, aprakstīt
 | [GameCapture](https://github.com/Holdi601/3DHeat-GameCapture) | braucienu telemetrija no sacensību spēlēm; līmeņi, atjaunoti no spēles video | [dokumentācija](https://holdi601.github.io/3DHeat-GameCapture/) |
 | [Unreal Exporter](https://github.com/Holdi601/3DHeat-UnrealExporter) | Unreal Editor spraudnis, kas eksportē līmeni kā 3D modeli | [dokumentācija](https://holdi601.github.io/3DHeat-UnrealExporter/) |
 | [CS2](https://github.com/Holdi601/3DHeat-CS2) | Counter-Strike 2 demo maču failos; kartes 3D modeļos | [dokumentācija](https://holdi601.github.io/3DHeat-CS2/) |
-| [Watcher](https://github.com/Holdi601/3DHeat-Watcher) | fona režīmā ieraksta tavu spēli no tā, ko spēles publicē | [dokumentācija](https://holdi601.github.io/3DHeat-Watcher/) |
+| [Watcher](https://github.com/Holdi601/3DHeat-Watcher) | fona režīmā ieraksta jūsu spēli no tā, ko spēles publicē | [dokumentācija](https://holdi601.github.io/3DHeat-Watcher/) |
 | [Ext-WarThunder](https://github.com/Holdi601/3DHeat-Ext-WarThunder) | War Thunder ieraksti maču failos | [dokumentācija](https://holdi601.github.io/3DHeat-Ext-WarThunder/) |
 | [Ext-WoT](https://github.com/Holdi601/3DHeat-Ext-WoT) | World of Tanks ieraksti maču failos | [dokumentācija](https://holdi601.github.io/3DHeat-Ext-WoT/) |
 | [Ext-WoWs](https://github.com/Holdi601/3DHeat-Ext-WoWs) | World of Warships ieraksti maču failos | [dokumentācija](https://holdi601.github.io/3DHeat-Ext-WoWs/) |
