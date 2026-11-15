@@ -1,5 +1,5 @@
 ---
-title: "Prije nego počneš"
+title: "Prije nego počnete"
 nav_order: 1.5
 lang: "bs"
 source: before-you-start.md
@@ -7,52 +7,52 @@ source_hash: "0c8bf313b1db"
 nav_exclude: true
 search_exclude: true
 ---
-# Prije nego počneš {#before-you-start}
+# Prije nego počnete {#before-you-start}
 
-Komandna linija ti je nova? Ova stranica te vodi od ničega do prve naredbe koja radi. Traje
+Komandna linija vam je nova? Ova stranica vas vodi od ničega do prve komande koja radi. Traje
 oko deset minuta, jednom.
 
-## 1. Instaliraj Python {#install-python}
+## 1. Instalirajte Python {#install-python}
 
-GameCapture je Python program. Treba ti **Python 3.10 ili noviji**.
+GameCapture je Python program. Treba vam **Python 3.10 ili noviji**.
 
-1. Idi na [python.org/downloads](https://www.python.org/downloads/) i preuzmi najnoviji
+1. Idite na [python.org/downloads](https://www.python.org/downloads/) i preuzmite najnoviji
    Python za Windows.
-2. Pokreni instalacijski program. Na prvom ekranu **označi "Add python.exe to PATH"**. Bez te oznake
+2. Pokrenite instalacijski program. Na prvom ekranu **označite "Add python.exe to PATH"**. Bez te oznake
    terminal neće naći Python.
-3. Klikni *Install Now*.
+3. Kliknite *Install Now*.
 
 Ili, u terminalu: `winget install Python.Python.3.12`.
 
-## 2. Instaliraj Git {#install-git}
+## 2. Instalirajte Git {#install-git}
 
-Git preuzima alat. Nabavi ga sa [git-scm.com](https://git-scm.com/download/win) ili pokreni
-`winget install Git.Git`. Ako ne želiš Git, na
-[GitHub stranici](https://github.com/Holdi601/3DHeat-GameCapture) koristi *Code > Download ZIP* i raspakuj ga.
+Git preuzima alat. Nabavite ga sa [git-scm.com](https://git-scm.com/download/win) ili pokrenite
+`winget install Git.Git`. Ako ne želite Git, na
+[GitHub stranici](https://github.com/Holdi601/3DHeat-GameCapture) koristite *Code > Download ZIP* i raspakujte ga.
 
-## 3. Otvori terminal u folderu {#open-a-terminal-in-a-folder}
+## 3. Otvorite terminal u folderu {#open-a-terminal-in-a-folder}
 
-Terminal je prozor u koji upisuješ naredbe. Ove stranice koriste **PowerShell**, koji ima svaki
+Terminal je prozor u koji upisujete komande. Ove stranice koriste **PowerShell**, koji ima svaki
 Windows računar.
 
-- Otvori folder u File Exploreru, klikni u adresnu traku, upiši `powershell` i pritisni Enter.
+- Otvorite folder u File Exploreru, kliknite u adresnu traku, upišite `powershell` i pritisnite Enter.
   PowerShell se otvara **u tom folderu**.
-- Ili otvori PowerShell iz Start izbornika i dođi do foldera pomoću `cd`:
+- Ili otvorite PowerShell iz Start izbornika i dođite do foldera pomoću `cd`:
 
 ```powershell
 cd "C:\Games\Tools"
 ```
 
-## 4. Čitanje naredbi na ovim stranicama {#read-the-commands-on-these-pages}
+## 4. Čitanje komandi na ovim stranicama {#read-the-commands-on-these-pages}
 
-- Upiši svaki red naredbe i pritisni Enter.
-- Tekst u špicastim zagradama `< >` je **rezervirano mjesto**: stavi tamo vlastitu vrijednost, bez zagrada.
+- Upišite svaki red komande i pritisnite Enter.
+- Tekst u špicastim zagradama `< >` je **rezervirano mjesto**: stavite tamo vlastitu vrijednost, bez zagrada.
   `<recording>.mp4` znači naziv datoteke poput `match1.mp4`.
 - Tekst u uglastim zagradama `[ ]`, kao `[--fps 5]`, je **neobavezan**.
 - Putanja s razmacima treba navodnike: `"C:\My Videos\match1.mp4"`.
-- Redovi koji počinju s `#` su komentari. Ne upisuješ ih.
+- Redovi koji počinju s `#` su komentari. Ne upisujete ih.
 
-## 5. Nabavi alat i njegove pakete {#get-the-tool-and-its-packages}
+## 5. Nabavite alat i njegove pakete {#get-the-tool-and-its-packages}
 
 ```powershell
 git clone https://github.com/Holdi601/3DHeat-GameCapture
@@ -62,43 +62,43 @@ python -m venv .venv
 ```
 
 `python -m venv .venv` pravi privatni folder za pakete alata, da se ne miješaju s
-ničim drugim na tvom računaru. Svaka naredba zatim počinje s `.venv\Scripts\python`.
+ničim drugim na vašem računaru. Svaka komanda zatim počinje s `.venv\Scripts\python`.
 
-**Trebao bi vidjeti** da zadnji red kaže `Successfully installed ...`. Provjeri radi li alat:
+**Trebali biste vidjeti** da zadnji red kaže `Successfully installed ...`. Provjerite radi li alat:
 
 ```powershell
 .venv\Scripts\python -m heat3d_capture --help
 ```
 
-**Trebao bi vidjeti** popis naredbi koji počinje s `usage: heat3d_capture`.
+**Trebali biste vidjeti** popis komandi koji počinje s `usage: heat3d_capture`.
 
-![Popis naredbi koji ispisuje --help](../assets/img/cli-help.svg)
+![Popis komandi koji ispisuje --help](../assets/img/cli-help.svg)
 
-Možeš i jednom *aktivirati* folder, pa upisivati samo `python`:
+Možete i jednom *aktivirati* folder, pa upisivati samo `python`:
 
-| Terminal | Aktiviraj | Zatim |
+| Terminal | Aktivirajte | Zatim |
 |---|---|---|
 | PowerShell | `.venv\Scripts\Activate.ps1` | `python -m heat3d_capture --help` |
 | cmd | `.venv\Scripts\activate.bat` | `python -m heat3d_capture --help` |
 
-Ako PowerShell kaže *running scripts is disabled*, jednom pokreni
-`Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` ili preskoči aktiviranje.
+Ako PowerShell kaže *running scripts is disabled*, jednom pokrenite
+`Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` ili preskočite aktiviranje.
 
-## 6. Dodatni programi koje neke naredbe trebaju {#extra-programs-some-commands-need}
+## 6. Dodatni programi koje neke komande trebaju {#extra-programs-some-commands-need}
 
-| Naredba | Treba | Instalacija |
+| Komanda | Treba | Instalacija |
 |---|---|---|
-| `hud` | **ffmpeg** i **ffprobe** (čitaju video datoteke) | `winget install Gyan.FFmpeg`, zatim otvori novi terminal. Provjeri pomoću `ffmpeg -version`. |
-| `reconstruct`, `locate` | **PyTorch**, instaliran prije ostalih paketa | naredba sa [pytorch.org](https://pytorch.org/get-started/locally/) za tvoj GPU |
+| `hud` | **ffmpeg** i **ffprobe** (čitaju video datoteke) | `winget install Gyan.FFmpeg`, zatim otvorite novi terminal. Provjerite pomoću `ffmpeg -version`. |
+| `reconstruct`, `locate` | **PyTorch**, instaliran prije ostalih paketa | komanda sa [pytorch.org](https://pytorch.org/get-started/locally/) za vaš GPU |
 
 ## Kad nešto pođe po zlu {#when-something-goes-wrong}
 
-| Vidiš | Znači | Uradi ovo |
+| Vidite | Znači | Uradite ovo |
 |---|---|---|
-| `'python' is not recognized` | Python nije na PATH-u | Ponovo instaliraj Python s oznakom PATH, pa otvori novi terminal. |
-| `No module named heat3d_capture` | terminal nije u folderu alata | Uradi `cd` u folder `3DHeat-GameCapture`. |
-| `No module named numpy` (ili drugi paket) | paketi nisu instalirani ili si koristio drugi Python | Ponovo pokreni red `pip install -r requirements.txt`, s `.venv\Scripts\python`. |
-| `'.venv' is not recognized` | upisao si `/` u cmd | Koristi obrnute kose crte: `.venv\Scripts\python`. |
-| `ffmpeg was not found on PATH` | ffmpeg nedostaje | Vidi korak 6, pa otvori novi terminal. |
+| `'python' is not recognized` | Python nije na PATH-u | Ponovo instalirajte Python s oznakom PATH, pa otvorite novi terminal. |
+| `No module named heat3d_capture` | terminal nije u folderu alata | Uradite `cd` u folder `3DHeat-GameCapture`. |
+| `No module named numpy` (ili drugi paket) | paketi nisu instalirani ili ste koristili drugi Python | Ponovo pokrenite red `pip install -r requirements.txt`, s `.venv\Scripts\python`. |
+| `'.venv' is not recognized` | upisali ste `/` u cmd | Koristite obrnute kose crte: `.venv\Scripts\python`. |
+| `ffmpeg was not found on PATH` | ffmpeg nedostaje | Pogledajte korak 6, pa otvorite novi terminal. |
 
 Dalje: [Početna](index.md) ima prvi primjer za svaki posao.

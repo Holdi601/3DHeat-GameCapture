@@ -38,12 +38,12 @@ Ne znate ništa o naredbenom retku? Prvo pročitajte [Prije nego što počnete](
 
 Sva tri slijede jedno pravilo: **ništa se ne ubacuje u igru i ništa se ne kači**. Kadrovi
 dolaze iz javnog API-ja za snimanje ekrana, a telemetrija iz sučelja koja igre objavljuju za to.
-Vidi [Pravila](../rules.md).
+Vidi [Pravila](rules.md).
 
 ![Što ulazi, koja naredba, što izlazi, gdje ga preglednik prikazuje](../assets/img/hr/overview.svg)
 
 Kod je u Pythonu (paket `heat3d_capture`), licenca MIT. Modeli dubine i položaja koje može
-pokrenuti imaju vlastite licence - vidi [Modeli i licence](../models-and-licences.md).
+pokrenuti imaju vlastite licence - vidi [Modeli i licence](models-and-licences.md).
 
 ## Brzi početak {#quick-start}
 
@@ -70,20 +70,20 @@ Svaka druga igra je jedan `--game` daleko:
 .venv\Scripts\python -m heat3d_capture telemetry --game dirtrally2 -o laps
 ```
 
-Vidi [Snimači telemetrije](../telemetry.md) za svaku igru i opciju.
+Vidi [Snimači telemetrije](telemetry.md) za svaku igru i opciju.
 
 ### Skeniranje razine {#scan-a-level}
 
 Dvaput kliknite **`scan.bat`** u mapi alata. Pronalazi Python (i nudi instalaciju putem
 winget ako ga nema), pravi privatni `.venv` i otvara prozor za skeniranje. Prozor kaže
 što nedostaje, čemu služi svaki paket i kolika je preuzimanja, a ništa ne instalira bez vašeg da.
-Vidi [Izvođenje i ovisnosti](../runtime.md) i
-[Prozor skeniranja](../reconstruction-scan-ui.md).
+Vidi [Izvođenje i ovisnosti](runtime.md) i
+[Prozor skeniranja](reconstruction-scan-ui.md).
 
 Ručno: `.venv\Scripts\python -m heat3d_capture.ui`.
 
 Za rekonstrukciju snimke izvan mreže, s putanjom kamere riješenom odjednom (treba PyTorch,
-paket `vggt` i GPU - vidi [Rekonstrukcija izvan mreže](../reconstruction-offline.md)):
+paket `vggt` i GPU - vidi [Rekonstrukcija izvan mreže](reconstruction-offline.md)):
 
 ```powershell
 .venv\Scripts\python -m heat3d_capture reconstruct lap.mp4 -o lap.glb
@@ -94,36 +94,36 @@ paket `vggt` i GPU - vidi [Rekonstrukcija izvan mreže](../reconstruction-offlin
 | Stranica | Što obuhvaća |
 |---|---|
 | [Prije nego što počnete](before-you-start.md) | Python, terminal, prva naredba, česte greške |
-| [Pravila](../rules.md) | Bez ubacivanja, samo objavljena sučelja, i što to košta |
-| [Snimači telemetrije](../telemetry.md) | Naredba `telemetry` i pregled svake igre |
-| [Forza](../telemetry-forza.md) | Data Out, prepoznavanje rasporeda, FH Companion relej i njegov `.tele.gz` |
-| [Assetto Corsa igre](../telemetry-assetto-corsa.md) | AC, ACC, AC EVO, AC Rally iz dijeljene memorije |
-| [Rally igre](../telemetry-rally.md) | EA SPORTS WRC, DiRT Rally 2.0 / 1 / DiRT 4, Richard Burns Rally |
-| [BeamNG.drive](../telemetry-beamng.md) | `heat3d` protokol mod |
-| [Trackmania](../telemetry-trackmania.md) | `Heat3dRecorder` Openplanet dodatak |
-| [iRacing](../telemetry-iracing.md) | Čitanje `.ibt` datoteka u pregledniku |
-| [Dijeljenje krugova i dionica](../lap-splitting.md) | `LapSplitter`, `CounterSplitter`, `LineSplitter`, `StageSplitter` |
-| [Proklizavanje, driftanje i izvedeni kanali](../slip-and-drift.md) | Kako se proklizavanje skalira i što preglednik izvodi |
-| [Datoteka heat3d-lap](../lap-format.md) | Format datoteke kruga, kanali, jedinice, `meta` |
-| [Igre](../games.md) | Po igri: kako snimati, što se šalje, koje staze se mogu izvesti |
-| [Naredbe](../commands.md) | `route`, `telemetry`, `laps`, `reconstruct`, `hud`, `locate`, korak po korak |
+| [Pravila](rules.md) | Bez ubacivanja, samo objavljena sučelja, i što to košta |
+| [Snimači telemetrije](telemetry.md) | Naredba `telemetry` i pregled svake igre |
+| [Forza](telemetry-forza.md) | Data Out, prepoznavanje rasporeda, FH Companion relej i njegov `.tele.gz` |
+| [Assetto Corsa igre](telemetry-assetto-corsa.md) | AC, ACC, AC EVO, AC Rally iz dijeljene memorije |
+| [Rally igre](telemetry-rally.md) | EA SPORTS WRC, DiRT Rally 2.0 / 1 / DiRT 4, Richard Burns Rally |
+| [BeamNG.drive](telemetry-beamng.md) | `heat3d` protokol mod |
+| [Trackmania](telemetry-trackmania.md) | `Heat3dRecorder` Openplanet dodatak |
+| [iRacing](telemetry-iracing.md) | Čitanje `.ibt` datoteka u pregledniku |
+| [Kako se krugovi i etape dijele](lap-splitting.md) | `LapSplitter`, `CounterSplitter`, `LineSplitter`, `StageSplitter` |
+| [Proklizavanje, driftanje i izvedeni kanali](slip-and-drift.md) | Kako se proklizavanje skalira i što preglednik izvodi |
+| [Datoteka heat3d-lap](lap-format.md) | Format datoteke kruga, kanali, jedinice, `meta` |
+| [Igre](games.md) | Po igri: kako snimati, što se šalje, koje staze se mogu izvesti |
+| [Naredbe](commands.md) | `route`, `telemetry`, `laps`, `reconstruct`, `hud`, `locate`, korak po korak |
 | [Referenca naredbi](../cli-reference.md) | svaka opcija, generirano iz `--help` |
-| [Čitanje HUD-a iz snimke](../hud-video.md) | `hud`: vlastite akcije, smrti, trag na minimapi i popis ubojstava iz snimke |
-| [Lociranje kadrova u razini](../locate.md) | `locate`: gdje je svaki kadar snimljen, naspram geometrije razine |
-| [Rekonstrukcija razine](../reconstruction.md) | Cjevovod od kadrova do `.glb` |
-| [Prozor skeniranja](../reconstruction-scan-ui.md) | Svaka kontrola, tipkovnički prečac i element preklapanja |
-| [Snimanje, maske i kvaliteta kadrova](../reconstruction-capture.md) | Windows Graphics Capture, ključni kadrovi, HUD maske, savjeti o kvaliteti |
-| [Dubina](../reconstruction-depth.md) | Depth Anything V2, ONNX Runtime, izrada modela |
-| [Položaj i mjerilo kamere](../reconstruction-pose.md) | Odometrija, relokalizacija, položaji iz telemetrije, mjerilo tla, bundle adjustment |
-| [Spajanje, pokrivenost i boja](../reconstruction-fusion-and-texture.md) | Volumen zauzeća, mreža pokrivenosti, slaba mjesta, boja vrhova |
-| [Izlaz `.glb`](../glb-output.md) | Datoteka koju preglednik učitava |
-| [Rekonstrukcija izvan mreže](../reconstruction-offline.md) | `reconstruct`, VGGT prozori i spajanje |
-| [Modeli i licence](../models-and-licences.md) | Veličine Depth Anything V2, VGGT, paketi |
-| [Izvođenje i ovisnosti](../runtime.md) | Provjera prije pokretanja, pozadinski dijelovi, razine performansi |
-| [Ograničenja i provjere](../limits.md) | Što nije učinjeno i što nije provjereno |
-| [Ažuriranja](../updates.md) | Provjera izdanja i `python -m heat3d_update` |
-| [Razvoj](../development.md) | Testovi, virtualno okruženje, raspored repozitorija |
-| [Održavanje ovih stranica](../maintaining.md) | Popis za izdavanje koda i dokumentacije |
+| [Čitanje HUD-a iz snimke](hud-video.md) | `hud`: vlastite akcije, smrti, trag na minimapi i popis ubojstava iz snimke |
+| [Lociranje kadrova u razini](locate.md) | `locate`: gdje je svaki kadar snimljen, naspram geometrije razine |
+| [Rekonstrukcija razine](reconstruction.md) | Cjevovod od kadrova do `.glb` |
+| [Prozor skeniranja](reconstruction-scan-ui.md) | Svaka kontrola, tipkovnički prečac i element preklapanja |
+| [Snimanje, maske i kvaliteta kadrova](reconstruction-capture.md) | Windows Graphics Capture, ključni kadrovi, HUD maske, savjeti o kvaliteti |
+| [Dubina](reconstruction-depth.md) | Depth Anything V2, ONNX Runtime, izrada modela |
+| [Položaj i mjerilo kamere](reconstruction-pose.md) | Odometrija, relokalizacija, položaji iz telemetrije, mjerilo tla, bundle adjustment |
+| [Spajanje, pokrivenost i boja](reconstruction-fusion-and-texture.md) | Volumen zauzeća, mreža pokrivenosti, slaba mjesta, boja vrhova |
+| [Izlaz `.glb`](glb-output.md) | Datoteka koju preglednik učitava |
+| [Rekonstrukcija izvan mreže](reconstruction-offline.md) | `reconstruct`, VGGT prozori i spajanje |
+| [Modeli i licence](models-and-licences.md) | Veličine Depth Anything V2, VGGT, paketi |
+| [Izvođenje i ovisnosti](runtime.md) | Provjera prije pokretanja, pozadinski dijelovi, razine performansi |
+| [Ograničenja i provjere](limits.md) | Što nije učinjeno i što nije provjereno |
+| [Ažuriranja](updates.md) | Provjera izdanja i `python -m heat3d_update` |
+| [Razvoj](development.md) | Testovi, virtualno okruženje, raspored repozitorija |
+| [Održavanje ovih stranica](maintaining.md) | Popis za izdavanje koda i dokumentacije |
 
 ## Dio 3DHeata {#part-of-3dheat}
 

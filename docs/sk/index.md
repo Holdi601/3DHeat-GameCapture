@@ -35,12 +35,12 @@ Nikdy ste nepracovali s príkazovým riadkom? Najprv si prečítajte [Ako zača�
 
 Všetky tri sa riadia jedným pravidlom: **do hry sa nič nevkladá a nič sa nezachytáva hákom**. Snímky
 pochádzajú z verejného API na snímanie obrazovky, telemetria z rozhraní, ktoré hry zverejňujú
-pre ňu. Pozri [Pravidlá](../rules.md).
+pre ňu. Pozrite [Pravidlá](rules.md).
 
 ![Čo vstupuje, ktorý príkaz, čo vystupuje, kde to prehliadač zobrazí](../assets/img/sk/overview.svg)
 
 Kód je v Pythone (balík `heat3d_capture`), licencia MIT. Modely hĺbky a pozície, ktoré môže
-spúšťať, majú vlastné licencie – pozri [Modely a licencie](../models-and-licences.md).
+spúšťať, majú vlastné licencie – pozrite [Modely a licencie](models-and-licences.md).
 
 ## Rýchly štart {#quick-start}
 
@@ -67,20 +67,20 @@ Každá ďalšia hra je jeden `--game` ďaleko:
 .venv\Scripts\python -m heat3d_capture telemetry --game dirtrally2 -o laps
 ```
 
-Každú hru a možnosť nájdete na stránke [Nahrávače telemetrie](../telemetry.md).
+Každú hru a možnosť nájdete na stránke [Nahrávače telemetrie](telemetry.md).
 
 ### Skenovanie úrovne {#scan-a-level}
 
 Dvakrát kliknite na **`scan.bat`** v priečinku nástroja. Nájde Python (a ak ho nemá, ponúkne
 inštaláciu cez winget), vytvorí súkromné `.venv` a otvorí okno skenovania. Okno povie,
 čo chýba, na čo slúži každý balík a aká veľká je jeho stiahnutá časť, a bez vášho súhlasu
-nič nenainštaluje. Pozri [Runtime a závislosti](../runtime.md) a
-[Okno skenovania](../reconstruction-scan-ui.md).
+nič nenainštaluje. Pozrite [Runtime a závislosti](runtime.md) a
+[Okno skenovania](reconstruction-scan-ui.md).
 
 Ručne: `.venv\Scripts\python -m heat3d_capture.ui`.
 
 Na prestavbu záznamu offline, s dráhou kamery vyriešenou naraz (vyžaduje PyTorch, balík
-`vggt` a GPU – pozri [Offline rekonštrukcia](../reconstruction-offline.md)):
+`vggt` a GPU – pozrite [Offline rekonštrukcia](reconstruction-offline.md)):
 
 ```powershell
 .venv\Scripts\python -m heat3d_capture reconstruct lap.mp4 -o lap.glb
@@ -91,36 +91,36 @@ Na prestavbu záznamu offline, s dráhou kamery vyriešenou naraz (vyžaduje PyT
 | Stránka | Čo obsahuje |
 |---|---|
 | [Ako začať](before-you-start.md) | Python, terminál, prvý príkaz, bežné chyby |
-| [Pravidlá](../rules.md) | žiadne vkladanie, len zverejnené rozhrania, a čo to stojí |
-| [Nahrávače telemetrie](../telemetry.md) | príkaz `telemetry` a prehľad každej hry |
-| [Forza](../telemetry-forza.md) | Data Out, zisťovanie rozloženia, relé FH Companion a jeho `.tele.gz` |
-| [Hry Assetto Corsa](../telemetry-assetto-corsa.md) | AC, ACC, AC EVO, AC Rally zo zdieľanej pamäte |
-| [Rallye hry](../telemetry-rally.md) | EA SPORTS WRC, DiRT Rally 2.0 / 1 / DiRT 4, Richard Burns Rally |
-| [BeamNG.drive](../telemetry-beamng.md) | mod protokolu `heat3d` |
-| [Trackmania](../telemetry-trackmania.md) | plugin Openplanet `Heat3dRecorder` |
-| [iRacing](../telemetry-iracing.md) | čítanie súborov `.ibt` v prehliadači |
-| [Delenie kôl a etáp](../lap-splitting.md) | `LapSplitter`, `CounterSplitter`, `LineSplitter`, `StageSplitter` |
-| [Pokĺzanie, driftovanie a odvodené kanály](../slip-and-drift.md) | ako sa škáluje pokĺzanie a čo prehliadač odvodzuje |
-| [Súbor heat3d-lap](../lap-format.md) | formát súboru kola, kanály, jednotky, `meta` |
-| [Hry](../games.md) | pre každú hru: ako nahrávať, čo sa posiela, ktoré trate sa dajú exportovať |
-| [Príkazy](../commands.md) | `route`, `telemetry`, `laps`, `reconstruct`, `hud`, `locate`, krok za krokom |
+| [Pravidlá](rules.md) | žiadne vkladanie, len zverejnené rozhrania, a čo to stojí |
+| [Nahrávače telemetrie](telemetry.md) | príkaz `telemetry` a prehľad každej hry |
+| [Forza](telemetry-forza.md) | Data Out, zisťovanie rozloženia, relé FH Companion a jeho `.tele.gz` |
+| [Hry Assetto Corsa](telemetry-assetto-corsa.md) | AC, ACC, AC EVO, AC Rally zo zdieľanej pamäte |
+| [Rallye hry](telemetry-rally.md) | EA SPORTS WRC, DiRT Rally 2.0 / 1 / DiRT 4, Richard Burns Rally |
+| [BeamNG.drive](telemetry-beamng.md) | mod protokolu `heat3d` |
+| [Trackmania](telemetry-trackmania.md) | plugin Openplanet `Heat3dRecorder` |
+| [iRacing](telemetry-iracing.md) | čítanie súborov `.ibt` v prehliadači |
+| [Delenie kôl a etáp](lap-splitting.md) | `LapSplitter`, `CounterSplitter`, `LineSplitter`, `StageSplitter` |
+| [Pokĺzanie, driftovanie a odvodené kanály](slip-and-drift.md) | ako sa škáluje pokĺzanie a čo prehliadač odvodzuje |
+| [Súbor heat3d-lap](lap-format.md) | formát súboru kola, kanály, jednotky, `meta` |
+| [Hry](games.md) | pre každú hru: ako nahrávať, čo sa posiela, ktoré trate sa dajú exportovať |
+| [Príkazy](commands.md) | `route`, `telemetry`, `laps`, `reconstruct`, `hud`, `locate`, krok za krokom |
 | [Referencia príkazov](../cli-reference.md) | každá možnosť, generované z `--help` |
-| [Čítanie HUD zo záznamu](../hud-video.md) | `hud`: vlastné akcie, smrti, stopa minimapy a prúd zabití zo záznamu |
-| [Lokalizácia snímok v úrovni](../locate.md) | `locate`: kde bola každá snímka nasnímaná, voči geometrii úrovne |
-| [Rekonštrukcia úrovne](../reconstruction.md) | postup od snímok k `.glb` |
-| [Okno skenovania](../reconstruction-scan-ui.md) | každé ovládanie, klávesová skratka a prvok prekrytia |
-| [Zachytávanie, masky a kvalita snímok](../reconstruction-capture.md) | Windows Graphics Capture, kľúčové snímky, masky HUD, rady ku kvalite |
-| [Hĺbka](../reconstruction-depth.md) | Depth Anything V2, ONNX Runtime, zostavenie modelu |
-| [Póza kamery a mierka](../reconstruction-pose.md) | odometria, relokalizácia, pózy z telemetrie, mierka zeme, bundle adjustment |
-| [Spájanie, pokrytie a farba](../reconstruction-fusion-and-texture.md) | objem obsadenosti, mriežka pokrytia, slabé miesta, farba vrcholov |
-| [Výstup .glb](../glb-output.md) | súbor, ktorý prehliadač načítava |
-| [Offline rekonštrukcia](../reconstruction-offline.md) | `reconstruct`, okná VGGT a zlepovanie |
-| [Modely a licencie](../models-and-licences.md) | veľkosti Depth Anything V2, VGGT, balíky |
-| [Runtime a závislosti](../runtime.md) | predletová kontrola, backendy, výkonnostné stupne |
-| [Obmedzenia a overenie](../limits.md) | čo sa nerobí a čo sa neoverilo |
-| [Aktualizácie](../updates.md) | kontrola vydania a `python -m heat3d_update` |
-| [Vývoj](../development.md) | testy, virtuálne prostredie, rozloženie repozitára |
-| [Údržba týchto dokumentov](../maintaining.md) | kontrolný zoznam vydania pre kód a dokumentáciu |
+| [Čítanie HUD zo záznamu](hud-video.md) | `hud`: vlastné akcie, smrti, stopa minimapy a prúd zabití zo záznamu |
+| [Lokalizácia snímok v úrovni](locate.md) | `locate`: kde bola každá snímka nasnímaná, voči geometrii úrovne |
+| [Rekonštrukcia úrovne](reconstruction.md) | postup od snímok k `.glb` |
+| [Okno skenovania](reconstruction-scan-ui.md) | každé ovládanie, klávesová skratka a prvok prekrytia |
+| [Zachytávanie, masky a kvalita snímok](reconstruction-capture.md) | Windows Graphics Capture, kľúčové snímky, masky HUD, rady ku kvalite |
+| [Hĺbka](reconstruction-depth.md) | Depth Anything V2, ONNX Runtime, zostavenie modelu |
+| [Póza kamery a mierka](reconstruction-pose.md) | odometria, relokalizácia, pózy z telemetrie, mierka zeme, bundle adjustment |
+| [Spájanie, pokrytie a farba](reconstruction-fusion-and-texture.md) | objem obsadenosti, mriežka pokrytia, slabé miesta, farba vrcholov |
+| [Výstup .glb](glb-output.md) | súbor, ktorý prehliadač načítava |
+| [Offline rekonštrukcia](reconstruction-offline.md) | `reconstruct`, okná VGGT a zlepovanie |
+| [Modely a licencie](models-and-licences.md) | veľkosti Depth Anything V2, VGGT, balíky |
+| [Runtime a závislosti](runtime.md) | predletová kontrola, backendy, výkonnostné stupne |
+| [Obmedzenia a overenie](limits.md) | čo sa nerobí a čo sa neoverilo |
+| [Aktualizácie](updates.md) | kontrola vydania a `python -m heat3d_update` |
+| [Vývoj](development.md) | testy, virtuálne prostredie, rozloženie repozitára |
+| [Údržba týchto dokumentov](maintaining.md) | kontrolný zoznam vydania pre kód a dokumentáciu |
 
 ## Súčasť 3DHeat {#part-of-3dheat}
 

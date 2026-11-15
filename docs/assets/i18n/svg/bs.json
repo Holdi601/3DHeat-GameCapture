@@ -62,7 +62,7 @@
  "locate eval": "locate eval",
  "locate frames": "locate frames",
  "locate train": "locate train",
- "locate: from a level and a recording to your own positions": "locate: od nivoa i snimka do tvojih pozicija",
+ "locate: from a level and a recording to your own positions": "locate: od nivoa i snimka do vaših pozicija",
  "masking": "maskiranje",
  "matches each frame": "poklapa svaki frame",
  "minimap mosaic": "mozaik minimape",
@@ -100,6 +100,6 @@
  "track and": "staza i",
  "with known poses": "s poznatim pozama",
  "written next to": "zapisano pored",
- "your own events": "tvoji događaji",
- "your own video": "tvoj video"
+ "your own events": "vaši događaji",
+ "your own video": "vaš video"
 }
