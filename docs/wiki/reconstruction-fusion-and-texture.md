@@ -173,5 +173,5 @@ again, once, from the frames themselves:
 Colour is written as per-vertex `COLOR_0`, not as a texture atlas. The viewer's default look is a
 grey map under saturated heat; colour is there to find the road on a scanned circuit, where
 geometry alone does not separate it from the verge, and is shown behind the viewer's *Captured
-colour* switch in its Level panel. An atlas would multiply the file size and need an unwrapper,
+colour* switch in its Background / Background / level panel. An atlas would multiply the file size and need an unwrapper,
 for a view that is deliberately not the default. Blender and other glTF tools read `COLOR_0`.

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="314" viewBox="0 0 860 314" role="img" aria-label="A recording becomes one file per lap">
+<rect width="860" height="314" rx="10" fill="#f7f8fa" stroke="#d0d4db"/>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8a94a3"/></marker></defs>
+<text x="20" y="32" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="18" font-weight="600" fill="#1f2328" text-anchor="start">Снимак постаје по датотека за круг</text>
+<rect x="20" y="52" width="247" height="104" rx="8" fill="#ffffff" stroke="#8a94a3"/>
+<text x="143" y="80" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">Пакети</text>
+<text x="143" y="106" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">по кадру</text>
+<text x="143" y="127" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">из игре</text>
+<rect x="307" y="52" width="247" height="104" rx="8" fill="#ffffff" stroke="#8a94a3"/>
+<text x="430" y="80" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">Делилац</text>
+<text x="430" y="106" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">бројач кругова, старт линија</text>
+<text x="430" y="127" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">или крај етапе</text>
+<rect x="593" y="52" width="247" height="104" rx="8" fill="#ffffff" stroke="#8a94a3"/>
+<text x="717" y="80" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">круг n .lap.json</text>
+<text x="717" y="106" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">по кругу</text>
+<text x="717" y="127" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">complete: true</text>
+<line x1="271" y1="104.0" x2="303" y2="104.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+<line x1="557" y1="104.0" x2="589" y2="104.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+<rect x="20" y="186" width="390" height="104" rx="8" fill="#e8f0fe" stroke="#8a94a3" stroke-dasharray="6 4"/>
+<text x="215" y="214" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">делимичан круг</text>
+<text x="215" y="240" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">прекинуто у кругу:</text>
+<text x="215" y="261" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">complete: false</text>
+<rect x="450" y="186" width="390" height="104" rx="8" fill="#e8f0fe" stroke="#8a94a3" stroke-dasharray="6 4"/>
+<text x="645" y="214" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">сирова пратећа</text>
+<text x="645" y="240" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">сваки пакет,</text>
+<text x="645" y="261" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">чува се цело</text>
+</svg>

@@ -1,6 +1,6 @@
 # Slip, drift and derived channels
 
-The car-control analysis in the viewer's Race tab wants the same few quantities from every
+The car-control analysis in the viewer's Race analysis tab wants the same few quantities from every
 game: how far each tyre slips, how far the car points away from where it is going (the drift
 angle), whether it is in the air, whether it is on loose ground. Games send these in very
 different forms, or not at all. The recorders here write what each game sends, under

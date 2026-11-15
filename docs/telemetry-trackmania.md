@@ -35,7 +35,7 @@ the plugin (with `--install`) and prints where the files will appear.
   The plugin can be signed on openplanet.dev; it is not signed here.
 
 Runs are written to `%USERPROFILE%\OpenplanetNext\PluginStorage\Heat3dRecorder`. Load those
-CSV files in the viewer's Race tab. `-o` and `--port` are ignored for Trackmania.
+CSV files in the viewer's Race analysis tab. `-o` and `--port` are ignored for Trackmania.
 
 ## What the plugin records
 

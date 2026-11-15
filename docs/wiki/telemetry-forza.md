@@ -118,7 +118,7 @@ every five metres, and beside each lap file `<lap>.json.tele.gz`, the lap's whol
 the game's rate. 3DHeat reads both:
 
 - **The viewer reads `.tele.gz` directly** when you drop it (with or without its lap file) on
-  the Race tab. It maps Forza's own field names (`PositionX`, `VelocityX`, `TireSlipRatio`
+  the Race analysis tab. It maps Forza's own field names (`PositionX`, `VelocityX`, `TireSlipRatio`
   + wheel, ...) to the canonical channels, turns the car-local `VelocityX/Y/Z` into `latVel`,
   `vertVel`, `longVel`, converts tyre temperatures from Fahrenheit, drops rows that repeat the
   previous one but for the recorder's clock, and marks the slip as `peak`. Given the lap file

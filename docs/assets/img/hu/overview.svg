@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="598" viewBox="0 0 860 598" role="img" aria-label="What goes in, which command, what comes out">
+<rect width="860" height="598" rx="10" fill="#f7f8fa" stroke="#d0d4db"/>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8a94a3"/></marker></defs>
+<text x="20" y="32" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="18" font-weight="600" fill="#1f2328" text-anchor="start">Mi megy be, melyik parancs, mi jön ki</text>
+<text x="143" y="68" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="15" font-weight="600" fill="#3d4450" text-anchor="middle">Van</text>
+<text x="430" y="68" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="15" font-weight="600" fill="#3d4450" text-anchor="middle">Futtatod</text>
+<text x="717" y="68" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="15" font-weight="600" fill="#3d4450" text-anchor="middle">Kapod</text>
+<rect x="20" y="84" width="247" height="70" rx="8" fill="#e8f0fe" stroke="#8a94a3"/>
+<text x="143" y="114" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">Versenyjáték telemetria</text>
+<text x="143" y="134" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">hálózat / megosztott memória / mod</text>
+<rect x="307" y="84" width="247" height="70" rx="8" fill="#fff4e0" stroke="#8a94a3"/>
+<text x="430" y="124" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">telemetry</text>
+<line x1="271" y1="119.0" x2="303" y2="119.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+<rect x="593" y="84" width="247" height="70" rx="8" fill="#e6f4ea" stroke="#8a94a3"/>
+<text x="717" y="114" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">&lt;lap&gt;.lap.json</text>
+<text x="717" y="134" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">3DHeat: Verseny fül</text>
+<line x1="557" y1="119.0" x2="589" y2="119.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+<rect x="20" y="168" width="247" height="70" rx="8" fill="#e8f0fe" stroke="#8a94a3"/>
+<text x="143" y="198" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">Egy Forza-kör</text>
+<text x="143" y="218" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">egyszer megtett, az útvonalhoz</text>
+<rect x="307" y="168" width="247" height="70" rx="8" fill="#fff4e0" stroke="#8a94a3"/>
+<text x="430" y="208" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">route</text>
+<line x1="271" y1="203.0" x2="303" y2="203.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+<rect x="593" y="168" width="247" height="70" rx="8" fill="#e6f4ea" stroke="#8a94a3"/>
+<text x="717" y="198" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">route .npz + .json</text>
+<text x="717" y="218" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">GameFiles: course</text>
+<line x1="557" y1="203.0" x2="589" y2="203.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+<rect x="20" y="252" width="247" height="70" rx="8" fill="#e8f0fe" stroke="#8a94a3"/>
+<text x="143" y="282" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">FH Companion körtár</text>
+<text x="143" y="302" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">már megtett körök</text>
+<rect x="307" y="252" width="247" height="70" rx="8" fill="#fff4e0" stroke="#8a94a3"/>
+<text x="430" y="292" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">körök</text>
+<line x1="271" y1="287.0" x2="303" y2="287.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+<rect x="593" y="252" width="247" height="70" rx="8" fill="#e6f4ea" stroke="#8a94a3"/>
+<text x="717" y="282" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">route + minták .csv</text>
+<text x="717" y="302" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">GameFiles: course</text>
+<line x1="557" y1="287.0" x2="589" y2="287.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+<rect x="20" y="336" width="247" height="70" rx="8" fill="#e8f0fe" stroke="#8a94a3"/>
+<text x="143" y="366" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">A képernyő játék közben</text>
+<text x="143" y="386" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">Windows képernyő-rögzítés</text>
+<rect x="307" y="336" width="247" height="70" rx="8" fill="#fff4e0" stroke="#8a94a3"/>
+<text x="430" y="376" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">beolvasó ablak</text>
+<line x1="271" y1="371.0" x2="303" y2="371.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+<rect x="593" y="336" width="247" height="70" rx="8" fill="#e6f4ea" stroke="#8a94a3"/>
+<text x="717" y="366" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">pálya .glb</text>
+<text x="717" y="386" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">3DHeat: Pálya panel</text>
+<line x1="557" y1="371.0" x2="589" y2="371.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+<rect x="20" y="420" width="247" height="70" rx="8" fill="#e8f0fe" stroke="#8a94a3"/>
+<text x="143" y="450" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">Egy felvétel (videó)</text>
+<text x="143" y="470" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">a munkamenet után</text>
+<rect x="307" y="420" width="247" height="70" rx="8" fill="#fff4e0" stroke="#8a94a3"/>
+<text x="430" y="460" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">reconstruct</text>
+<line x1="271" y1="455.0" x2="303" y2="455.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+<rect x="593" y="420" width="247" height="70" rx="8" fill="#e6f4ea" stroke="#8a94a3"/>
+<text x="717" y="450" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">pálya .glb</text>
+<text x="717" y="470" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">3DHeat: Pálya panel</text>
+<line x1="557" y1="455.0" x2="589" y2="455.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+<rect x="20" y="504" width="247" height="70" rx="8" fill="#e8f0fe" stroke="#8a94a3"/>
+<text x="143" y="534" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">Egy felvétel (videó)</text>
+<text x="143" y="554" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">a meccs után</text>
+<rect x="307" y="504" width="247" height="70" rx="8" fill="#fff4e0" stroke="#8a94a3"/>
+<text x="430" y="534" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">hud</text>
+<text x="430" y="554" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">locate (kísérleti)</text>
+<line x1="271" y1="539.0" x2="303" y2="539.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+<rect x="593" y="504" width="247" height="70" rx="8" fill="#e6f4ea" stroke="#8a94a3"/>
+<text x="717" y="534" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">saját nyomvonal .parquet</text>
+<text x="717" y="554" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">3DHeat: Hőtérkép fül</text>
+<line x1="557" y1="539.0" x2="589" y2="539.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+</svg>

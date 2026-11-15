@@ -14,7 +14,7 @@ All commands run from the repository folder, with the project's environment:
 | Command | Does |
 |---|---|
 | [`route`](#route) | Records a Forza lap's positions only, for finding the map in the game's files |
-| [`telemetry`](#telemetry) | Records every channel, a lap file per lap, for the Race tab |
+| [`telemetry`](#telemetry) | Records every channel, a lap file per lap, for the Race analysis tab |
 | [`laps`](#laps) | Reads an FH Companion lap library and writes one course's route and samples |
 | [`reconstruct`](#reconstruct) | Solves a recording offline and writes a `.glb` |
 | [`hud`](#hud) | Reads the player's own actions, deaths and minimap track, and the kill feed, out of a recording |

@@ -8,7 +8,7 @@ where you braked, where you were slow, how two laps differ. And to have the leve
 heatmap when nobody has a 3D model of it.
 
 **Example:** turn on Forza's Data Out, run one command, drive two laps. Two lap files appear in
-`laps\`. Drop them on the viewer's Race tab.
+`laps\`. Drop them on the viewer's Race analysis tab.
 
 ![telemetry recording two laps of a synthetic Forza feed](https://raw.githubusercontent.com/Holdi601/3DHeat-GameCapture/main/docs/assets/img/telemetry-run.svg)
 
@@ -52,7 +52,7 @@ python -m venv .venv
 ```
 
 **You should see** `listening on port 5300. Laps go to laps. Ctrl+C to stop.`, then a line per lap as you cross the line, as
-in the picture above. Press Ctrl+C to stop. Drop the files from `laps\` on the viewer's Race tab.
+in the picture above. Press Ctrl+C to stop. Drop the files from `laps\` on the viewer's Race analysis tab.
 Every other game is one `--game` away:
 
 ```powershell
@@ -119,7 +119,7 @@ To rebuild a recording offline, with the camera path solved all at once (needs P
 
 The files this writes are loaded by the **3DHeat viewer** -
 [source](https://github.com/Holdi601/3DHeat), [documentation](https://holdi601.github.io/3DHeat/).
-Lap files go to its Race tab, `.glb` levels to its Level panel, the `hud` and `locate` tables to
+Lap files go to its Race analysis tab, `.glb` levels to its Background / Background / level panel, the `hud` and `locate` tables to
 its Heatmap tab; how the viewer reads tables and match files is in
 [One file a match (.3dheat)](https://holdi601.github.io/3DHeat/container.html) and
 [Getting data in](https://holdi601.github.io/3DHeat/getting-data-in.html).

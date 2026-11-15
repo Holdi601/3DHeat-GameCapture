@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="314" viewBox="0 0 860 314" role="img" aria-label="hud: what one recording gives">
+<rect width="860" height="314" rx="10" fill="#f7f8fa" stroke="#d0d4db"/>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8a94a3"/></marker></defs>
+<text x="20" y="32" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="18" font-weight="600" fill="#1f2328" text-anchor="start">hud：一段錄製能提供什麼</text>
+<rect x="20" y="52" width="247" height="104" rx="8" fill="#ffffff" stroke="#8a94a3"/>
+<text x="143" y="80" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">錄製</text>
+<text x="143" y="106" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">你自己的影片</text>
+<text x="143" y="127" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">比賽之後</text>
+<rect x="307" y="52" width="247" height="104" rx="8" fill="#ffffff" stroke="#8a94a3"/>
+<text x="430" y="80" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">hud</text>
+<text x="430" y="106" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">--game bf6</text>
+<text x="430" y="127" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">需要 ffmpeg</text>
+<rect x="593" y="52" width="247" height="104" rx="8" fill="#ffffff" stroke="#8a94a3"/>
+<text x="717" y="80" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">四個檔案</text>
+<text x="717" y="106" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">寫在旁邊</text>
+<text x="717" y="127" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">-o 路徑</text>
+<line x1="271" y1="104.0" x2="303" y2="104.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+<line x1="557" y1="104.0" x2="589" y2="104.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+<rect x="20" y="186" width="175" height="104" rx="8" fill="#e8f0fe" stroke="#8a94a3" stroke-dasharray="6 4"/>
+<text x="108" y="214" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">&lt;out&gt;.parquet</text>
+<text x="108" y="240" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">軌跡與</text>
+<text x="108" y="261" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">你自己的事件</text>
+<rect x="235" y="186" width="175" height="104" rx="8" fill="#e8f0fe" stroke="#8a94a3" stroke-dasharray="6 4"/>
+<text x="322" y="214" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">&lt;out&gt;.events.jsonl</text>
+<text x="322" y="240" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">動作與</text>
+<text x="322" y="261" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">擊殺訊息</text>
+<rect x="450" y="186" width="175" height="104" rx="8" fill="#e8f0fe" stroke="#8a94a3" stroke-dasharray="6 4"/>
+<text x="538" y="214" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">&lt;out&gt;.summary.json</text>
+<text x="538" y="240" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">擊殺、死亡，</text>
+<text x="538" y="261" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">生命數</text>
+<rect x="665" y="186" width="175" height="104" rx="8" fill="#e8f0fe" stroke="#8a94a3" stroke-dasharray="6 4"/>
+<text x="752" y="214" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">&lt;out&gt;.map.png</text>
+<text x="752" y="240" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">+ .map.json：</text>
+<text x="752" y="261" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">小地圖馬賽克</text>
+</svg>

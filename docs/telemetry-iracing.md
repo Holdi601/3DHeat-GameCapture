@@ -8,7 +8,7 @@ nav_order: 6
 
 iRacing needs **no recorder**. The sim writes its own telemetry files, `.ibt`, when telemetry
 logging is on (Alt+L in the car): the whole session at 60 Hz, every channel the sim exposes,
-with the session's YAML description alongside. Drop the `.ibt` file on the viewer's Race tab.
+with the session's YAML description alongside. Drop the `.ibt` file on the viewer's Race analysis tab.
 
 The reader lives in the viewer, not in this repository (`src/race/ibt.ts` in the 3DHeat
 viewer). It is tested on a synthetic file; it is documented here because it is the iRacing

@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="598" viewBox="0 0 860 598" role="img" aria-label="What goes in, which command, what comes out">
+<rect width="860" height="598" rx="10" fill="#f7f8fa" stroke="#d0d4db"/>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8a94a3"/></marker></defs>
+<text x="20" y="32" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="18" font-weight="600" fill="#1f2328" text-anchor="start">X'jidħol, liema kmand, x'joħroġ</text>
+<text x="143" y="68" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="15" font-weight="600" fill="#3d4450" text-anchor="middle">Għandek</text>
+<text x="430" y="68" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="15" font-weight="600" fill="#3d4450" text-anchor="middle">Tħaddem</text>
+<text x="717" y="68" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="15" font-weight="600" fill="#3d4450" text-anchor="middle">Tikseb</text>
+<rect x="20" y="84" width="247" height="70" rx="8" fill="#e8f0fe" stroke="#8a94a3"/>
+<text x="143" y="114" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">Telemetrija ta' logħba tat-tlielaq</text>
+<text x="143" y="134" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">network / memorja maqsuma / mod</text>
+<rect x="307" y="84" width="247" height="70" rx="8" fill="#fff4e0" stroke="#8a94a3"/>
+<text x="430" y="124" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">telemetrija</text>
+<line x1="271" y1="119.0" x2="303" y2="119.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+<rect x="593" y="84" width="247" height="70" rx="8" fill="#e6f4ea" stroke="#8a94a3"/>
+<text x="717" y="114" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">&lt;lap&gt;.lap.json</text>
+<text x="717" y="134" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">3DHeat: tab Race</text>
+<line x1="557" y1="119.0" x2="589" y2="119.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+<rect x="20" y="168" width="247" height="70" rx="8" fill="#e8f0fe" stroke="#8a94a3"/>
+<text x="143" y="198" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">Lapp ta' Forza</text>
+<text x="143" y="218" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">misjuq darba, għar-rotta</text>
+<rect x="307" y="168" width="247" height="70" rx="8" fill="#fff4e0" stroke="#8a94a3"/>
+<text x="430" y="208" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">route</text>
+<line x1="271" y1="203.0" x2="303" y2="203.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+<rect x="593" y="168" width="247" height="70" rx="8" fill="#e6f4ea" stroke="#8a94a3"/>
+<text x="717" y="198" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">route .npz + .json</text>
+<text x="717" y="218" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">GameFiles: kors</text>
+<line x1="557" y1="203.0" x2="589" y2="203.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+<rect x="20" y="252" width="247" height="70" rx="8" fill="#e8f0fe" stroke="#8a94a3"/>
+<text x="143" y="282" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">Librerija tal-laps FH Companion</text>
+<text x="143" y="302" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">laps diġà misjuqa</text>
+<rect x="307" y="252" width="247" height="70" rx="8" fill="#fff4e0" stroke="#8a94a3"/>
+<text x="430" y="292" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">laps</text>
+<line x1="271" y1="287.0" x2="303" y2="287.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+<rect x="593" y="252" width="247" height="70" rx="8" fill="#e6f4ea" stroke="#8a94a3"/>
+<text x="717" y="282" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">rotta + kampjuni .csv</text>
+<text x="717" y="302" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">GameFiles: kors</text>
+<line x1="557" y1="287.0" x2="589" y2="287.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+<rect x="20" y="336" width="247" height="70" rx="8" fill="#e8f0fe" stroke="#8a94a3"/>
+<text x="143" y="366" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">L-iskrin waqt li tilgħab</text>
+<text x="143" y="386" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">Capture tal-iskrin ta' Windows</text>
+<rect x="307" y="336" width="247" height="70" rx="8" fill="#fff4e0" stroke="#8a94a3"/>
+<text x="430" y="376" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">tieqa tal-iskennjar</text>
+<line x1="271" y1="371.0" x2="303" y2="371.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+<rect x="593" y="336" width="247" height="70" rx="8" fill="#e6f4ea" stroke="#8a94a3"/>
+<text x="717" y="366" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">livell .glb</text>
+<text x="717" y="386" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">3DHeat: pannell Sfond / livell</text>
+<line x1="557" y1="371.0" x2="589" y2="371.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+<rect x="20" y="420" width="247" height="70" rx="8" fill="#e8f0fe" stroke="#8a94a3"/>
+<text x="143" y="450" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">Reġistrazzjoni (vidjow)</text>
+<text x="143" y="470" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">wara s-sessjoni</text>
+<rect x="307" y="420" width="247" height="70" rx="8" fill="#fff4e0" stroke="#8a94a3"/>
+<text x="430" y="460" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">reconstruct</text>
+<line x1="271" y1="455.0" x2="303" y2="455.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+<rect x="593" y="420" width="247" height="70" rx="8" fill="#e6f4ea" stroke="#8a94a3"/>
+<text x="717" y="450" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">livell .glb</text>
+<text x="717" y="470" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">3DHeat: pannell Sfond / livell</text>
+<line x1="557" y1="455.0" x2="589" y2="455.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+<rect x="20" y="504" width="247" height="70" rx="8" fill="#e8f0fe" stroke="#8a94a3"/>
+<text x="143" y="534" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">Reġistrazzjoni (vidjow)</text>
+<text x="143" y="554" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">wara l-partita</text>
+<rect x="307" y="504" width="247" height="70" rx="8" fill="#fff4e0" stroke="#8a94a3"/>
+<text x="430" y="534" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">hud</text>
+<text x="430" y="554" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">locate (sperimentali)</text>
+<line x1="271" y1="539.0" x2="303" y2="539.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+<rect x="593" y="504" width="247" height="70" rx="8" fill="#e6f4ea" stroke="#8a94a3"/>
+<text x="717" y="534" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">track proprju .parquet</text>
+<text x="717" y="554" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">3DHeat: tab Heatmap</text>
+<line x1="557" y1="539.0" x2="589" y2="539.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+</svg>

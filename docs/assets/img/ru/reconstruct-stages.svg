@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="320" viewBox="0 0 860 320" role="img" aria-label="reconstruct: the stages it prints, in order">
+<rect width="860" height="320" rx="10" fill="#f7f8fa" stroke="#d0d4db"/>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8a94a3"/></marker></defs>
+<text x="20" y="32" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="18" font-weight="600" fill="#1f2328" text-anchor="start">reconstruct: этапы, которые он выводит, по порядку</text>
+<rect x="20" y="52" width="247" height="104" rx="8" fill="#ffffff" stroke="#8a94a3"/>
+<text x="143" y="80" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">маскирование</text>
+<text x="143" y="106" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">учится тому, чего никогда</text>
+<text x="143" y="127" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">движения (HUD, кабина)</text>
+<rect x="307" y="52" width="247" height="104" rx="8" fill="#ffffff" stroke="#8a94a3"/>
+<text x="430" y="80" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">планирование</text>
+<text x="430" y="106" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">выбирает кадры</text>
+<text x="430" y="127" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">по движению</text>
+<rect x="593" y="52" width="247" height="104" rx="8" fill="#ffffff" stroke="#8a94a3"/>
+<text x="717" y="80" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">решение</text>
+<text x="717" y="106" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">путь камеры в</text>
+<text x="717" y="127" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">окна VGGT</text>
+<rect x="20" y="192" width="247" height="104" rx="8" fill="#ffffff" stroke="#8a94a3"/>
+<text x="143" y="220" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">слияние</text>
+<text x="143" y="246" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">глубина вдоль</text>
+<text x="143" y="267" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">путь</text>
+<rect x="307" y="192" width="247" height="104" rx="8" fill="#ffffff" stroke="#8a94a3"/>
+<text x="430" y="220" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">экспорт</text>
+<text x="430" y="246" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">один .glb</text>
+<text x="430" y="267" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">для визуализатора</text>
+<line x1="271" y1="104.0" x2="303" y2="104.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+<line x1="557" y1="104.0" x2="589" y2="104.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+<path d="M717,158 V174 H143 V188" fill="none" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+<line x1="271" y1="244.0" x2="303" y2="244.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+</svg>

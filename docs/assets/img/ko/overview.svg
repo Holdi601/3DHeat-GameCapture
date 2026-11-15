@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="598" viewBox="0 0 860 598" role="img" aria-label="What goes in, which command, what comes out">
+<rect width="860" height="598" rx="10" fill="#f7f8fa" stroke="#d0d4db"/>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8a94a3"/></marker></defs>
+<text x="20" y="32" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="18" font-weight="600" fill="#1f2328" text-anchor="start">들어가는 것, 명령, 나오는 것</text>
+<text x="143" y="68" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="15" font-weight="600" fill="#3d4450" text-anchor="middle">준비물</text>
+<text x="430" y="68" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="15" font-weight="600" fill="#3d4450" text-anchor="middle">실행</text>
+<text x="717" y="68" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="15" font-weight="600" fill="#3d4450" text-anchor="middle">결과</text>
+<rect x="20" y="84" width="247" height="70" rx="8" fill="#e8f0fe" stroke="#8a94a3"/>
+<text x="143" y="114" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">레이싱 게임 텔레메트리</text>
+<text x="143" y="134" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">네트워크 / 공유 메모리 / 모드</text>
+<rect x="307" y="84" width="247" height="70" rx="8" fill="#fff4e0" stroke="#8a94a3"/>
+<text x="430" y="124" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">텔레메트리</text>
+<line x1="271" y1="119.0" x2="303" y2="119.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+<rect x="593" y="84" width="247" height="70" rx="8" fill="#e6f4ea" stroke="#8a94a3"/>
+<text x="717" y="114" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">&lt;lap&gt;.lap.json</text>
+<text x="717" y="134" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">3DHeat: 레이스 분석 탭</text>
+<line x1="557" y1="119.0" x2="589" y2="119.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+<rect x="20" y="168" width="247" height="70" rx="8" fill="#e8f0fe" stroke="#8a94a3"/>
+<text x="143" y="198" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">Forza 랩</text>
+<text x="143" y="218" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">경로를 위해 한 번 주행</text>
+<rect x="307" y="168" width="247" height="70" rx="8" fill="#fff4e0" stroke="#8a94a3"/>
+<text x="430" y="208" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">경로</text>
+<line x1="271" y1="203.0" x2="303" y2="203.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+<rect x="593" y="168" width="247" height="70" rx="8" fill="#e6f4ea" stroke="#8a94a3"/>
+<text x="717" y="198" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">경로 .npz + .json</text>
+<text x="717" y="218" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">GameFiles: course</text>
+<line x1="557" y1="203.0" x2="589" y2="203.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+<rect x="20" y="252" width="247" height="70" rx="8" fill="#e8f0fe" stroke="#8a94a3"/>
+<text x="143" y="282" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">FH Companion 랩 라이브러리</text>
+<text x="143" y="302" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">이미 주행한 랩</text>
+<rect x="307" y="252" width="247" height="70" rx="8" fill="#fff4e0" stroke="#8a94a3"/>
+<text x="430" y="292" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">랩</text>
+<line x1="271" y1="287.0" x2="303" y2="287.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+<rect x="593" y="252" width="247" height="70" rx="8" fill="#e6f4ea" stroke="#8a94a3"/>
+<text x="717" y="282" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">경로 + 샘플 .csv</text>
+<text x="717" y="302" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">GameFiles: course</text>
+<line x1="557" y1="287.0" x2="589" y2="287.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+<rect x="20" y="336" width="247" height="70" rx="8" fill="#e8f0fe" stroke="#8a94a3"/>
+<text x="143" y="366" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">플레이 중의 화면</text>
+<text x="143" y="386" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">Windows 화면 캡처</text>
+<rect x="307" y="336" width="247" height="70" rx="8" fill="#fff4e0" stroke="#8a94a3"/>
+<text x="430" y="376" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">스캔 구간</text>
+<line x1="271" y1="371.0" x2="303" y2="371.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+<rect x="593" y="336" width="247" height="70" rx="8" fill="#e6f4ea" stroke="#8a94a3"/>
+<text x="717" y="366" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">레벨 .glb</text>
+<text x="717" y="386" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">3DHeat: 배경 / 레벨 패널</text>
+<line x1="557" y1="371.0" x2="589" y2="371.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+<rect x="20" y="420" width="247" height="70" rx="8" fill="#e8f0fe" stroke="#8a94a3"/>
+<text x="143" y="450" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">녹화본(영상)</text>
+<text x="143" y="470" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">세션 후</text>
+<rect x="307" y="420" width="247" height="70" rx="8" fill="#fff4e0" stroke="#8a94a3"/>
+<text x="430" y="460" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">reconstruct</text>
+<line x1="271" y1="455.0" x2="303" y2="455.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+<rect x="593" y="420" width="247" height="70" rx="8" fill="#e6f4ea" stroke="#8a94a3"/>
+<text x="717" y="450" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">레벨 .glb</text>
+<text x="717" y="470" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">3DHeat: 배경 / 레벨 패널</text>
+<line x1="557" y1="455.0" x2="589" y2="455.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+<rect x="20" y="504" width="247" height="70" rx="8" fill="#e8f0fe" stroke="#8a94a3"/>
+<text x="143" y="534" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">녹화본(영상)</text>
+<text x="143" y="554" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">매치 후</text>
+<rect x="307" y="504" width="247" height="70" rx="8" fill="#fff4e0" stroke="#8a94a3"/>
+<text x="430" y="534" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">hud</text>
+<text x="430" y="554" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">locate (실험적)</text>
+<line x1="271" y1="539.0" x2="303" y2="539.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+<rect x="593" y="504" width="247" height="70" rx="8" fill="#e6f4ea" stroke="#8a94a3"/>
+<text x="717" y="534" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">내 트랙 .parquet</text>
+<text x="717" y="554" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">3DHeat: 히트맵 탭</text>
+<line x1="557" y1="539.0" x2="589" y2="539.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
+</svg>

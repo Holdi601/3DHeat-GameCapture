@@ -8,7 +8,7 @@ where you braked, where you were slow, how two laps differ. And to have the leve
 heatmap when nobody has a 3D model of it.
 
 **Example:** turn on Forza's Data Out, run `python -m heat3d_capture telemetry -o laps`, drive two
-laps. Two lap files appear in `laps`. Drop them on the viewer's Race tab.
+laps. Two lap files appear in `laps`. Drop them on the viewer's Race analysis tab.
 
 ![What goes in, which command, what comes out, where the viewer shows it](docs/assets/img/overview.svg)
 
@@ -24,7 +24,7 @@ laps. Two lap files appear in `laps`. Drop them on the viewer's Race tab.
 
 - **Lap telemetry** - record every channel a racing game publishes (Forza Data Out, the Assetto
   Corsa games' shared memory, the rally games' network feeds, a BeamNG mod, a Trackmania plugin),
-  one `heat3d-lap` file per lap, for the viewer's Race tab: lines, speed traces, slip, braking
+  one `heat3d-lap` file per lap, for the viewer's Race analysis tab: lines, speed traces, slip, braking
   zones.
 - **Levels nobody exported** - turn what the screen showed into a `.glb` the viewer lays under the
   heatmap. If you have the game's project, use the
@@ -102,9 +102,9 @@ and `.glb` 3D models, as below.
 
 | File | From | Holds | In the viewer |
 |---|---|---|---|
-| `<stamp>_car<n>_lap<k>_<s>s.lap.json` | `telemetry` | one lap: `game`, `car`, `lap`, `meta`, `units`, and every channel as a column (`time`, `distance`, `x`, `y`, `z`, `speed`, per-wheel slip, ...) - [the format](https://holdi601.github.io/3DHeat-GameCapture/lap-format.html) | Race tab |
+| `<stamp>_car<n>_lap<k>_<s>s.lap.json` | `telemetry` | one lap: `game`, `car`, `lap`, `meta`, `units`, and every channel as a column (`time`, `distance`, `x`, `y`, `z`, `speed`, per-wheel slip, ...) - [the format](https://holdi601.github.io/3DHeat-GameCapture/lap-format.html) | Race analysis tab |
 | `<stamp>_<game>.raw.parquet`, `.summary.json` | `telemetry` | every packet kept whole; the completeness self-check (below) | skipped |
-| `<level>.glb` | scan window, `reconstruct` | one mesh in the viewer's frame - [the .glb](https://holdi601.github.io/3DHeat-GameCapture/glb-output.html) | Level panel |
+| `<level>.glb` | scan window, `reconstruct` | one mesh in the viewer's frame - [the .glb](https://holdi601.github.io/3DHeat-GameCapture/glb-output.html) | Background / Background / level panel |
 | `<out>.parquet` (+ `.events.jsonl`, `.summary.json`, `.map.png`) | `hud` | the player's track and own events, one row each, in minimap or level units | Heatmap tab, Map image |
 | `<out>.parquet` (+ `.summary.json`) | `locate frames` | per frame: time, position, view direction, where the fix came from, confidence | Heatmap tab |
 
@@ -507,7 +507,7 @@ question no synthetic scene can answer.
   price of never touching the game process.
 - **No texture atlas.** Colour is per-vertex (`COLOR_0`), which Blender and other
   glTF tools read, and which the viewer shows behind the *Captured colour*
-  switch in its Level panel. Per-vertex rather than an atlas because the viewer's
+  switch in its Background / Background / level panel. Per-vertex rather than an atlas because the viewer's
   default look is a grey map under saturated heat — colour is there to find the
   road on a scanned circuit, where geometry alone does not separate it from the
   verge, and is switched off again to read the heat. An atlas would multiply the
@@ -691,7 +691,7 @@ among them sit a median of 3 cm above the terrain. So the height is not a layer
 of track missing from the terrain; it is the car's own reference point above its
 wheels.
 
-### Every channel, for the Race tab
+### Every channel, for the Race analysis tab
 
 FH Companion keeps thirteen channels every five metres: enough to see a line
 and a speed trace, not enough to say *why* a lap was slow. The game sends a
@@ -774,7 +774,7 @@ yet confirmed.
 Every lap file is a `heat3d-lap` document: channels as columns under
 canonical names, per wheel as `tireTemp.FL` and so on - see
 [`docs/lap-format.md`](docs/lap-format.md). Drop the files on the
-viewer's Race tab. iRacing needs no recorder: its
+viewer's Race analysis tab. iRacing needs no recorder: its
 own `.ibt` files load directly.
 
 ### Completeness
