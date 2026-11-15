@@ -32,12 +32,12 @@ Har du aldrig använt kommandoraden förut? Läs [Innan du börjar](before-you-s
 
 Alla tre följer en regel: **inget injiceras i ett spel och inget hookas**. Bilderna kommer från
 det publika skärmfångstgränssnittet, telemetrin från gränssnitt som spelen publicerar för ändamålet. Se
-[Reglerna](../rules.md).
+[Reglerna](rules.md).
 
 ![Vad som går in, vilket kommando, vad som kommer ut, var visaren visar det](../assets/img/sv/overview.svg)
 
 Koden är Python (paketet `heat3d_capture`), MIT-licensierad. Djup- och positionsmodellerna den kan köra
-har egna licenser - se [Modeller och licenser](../models-and-licences.md).
+har egna licenser - se [Modeller och licenser](models-and-licences.md).
 
 ## Snabbstart {#quick-start}
 
@@ -64,20 +64,20 @@ visarens Racinganalys-flik. Varje annat spel är ett `--game` bort:
 .venv\Scripts\python -m heat3d_capture telemetry --game dirtrally2 -o laps
 ```
 
-Se [Telemetriinspelare](../telemetry.md) för varje spel och alternativ.
+Se [Telemetriinspelare](telemetry.md) för varje spel och alternativ.
 
 ### Skanna en nivå {#scan-a-level}
 
 Dubbelklicka på **`scan.bat`** i verktygets mapp. Den hittar Python (och erbjuder att installera det
 med winget om det saknas), skapar en privat `.venv` och öppnar skanningsfönstret. Fönstret säger
 vad som saknas, vad varje paket används till och hur stor nedladdningen är, och installerar
-ingenting utan ett ja. Se [Körning och beroenden](../runtime.md) och
-[Skanningsfönstret](../reconstruction-scan-ui.md).
+ingenting utan ett ja. Se [Körning och beroenden](runtime.md) och
+[Skanningsfönstret](reconstruction-scan-ui.md).
 
 För hand: `.venv\Scripts\python -m heat3d_capture.ui`.
 
 För att bygga om en inspelning offline, med kamerabanan löst på en gång (kräver PyTorch, paketet `vggt`
-och en GPU - se [Offline-rekonstruktion](../reconstruction-offline.md)):
+och en GPU - se [Offline-rekonstruktion](reconstruction-offline.md)):
 
 ```powershell
 .venv\Scripts\python -m heat3d_capture reconstruct lap.mp4 -o lap.glb
@@ -88,36 +88,36 @@ och en GPU - se [Offline-rekonstruktion](../reconstruction-offline.md)):
 | Sida | Vad den täcker |
 |---|---|
 | [Innan du börjar](before-you-start.md) | Python, en terminal, det första kommandot, vanliga fel |
-| [Reglerna](../rules.md) | Ingen injicering, bara publicerade gränssnitt, och vad det kostar |
-| [Telemetriinspelare](../telemetry.md) | Kommandot `telemetry` och en översikt över varje spel |
-| [Forza](../telemetry-forza.md) | Data Out, layoutigenkänning, FH Companion-reläet och dess `.tele.gz` |
-| [Assetto Corsa-spelen](../telemetry-assetto-corsa.md) | AC, ACC, AC EVO, AC Rally från delat minne |
-| [Rallyspelen](../telemetry-rally.md) | EA SPORTS WRC, DiRT Rally 2.0 / 1 / DiRT 4, Richard Burns Rally |
-| [BeamNG.drive](../telemetry-beamng.md) | `heat3d`-protokollmodet |
-| [Trackmania](../telemetry-trackmania.md) | Openplanet-pluginet `Heat3dRecorder` |
-| [iRacing](../telemetry-iracing.md) | Läsa `.ibt`-filer i visaren |
-| [Varv- och etappdelning](../lap-splitting.md) | `LapSplitter`, `CounterSplitter`, `LineSplitter`, `StageSplitter` |
-| [Glidning, drift och härledda kanaler](../slip-and-drift.md) | Hur glidning skalas, och vad visaren härleder |
-| [heat3d-lap-filen](../lap-format.md) | Varvfilens format, kanaler, enheter, `meta` |
-| [Spel](../games.md) | Per spel: hur man spelar in, vad som skickas, vilka banor som kan exporteras |
-| [Kommandon](../commands.md) | `route`, `telemetry`, `laps`, `reconstruct`, `hud`, `locate`, steg för steg |
+| [Reglerna](rules.md) | Ingen injicering, bara publicerade gränssnitt, och vad det kostar |
+| [Telemetriinspelare](telemetry.md) | Kommandot `telemetry` och en översikt över varje spel |
+| [Forza](telemetry-forza.md) | Data Out, layoutigenkänning, FH Companion-reläet och dess `.tele.gz` |
+| [Assetto Corsa-spelen](telemetry-assetto-corsa.md) | AC, ACC, AC EVO, AC Rally från delat minne |
+| [Rallyspelen](telemetry-rally.md) | EA SPORTS WRC, DiRT Rally 2.0 / 1 / DiRT 4, Richard Burns Rally |
+| [BeamNG.drive](telemetry-beamng.md) | `heat3d`-protokollmodet |
+| [Trackmania](telemetry-trackmania.md) | Openplanet-pluginet `Heat3dRecorder` |
+| [iRacing](telemetry-iracing.md) | Läsa `.ibt`-filer i visaren |
+| [Varv- och etappdelning](lap-splitting.md) | `LapSplitter`, `CounterSplitter`, `LineSplitter`, `StageSplitter` |
+| [Glidning, drift och härledda kanaler](slip-and-drift.md) | Hur glidning skalas, och vad visaren härleder |
+| [heat3d-lap-filen](lap-format.md) | Varvfilens format, kanaler, enheter, `meta` |
+| [Spel](games.md) | Per spel: hur man spelar in, vad som skickas, vilka banor som kan exporteras |
+| [Kommandon](commands.md) | `route`, `telemetry`, `laps`, `reconstruct`, `hud`, `locate`, steg för steg |
 | [Kommandoreferens](../cli-reference.md) | varje alternativ, genererat från `--help` |
-| [Läsa HUD:en från en inspelning](../hud-video.md) | `hud`: egna handlingar, dödsfall, minikartans spår och dödsnotisen från en inspelning |
-| [Lokalisera bilder i en nivå](../locate.md) | `locate`: var varje bild togs, mot nivåns geometri |
-| [Nivårekonstruktion](../reconstruction.md) | Pipelinen från bilder till en `.glb` |
-| [Skanningsfönstret](../reconstruction-scan-ui.md) | Varje kontroll, genväg och överlägg |
-| [Fångst, masker och bildkvalitet](../reconstruction-capture.md) | Windows Graphics Capture, nyckelbilder, HUD-masker, kvalitetsråd |
-| [Djup](../reconstruction-depth.md) | Depth Anything V2, ONNX Runtime, bygga modellen |
-| [Kamerapose och skala](../reconstruction-pose.md) | Odometri, återlokalisering, telemetripositioner, markskala, bundle adjustment |
-| [Sammanslagning, täckning och färg](../reconstruction-fusion-and-texture.md) | Ockupationsvolymen, täckningsnätet, svaga punkter, vertexfärg |
-| [.glb-utdatan](../glb-output.md) | Filen visaren läser in |
-| [Offline-rekonstruktion](../reconstruction-offline.md) | `reconstruct`, VGGT-fönster och hopsättning |
-| [Modeller och licenser](../models-and-licences.md) | Depth Anything V2-storlekar, VGGT, paketen |
-| [Körning och beroenden](../runtime.md) | Förkontroll, backends, prestandanivåer |
-| [Begränsningar och verifiering](../limits.md) | Vad som inte är gjort, och vad som inte har kontrollerats |
-| [Uppdateringar](../updates.md) | Kontrollen av utgåvor och `python -m heat3d_update` |
-| [Utveckling](../development.md) | Tester, den virtuella miljön, förrådets layout |
-| [Underhålla dokumentationen](../maintaining.md) | Utgivningschecklistan för kod och dokumentation |
+| [Läsa HUD:en från en inspelning](hud-video.md) | `hud`: egna handlingar, dödsfall, minikartans spår och dödsnotisen från en inspelning |
+| [Lokalisera bilder i en nivå](locate.md) | `locate`: var varje bild togs, mot nivåns geometri |
+| [Nivårekonstruktion](reconstruction.md) | Pipelinen från bilder till en `.glb` |
+| [Skanningsfönstret](reconstruction-scan-ui.md) | Varje kontroll, genväg och överlägg |
+| [Fångst, masker och bildkvalitet](reconstruction-capture.md) | Windows Graphics Capture, nyckelbilder, HUD-masker, kvalitetsråd |
+| [Djup](reconstruction-depth.md) | Depth Anything V2, ONNX Runtime, bygga modellen |
+| [Kamerapose och skala](reconstruction-pose.md) | Odometri, återlokalisering, telemetripositioner, markskala, bundle adjustment |
+| [Sammanslagning, täckning och färg](reconstruction-fusion-and-texture.md) | Ockupationsvolymen, täckningsnätet, svaga punkter, vertexfärg |
+| [.glb-utdatan](glb-output.md) | Filen visaren läser in |
+| [Offline-rekonstruktion](reconstruction-offline.md) | `reconstruct`, VGGT-fönster och hopsättning |
+| [Modeller och licenser](models-and-licences.md) | Depth Anything V2-storlekar, VGGT, paketen |
+| [Körning och beroenden](runtime.md) | Förkontroll, backends, prestandanivåer |
+| [Begränsningar och verifiering](limits.md) | Vad som inte är gjort, och vad som inte har kontrollerats |
+| [Uppdateringar](updates.md) | Kontrollen av utgåvor och `python -m heat3d_update` |
+| [Utveckling](development.md) | Tester, den virtuella miljön, förrådets layout |
+| [Underhålla dokumentationen](maintaining.md) | Utgivningschecklistan för kod och dokumentation |
 
 ## En del av 3DHeat {#part-of-3dheat}
 
