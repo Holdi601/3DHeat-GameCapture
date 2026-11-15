@@ -40,12 +40,12 @@ vuelta en `laps\`. Suéltalos en la pestaña Análisis de carrera del visor.
 
 Las tres siguen una regla: **no se inyecta nada en un juego y no se engancha nada**. Los fotogramas
 vienen de la API pública de captura de pantalla, y la telemetría de las interfaces que los juegos
-publican para ello. Consulta [Las normas](../rules.md).
+publican para ello. Consulta [Las normas](rules.md).
 
 ![Qué entra, qué comando, qué sale, dónde lo muestra el visor](../assets/img/es/overview.svg)
 
 El código es Python (paquete `heat3d_capture`), con licencia MIT. Los modelos de profundidad y de pose
-que puede ejecutar tienen sus propias licencias: consulta [Modelos y licencias](../models-and-licences.md).
+que puede ejecutar tienen sus propias licencias: consulta [Modelos y licencias](models-and-licences.md).
 
 ## Inicio rápido {#quick-start}
 
@@ -72,20 +72,20 @@ vuelta al cruzar la meta, como en la imagen de arriba. Pulsa Ctrl+C para parar. 
 .venv\Scripts\python -m heat3d_capture telemetry --game dirtrally2 -o laps
 ```
 
-Consulta [Grabadores de telemetría](../telemetry.md) para cada juego y cada opción.
+Consulta [Grabadores de telemetría](telemetry.md) para cada juego y cada opción.
 
 ### Escanear un nivel {#scan-a-level}
 
 Haz doble clic en **`scan.bat`** en la carpeta de la herramienta. Encuentra Python (y ofrece instalarlo
 con winget si no hay ninguno), crea un `.venv` privado y abre la ventana de escaneo. La ventana indica
 qué falta, para qué sirve cada paquete y cuánto ocupa la descarga, y no instala nada sin un sí.
-Consulta [Entorno de ejecución y dependencias](../runtime.md) y
-[La ventana de escaneo](../reconstruction-scan-ui.md).
+Consulta [Entorno de ejecución y dependencias](runtime.md) y
+[La ventana de escaneo](reconstruction-scan-ui.md).
 
 A mano: `.venv\Scripts\python -m heat3d_capture.ui`.
 
 Para reconstruir una grabación sin conexión, con la trayectoria de la cámara resuelta de una vez
-(necesita PyTorch, el paquete `vggt` y una GPU - ver [Reconstrucción sin conexión](../reconstruction-offline.md)):
+(necesita PyTorch, el paquete `vggt` y una GPU - ver [Reconstrucción sin conexión](reconstruction-offline.md)):
 
 ```powershell
 .venv\Scripts\python -m heat3d_capture reconstruct lap.mp4 -o lap.glb
@@ -96,36 +96,36 @@ Para reconstruir una grabación sin conexión, con la trayectoria de la cámara 
 | Página | Qué cubre |
 |---|---|
 | [Antes de empezar](before-you-start.md) | Python, una terminal, el primer comando, errores habituales |
-| [Las normas](../rules.md) | Sin inyección, solo interfaces publicadas, y lo que eso cuesta |
-| [Grabadores de telemetría](../telemetry.md) | El comando `telemetry` y un resumen de cada juego |
-| [Forza](../telemetry-forza.md) | Data Out, detección del diseño, el relé de FH Companion y su `.tele.gz` |
-| [Juegos de Assetto Corsa](../telemetry-assetto-corsa.md) | AC, ACC, AC EVO, AC Rally desde la memoria compartida |
-| [Juegos de rally](../telemetry-rally.md) | EA SPORTS WRC, DiRT Rally 2.0 / 1 / DiRT 4, Richard Burns Rally |
-| [BeamNG.drive](../telemetry-beamng.md) | El mod del protocolo `heat3d` |
-| [Trackmania](../telemetry-trackmania.md) | El plugin de Openplanet `Heat3dRecorder` |
-| [iRacing](../telemetry-iracing.md) | Leer archivos `.ibt` en el visor |
-| [División de vueltas y tramos](../lap-splitting.md) | `LapSplitter`, `CounterSplitter`, `LineSplitter`, `StageSplitter` |
-| [Deslizamiento, derrape y canales derivados](../slip-and-drift.md) | Cómo se escala el deslizamiento, y lo que deriva el visor |
-| [El archivo heat3d-lap](../lap-format.md) | El formato del archivo de vuelta, canales, unidades, `meta` |
-| [Juegos](../games.md) | Por juego: cómo grabar, qué se envía, qué circuitos se pueden exportar |
-| [Comandos](../commands.md) | `route`, `telemetry`, `laps`, `reconstruct`, `hud`, `locate`, paso a paso |
+| [Las normas](rules.md) | Sin inyección, solo interfaces publicadas, y lo que eso cuesta |
+| [Grabadores de telemetría](telemetry.md) | El comando `telemetry` y un resumen de cada juego |
+| [Forza](telemetry-forza.md) | Data Out, detección del diseño, el relé de FH Companion y su `.tele.gz` |
+| [Juegos de Assetto Corsa](telemetry-assetto-corsa.md) | AC, ACC, AC EVO, AC Rally desde la memoria compartida |
+| [Juegos de rally](telemetry-rally.md) | EA SPORTS WRC, DiRT Rally 2.0 / 1 / DiRT 4, Richard Burns Rally |
+| [BeamNG.drive](telemetry-beamng.md) | El mod del protocolo `heat3d` |
+| [Trackmania](telemetry-trackmania.md) | El plugin de Openplanet `Heat3dRecorder` |
+| [iRacing](telemetry-iracing.md) | Leer archivos `.ibt` en el visor |
+| [División de vueltas y tramos](lap-splitting.md) | `LapSplitter`, `CounterSplitter`, `LineSplitter`, `StageSplitter` |
+| [Deslizamiento, deriva y canales derivados](slip-and-drift.md) | Cómo se escala el deslizamiento, y lo que deriva el visor |
+| [El archivo heat3d-lap](lap-format.md) | El formato del archivo de vuelta, canales, unidades, `meta` |
+| [Juegos](games.md) | Por juego: cómo grabar, qué se envía, qué circuitos se pueden exportar |
+| [Comandos](commands.md) | `route`, `telemetry`, `laps`, `reconstruct`, `hud`, `locate`, paso a paso |
 | [Referencia de comandos](../cli-reference.md) | cada opción, generada desde `--help` |
-| [Leer el HUD de una grabación](../hud-video.md) | `hud`: acciones propias, muertes, trazado del minimapa y registro de bajas de una grabación |
-| [Localizar fotogramas en un nivel](../locate.md) | `locate`: dónde se tomó cada fotograma, frente a la geometría del nivel |
-| [Reconstrucción de niveles](../reconstruction.md) | La canalización desde los fotogramas hasta un `.glb` |
-| [La ventana de escaneo](../reconstruction-scan-ui.md) | Cada control, atajo y elemento superpuesto |
-| [Captura, máscaras y calidad de fotograma](../reconstruction-capture.md) | Windows Graphics Capture, fotogramas clave, máscaras del HUD, consejos de calidad |
-| [Profundidad](../reconstruction-depth.md) | Depth Anything V2, ONNX Runtime, construcción del modelo |
-| [Pose de cámara y escala](../reconstruction-pose.md) | Odometría, relocalización, poses de telemetría, escala del suelo, ajuste de haces |
-| [Fusión, cobertura y color](../reconstruction-fusion-and-texture.md) | El volumen de ocupación, la rejilla de cobertura, puntos débiles, color por vértice |
-| [La salida .glb](../glb-output.md) | El archivo que carga el visor |
-| [Reconstrucción sin conexión](../reconstruction-offline.md) | `reconstruct`, ventanas VGGT y unión |
-| [Modelos y licencias](../models-and-licences.md) | Tamaños de Depth Anything V2, VGGT, los paquetes |
-| [Entorno de ejecución y dependencias](../runtime.md) | Verificación previa, backends, niveles de rendimiento |
-| [Límites y verificación](../limits.md) | Lo que no se hace, y lo que no se ha comprobado |
-| [Actualizaciones](../updates.md) | La comprobación de versiones y `python -m heat3d_update` |
-| [Desarrollo](../development.md) | Pruebas, el entorno virtual, estructura del repositorio |
-| [Mantenimiento de estas páginas](../maintaining.md) | La lista de comprobación de código y documentación |
+| [Leer el HUD de una grabación](hud-video.md) | `hud`: acciones propias, muertes, trazado del minimapa y registro de bajas de una grabación |
+| [Localizar fotogramas en un nivel](locate.md) | `locate`: dónde se tomó cada fotograma, frente a la geometría del nivel |
+| [Reconstrucción de niveles](reconstruction.md) | La canalización desde los fotogramas hasta un `.glb` |
+| [La ventana de escaneo](reconstruction-scan-ui.md) | Cada control, atajo y elemento superpuesto |
+| [Captura, máscaras y calidad de fotograma](reconstruction-capture.md) | Windows Graphics Capture, fotogramas clave, máscaras del HUD, consejos de calidad |
+| [Profundidad](reconstruction-depth.md) | Depth Anything V2, ONNX Runtime, construcción del modelo |
+| [Pose de cámara y escala](reconstruction-pose.md) | Odometría, relocalización, poses de telemetría, escala del suelo, ajuste de haces |
+| [Fusión, cobertura y color](reconstruction-fusion-and-texture.md) | El volumen de ocupación, la rejilla de cobertura, puntos débiles, color por vértice |
+| [La salida .glb](glb-output.md) | El archivo que carga el visor |
+| [Reconstrucción sin conexión](reconstruction-offline.md) | `reconstruct`, ventanas VGGT y unión |
+| [Modelos y licencias](models-and-licences.md) | Tamaños de Depth Anything V2, VGGT, los paquetes |
+| [Entorno de ejecución y dependencias](runtime.md) | Verificación previa, backends, niveles de rendimiento |
+| [Límites y verificación](limits.md) | Lo que no se hace, y lo que no se ha comprobado |
+| [Actualizaciones](updates.md) | La comprobación de versiones y `python -m heat3d_update` |
+| [Desarrollo](development.md) | Pruebas, el entorno virtual, estructura del repositorio |
+| [Mantenimiento de estas páginas](maintaining.md) | La lista de comprobación de código y documentación |
 
 ## Parte de 3DHeat {#part-of-3dheat}
 

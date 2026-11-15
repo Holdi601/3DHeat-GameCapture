@@ -13,7 +13,7 @@
 <line x1="271" y1="119.0" x2="303" y2="119.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
 <rect x="593" y="84" width="247" height="70" rx="8" fill="#e6f4ea" stroke="#8a94a3"/>
 <text x="717" y="114" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">&lt;tour&gt;.lap.json</text>
-<text x="717" y="134" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">3DHeat : onglet Analyse de course</text>
+<text x="717" y="134" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">3DHeat : Analyse de course</text>
 <line x1="557" y1="119.0" x2="589" y2="119.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
 <rect x="20" y="168" width="247" height="70" rx="8" fill="#e8f0fe" stroke="#8a94a3"/>
 <text x="143" y="198" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">Un tour Forza</text>
@@ -26,7 +26,7 @@
 <text x="717" y="218" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">GameFiles : course</text>
 <line x1="557" y1="203.0" x2="589" y2="203.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
 <rect x="20" y="252" width="247" height="70" rx="8" fill="#e8f0fe" stroke="#8a94a3"/>
-<text x="143" y="282" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">bibliothèque de tours FH Companion</text>
+<text x="143" y="282" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">bibliothèque FH Companion</text>
 <text x="143" y="302" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">tours déjà roulés</text>
 <rect x="307" y="252" width="247" height="70" rx="8" fill="#fff4e0" stroke="#8a94a3"/>
 <text x="430" y="292" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">tours</text>
@@ -43,7 +43,7 @@
 <line x1="271" y1="371.0" x2="303" y2="371.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
 <rect x="593" y="336" width="247" height="70" rx="8" fill="#e6f4ea" stroke="#8a94a3"/>
 <text x="717" y="366" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">niveau .glb</text>
-<text x="717" y="386" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">3DHeat : panneau Arrière-plan / niveau</text>
+<text x="717" y="386" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">3DHeat : Arrière-plan / niveau</text>
 <line x1="557" y1="371.0" x2="589" y2="371.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
 <rect x="20" y="420" width="247" height="70" rx="8" fill="#e8f0fe" stroke="#8a94a3"/>
 <text x="143" y="450" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">Un enregistrement (vidéo)</text>
@@ -53,7 +53,7 @@
 <line x1="271" y1="455.0" x2="303" y2="455.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
 <rect x="593" y="420" width="247" height="70" rx="8" fill="#e6f4ea" stroke="#8a94a3"/>
 <text x="717" y="450" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">niveau .glb</text>
-<text x="717" y="470" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">3DHeat : panneau Arrière-plan / niveau</text>
+<text x="717" y="470" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#3d4450" text-anchor="middle">3DHeat : Arrière-plan / niveau</text>
 <line x1="557" y1="455.0" x2="589" y2="455.0" stroke="#8a94a3" stroke-width="2" marker-end="url(#a)"/>
 <rect x="20" y="504" width="247" height="70" rx="8" fill="#e8f0fe" stroke="#8a94a3"/>
 <text x="143" y="534" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#1f2328" text-anchor="middle">Un enregistrement (vidéo)</text>

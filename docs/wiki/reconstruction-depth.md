@@ -64,7 +64,9 @@ What the converter does:
   TorchScript path produces one self-contained file.
 - Prints the file and its size. The tracer's warnings about baked-in shapes are expected.
 
-The scanner looks for `models/depth-*.onnx` and uses the first by file name.
+The scanner looks for `models/depth-*.onnx` and picks by licence, not by file name: Small
+whenever it is there, a larger size only when it is the only one. The scan window's line
+names the file, its licence and any other model it left unused.
 
 ## Running it: ONNX Runtime
 

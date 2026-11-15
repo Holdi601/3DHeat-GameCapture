@@ -18,7 +18,7 @@ wo du gebremst hast, wo du langsam warst, wie sich zwei Runden unterscheiden. Un
 Heatmap zu haben, wenn niemand ein 3D-Modell davon hat.
 
 **Beispiel:** Schalte Forzas Data Out ein, führe einen Befehl aus und fahre zwei Runden. Im Ordner `laps\`
-erscheinen zwei Rundendateien. Zieh sie in den Rennanalyse-Reiter des Viewers.
+erscheinen zwei Rundendateien. Zieh sie in den Rennanalyse-Tab des Viewers.
 
 ![Telemetrie, die zwei Runden eines synthetischen Forza-Datenstroms aufnimmt](../assets/img/telemetry-run.svg)
 
@@ -28,7 +28,7 @@ Neu in der Kommandozeile? Lies zuerst [Bevor du anfängst](before-you-start.md).
 
 1. **Rundentelemetrie.** Es nimmt jeden Kanal auf, den ein Rennspiel veröffentlicht - Forzas Data Out, die
    Shared-Memory-Schnittstelle der Assetto-Corsa-Spiele, die Netzwerkfeeds der Rally-Spiele, ein BeamNG-Mod,
-   ein Trackmania-Plugin - und schreibt pro Runde oder Etappe eine `heat3d-lap`-Datei für den Rennanalyse-Reiter des
+   ein Trackmania-Plugin - und schreibt pro Runde oder Etappe eine `heat3d-lap`-Datei für den Rennanalyse-Tab des
    Viewers. iRacing braucht keinen Recorder: Der Viewer liest seine eigenen `.ibt`-Dateien.
 2. **Levels aus dem Spiel.** Es macht aus dem, was der Bildschirm zeigte, während du durch ein Level gelaufen
    oder gefahren bist, ein 3D-Modell im `.glb`-Format, das der Viewer unter die Heatmap legt.
@@ -38,12 +38,12 @@ Neu in der Kommandozeile? Lies zuerst [Bevor du anfängst](before-you-start.md).
 
 Alle drei folgen einer Regel: **Nichts wird in ein Spiel eingeschleust und nichts wird eingehakt.** Die Frames
 kommen von der öffentlichen Bildschirmaufnahme-Schnittstelle, die Telemetrie von Schnittstellen, die die Spiele
-dafür veröffentlichen. Siehe [Die Regeln](../rules.md).
+dafür veröffentlichen. Siehe [Die Regeln](rules.md).
 
 ![Was hineingeht, welcher Befehl, was herauskommt, wo der Viewer es zeigt](../assets/img/de/overview.svg)
 
 Der Code ist Python (Paket `heat3d_capture`), MIT-lizenziert. Die Tiefen- und Posenmodelle, die es ausführen
-kann, haben eigene Lizenzen - siehe [Modelle und Lizenzen](../models-and-licences.md).
+kann, haben eigene Lizenzen - siehe [Modelle und Lizenzen](models-and-licences.md).
 
 ## Schnellstart {#quick-start}
 
@@ -63,26 +63,26 @@ python -m venv .venv
 
 **Du solltest sehen** `listening on port 5300. Laps go to laps. Ctrl+C to stop.`, dann eine Zeile pro Runde,
 sobald du die Linie überquerst, wie im Bild oben. Drücke Strg+C zum Beenden. Zieh die Dateien aus `laps\`
-in den Rennanalyse-Reiter des Viewers. Jedes andere Spiel ist nur einen `--game`-Schalter entfernt:
+in den Rennanalyse-Tab des Viewers. Jedes andere Spiel ist nur einen `--game`-Schalter entfernt:
 
 ```powershell
 .venv\Scripts\python -m heat3d_capture telemetry --game acc -o laps
 .venv\Scripts\python -m heat3d_capture telemetry --game dirtrally2 -o laps
 ```
 
-Siehe [Telemetrie-Recorder](../telemetry.md) für jedes Spiel und jede Option.
+Siehe [Telemetrie-Recorder](telemetry.md) für jedes Spiel und jede Option.
 
 ### Ein Level scannen {#scan-a-level}
 
 Doppelklicke auf **`scan.bat`** im Ordner des Werkzeugs. Es findet Python (und bietet an, es mit winget
 zu installieren, falls keins da ist), legt eine eigene `.venv` an und öffnet das Scan-Fenster. Das Fenster sagt,
 was fehlt, wofür jedes Paket ist und wie groß der Download ist, und installiert nichts ohne dein Ja. Siehe
-[Laufzeit und Abhängigkeiten](../runtime.md) und [Das Scan-Fenster](../reconstruction-scan-ui.md).
+[Laufzeit und Abhängigkeiten](runtime.md) und [Das Scan-Fenster](reconstruction-scan-ui.md).
 
 Von Hand: `.venv\Scripts\python -m heat3d_capture.ui`.
 
 Um eine Aufnahme offline nachzubauen, mit dem Kamerapfad, der auf einmal gelöst wird (braucht PyTorch, das Paket
-`vggt` und eine GPU - siehe [Offline-Rekonstruktion](../reconstruction-offline.md)):
+`vggt` und eine GPU - siehe [Offline-Rekonstruktion](reconstruction-offline.md)):
 
 ```powershell
 .venv\Scripts\python -m heat3d_capture reconstruct lap.mp4 -o lap.glb
@@ -93,43 +93,43 @@ Um eine Aufnahme offline nachzubauen, mit dem Kamerapfad, der auf einmal gelöst
 | Seite | Was sie behandelt |
 |---|---|
 | [Bevor du anfängst](before-you-start.md) | Python, ein Terminal, der erste Befehl, häufige Fehler |
-| [Die Regeln](../rules.md) | Keine Einschleusung, nur veröffentlichte Schnittstellen, und was das kostet |
-| [Telemetrie-Recorder](../telemetry.md) | Der Befehl `telemetry` und ein Überblick über jedes Spiel |
-| [Forza](../telemetry-forza.md) | Data Out, Erkennung des Layouts, das FH-Companion-Relais und seine `.tele.gz` |
-| [Assetto-Corsa-Spiele](../telemetry-assetto-corsa.md) | AC, ACC, AC EVO, AC Rally aus dem Shared Memory |
-| [Rally-Spiele](../telemetry-rally.md) | EA SPORTS WRC, DiRT Rally 2.0 / 1 / DiRT 4, Richard Burns Rally |
-| [BeamNG.drive](../telemetry-beamng.md) | Der `heat3d`-Protokoll-Mod |
-| [Trackmania](../telemetry-trackmania.md) | Das Openplanet-Plugin `Heat3dRecorder` |
-| [iRacing](../telemetry-iracing.md) | Lesen von `.ibt`-Dateien im Viewer |
-| [Runden- und Etappen-Teilung](../lap-splitting.md) | `LapSplitter`, `CounterSplitter`, `LineSplitter`, `StageSplitter` |
-| [Schlupf, Drift und abgeleitete Kanäle](../slip-and-drift.md) | Wie Schlupf skaliert wird und was der Viewer ableitet |
-| [Die heat3d-lap-Datei](../lap-format.md) | Das Format der Rundendatei, Kanäle, Einheiten, `meta` |
-| [Spiele](../games.md) | Pro Spiel: wie aufgenommen wird, was gesendet wird, welche Strecken exportiert werden können |
-| [Befehle](../commands.md) | `route`, `telemetry`, `laps`, `reconstruct`, `hud`, `locate`, Schritt für Schritt |
+| [Die Regeln](rules.md) | Keine Einschleusung, nur veröffentlichte Schnittstellen, und was das kostet |
+| [Telemetrie-Recorder](telemetry.md) | Der Befehl `telemetry` und ein Überblick über jedes Spiel |
+| [Forza](telemetry-forza.md) | Data Out, Erkennung des Layouts, das FH-Companion-Relais und seine `.tele.gz` |
+| [Assetto-Corsa-Spiele](telemetry-assetto-corsa.md) | AC, ACC, AC EVO, AC Rally aus dem Shared Memory |
+| [Rally-Spiele](telemetry-rally.md) | EA SPORTS WRC, DiRT Rally 2.0 / 1 / DiRT 4, Richard Burns Rally |
+| [BeamNG.drive](telemetry-beamng.md) | Der `heat3d`-Protokoll-Mod |
+| [Trackmania](telemetry-trackmania.md) | Das Openplanet-Plugin `Heat3dRecorder` |
+| [iRacing](telemetry-iracing.md) | Lesen von `.ibt`-Dateien im Viewer |
+| [Runden- und Etappen-Teilung](lap-splitting.md) | `LapSplitter`, `CounterSplitter`, `LineSplitter`, `StageSplitter` |
+| [Schlupf, Drift und abgeleitete Kanäle](slip-and-drift.md) | Wie Schlupf skaliert wird und was der Viewer ableitet |
+| [Die heat3d-lap-Datei](lap-format.md) | Das Format der Rundendatei, Kanäle, Einheiten, `meta` |
+| [Spiele](games.md) | Pro Spiel: wie aufgenommen wird, was gesendet wird, welche Strecken exportiert werden können |
+| [Befehle](commands.md) | `route`, `telemetry`, `laps`, `reconstruct`, `hud`, `locate`, Schritt für Schritt |
 | [Befehlsreferenz](../cli-reference.md) | jede Option, aus `--help` erzeugt |
-| [Das HUD einer Aufnahme lesen](../hud-video.md) | `hud`: eigene Aktionen, Tode, Minimap-Strecke und Killfeed aus einer Aufnahme |
-| [Frames in einem Level finden](../locate.md) | `locate`: wo jeder Frame aufgenommen wurde, gegen die Geometrie des Levels |
-| [Level-Rekonstruktion](../reconstruction.md) | Die Pipeline von Frames zu einer `.glb` |
-| [Das Scan-Fenster](../reconstruction-scan-ui.md) | Jedes Bedienelement, jede Taste und jedes Overlay |
-| [Aufnahme, Masken und Framequalität](../reconstruction-capture.md) | Windows Graphics Capture, Keyframes, HUD-Masken, Qualitätshinweise |
-| [Tiefe](../reconstruction-depth.md) | Depth Anything V2, ONNX Runtime, Aufbau des Modells |
-| [Kamerapose und Maßstab](../reconstruction-pose.md) | Odometrie, Relokalisierung, Posen aus der Telemetrie, Bodenmaßstab, Bündelausgleich |
-| [Fusion, Abdeckung und Farbe](../reconstruction-fusion-and-texture.md) | Das Belegungsvolumen, das Abdeckungsgitter, schwache Stellen, Vertexfarbe |
-| [Die .glb-Ausgabe](../glb-output.md) | Die Datei, die der Viewer lädt |
-| [Offline-Rekonstruktion](../reconstruction-offline.md) | `reconstruct`, VGGT-Fenster und Zusammensetzen |
-| [Modelle und Lizenzen](../models-and-licences.md) | Größen von Depth Anything V2, VGGT, die Pakete |
-| [Laufzeit und Abhängigkeiten](../runtime.md) | Vorprüfung, Backends, Leistungsstufen |
-| [Grenzen und Prüfungen](../limits.md) | Was nicht gemacht wird und was nicht geprüft wurde |
-| [Updates](../updates.md) | Die Release-Prüfung und `python -m heat3d_update` |
-| [Entwicklung](../development.md) | Tests, die virtuelle Umgebung, Aufbau des Repositorys |
-| [Pflege](../maintaining.md) | Die Release-Checkliste für Code und Dokumentation |
+| [Das HUD einer Aufnahme lesen](hud-video.md) | `hud`: eigene Aktionen, Tode, Minimap-Strecke und Killfeed aus einer Aufnahme |
+| [Frames in einem Level finden](locate.md) | `locate`: wo jeder Frame aufgenommen wurde, gegen die Geometrie des Levels |
+| [Level-Rekonstruktion](reconstruction.md) | Die Pipeline von Frames zu einer `.glb` |
+| [Das Scan-Fenster](reconstruction-scan-ui.md) | Jedes Bedienelement, jede Taste und jedes Overlay |
+| [Aufnahme, Masken und Framequalität](reconstruction-capture.md) | Windows Graphics Capture, Keyframes, HUD-Masken, Qualitätshinweise |
+| [Tiefe](reconstruction-depth.md) | Depth Anything V2, ONNX Runtime, Aufbau des Modells |
+| [Kamerapose und Maßstab](reconstruction-pose.md) | Odometrie, Relokalisierung, Posen aus der Telemetrie, Bodenmaßstab, Bündelausgleich |
+| [Fusion, Abdeckung und Farbe](reconstruction-fusion-and-texture.md) | Das Belegungsvolumen, das Abdeckungsgitter, schwache Stellen, Vertexfarbe |
+| [Die .glb-Ausgabe](glb-output.md) | Die Datei, die der Viewer lädt |
+| [Offline-Rekonstruktion](reconstruction-offline.md) | `reconstruct`, VGGT-Fenster und Zusammensetzen |
+| [Modelle und Lizenzen](models-and-licences.md) | Größen von Depth Anything V2, VGGT, die Pakete |
+| [Laufzeit und Abhängigkeiten](runtime.md) | Vorprüfung, Backends, Leistungsstufen |
+| [Grenzen und Prüfungen](limits.md) | Was nicht gemacht wird und was nicht geprüft wurde |
+| [Updates](updates.md) | Die Release-Prüfung und `python -m heat3d_update` |
+| [Entwicklung](development.md) | Tests, die virtuelle Umgebung, Aufbau des Repositorys |
+| [Pflege](maintaining.md) | Die Release-Checkliste für Code und Dokumentation |
 
 ## Teil von 3DHeat {#part-of-3dheat}
 
 Die Dateien, die dies schreibt, lädt der **3DHeat-Viewer** -
 [Quelle](https://github.com/Holdi601/3DHeat), [Dokumentation](https://holdi601.github.io/3DHeat/).
-Rundendateien gehen in seinen Rennanalyse-Reiter, `.glb`-Levels in sein Panel „Hintergrund / Level“, die Tabellen von `hud` und `locate`
-in seinen Heatmap-Reiter; wie der Viewer Tabellen und Match-Dateien liest, steht in
+Rundendateien gehen in seinen Rennanalyse-Tab, `.glb`-Levels in sein Panel „Hintergrund / Level“, die Tabellen von `hud` und `locate`
+in seinen Heatmap-Tab; wie der Viewer Tabellen und Match-Dateien liest, steht in
 [Eine Datei pro Match (.3dheat)](https://holdi601.github.io/3DHeat/container.html) und
 [Daten hineinbringen](https://holdi601.github.io/3DHeat/getting-data-in.html).
 
