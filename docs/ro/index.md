@@ -38,12 +38,12 @@ Nu ați mai lucrat în linia de comandă? Citiți mai întâi [Înainte de a în
 
 Toate trei urmează o regulă: **nimic nu este injectat într-un joc și nimic nu este interceptat**. Cadrele
 vin din API-ul public de captură a ecranului, iar telemetria din interfețele pe care jocurile le publică
-pentru acest scop. Vezi [Regulile](../rules.md).
+pentru acest scop. Vezi [Regulile](rules.md).
 
 ![Ce intră, ce comandă, ce iese, unde o arată vizualizatorul](../assets/img/ro/overview.svg)
 
 Codul este în Python (pachetul `heat3d_capture`), cu licență MIT. Modelele de adâncime și de poziție pe care
-le poate rula au propriile licențe - vezi [Modele și licențe](../models-and-licences.md).
+le poate rula au propriile licențe - vezi [Modele și licențe](models-and-licences.md).
 
 ## Pornire rapidă {#quick-start}
 
@@ -70,19 +70,19 @@ Trageți fișierele din `laps\` în fila Analiză de cursă a vizualizatorului. 
 .venv\Scripts\python -m heat3d_capture telemetry --game dirtrally2 -o laps
 ```
 
-Vezi [Înregistratoarele de telemetrie](../telemetry.md) pentru fiecare joc și fiecare opțiune.
+Vezi [Înregistratoarele de telemetrie](telemetry.md) pentru fiecare joc și fiecare opțiune.
 
 ### Scanați un nivel {#scan-a-level}
 
 Dați dublu clic pe **`scan.bat`** în dosarul instrumentului. Găsește Python (și vă oferă să-l instalați cu
 winget dacă nu există), face un `.venv` privat și deschide fereastra de scanare. Fereastra spune ce lipsește,
 la ce folosește fiecare pachet și cât de mare este descărcarea, și nu instalează nimic fără un da.
-Vezi [Rulare și dependențe](../runtime.md) și [Fereastra de scanare](../reconstruction-scan-ui.md).
+Vezi [Rulare și dependențe](runtime.md) și [Fereastra de scanare](reconstruction-scan-ui.md).
 
 Manual: `.venv\Scripts\python -m heat3d_capture.ui`.
 
 Ca să reconstruiți o înregistrare offline, cu traseul camerei rezolvat dintr-o dată (are nevoie de PyTorch,
-pachetul `vggt` și de o placă grafică - vezi [Reconstrucția offline](../reconstruction-offline.md)):
+pachetul `vggt` și de o placă grafică - vezi [Reconstrucția offline](reconstruction-offline.md)):
 
 ```powershell
 .venv\Scripts\python -m heat3d_capture reconstruct lap.mp4 -o lap.glb
@@ -93,36 +93,36 @@ pachetul `vggt` și de o placă grafică - vezi [Reconstrucția offline](../reco
 | Pagina | Ce acoperă |
 |---|---|
 | [Înainte de a începe](before-you-start.md) | Python, un terminal, prima comandă, erori frecvente |
-| [Regulile](../rules.md) | Fără injectare, doar interfețe publicate, și ce costă asta |
-| [Înregistratoarele de telemetrie](../telemetry.md) | Comanda `telemetry` și o privire de ansamblu asupra fiecărui joc |
-| [Forza](../telemetry-forza.md) | Data Out, detectarea aspectului, releul FH Companion și `.tele.gz` al acestuia |
-| [Jocurile Assetto Corsa](../telemetry-assetto-corsa.md) | AC, ACC, AC EVO, AC Rally din memoria partajată |
-| [Jocurile de raliu](../telemetry-rally.md) | EA SPORTS WRC, DiRT Rally 2.0 / 1 / DiRT 4, Richard Burns Rally |
-| [BeamNG.drive](../telemetry-beamng.md) | Modul de protocol `heat3d` |
-| [Trackmania](../telemetry-trackmania.md) | Pluginul Openplanet `Heat3dRecorder` |
-| [iRacing](../telemetry-iracing.md) | Citirea fișierelor `.ibt` în vizualizator |
-| [Împărțirea în ture și etape](../lap-splitting.md) | `LapSplitter`, `CounterSplitter`, `LineSplitter`, `StageSplitter` |
-| [Derapaj, drift și canale derivate](../slip-and-drift.md) | Cum este scalat derapajul și ce derivă vizualizatorul |
-| [Fișierul heat3d-lap](../lap-format.md) | Formatul fișierului de tur, canalele, unitățile, `meta` |
-| [Jocuri](../games.md) | Pentru fiecare joc: cum se înregistrează, ce se trimite, ce circuite pot fi exportate |
-| [Comenzi](../commands.md) | `route`, `telemetry`, `laps`, `reconstruct`, `hud`, `locate`, pas cu pas |
+| [Regulile](rules.md) | Fără injectare, doar interfețe publicate, și ce costă asta |
+| [Înregistratoarele de telemetrie](telemetry.md) | Comanda `telemetry` și o privire de ansamblu asupra fiecărui joc |
+| [Forza](telemetry-forza.md) | Data Out, detectarea aspectului, releul FH Companion și `.tele.gz` al acestuia |
+| [Jocurile Assetto Corsa](telemetry-assetto-corsa.md) | AC, ACC, AC EVO, AC Rally din memoria partajată |
+| [Jocurile de raliu](telemetry-rally.md) | EA SPORTS WRC, DiRT Rally 2.0 / 1 / DiRT 4, Richard Burns Rally |
+| [BeamNG.drive](telemetry-beamng.md) | Modul de protocol `heat3d` |
+| [Trackmania](telemetry-trackmania.md) | Pluginul Openplanet `Heat3dRecorder` |
+| [iRacing](telemetry-iracing.md) | Citirea fișierelor `.ibt` în vizualizator |
+| [Împărțirea în ture și etape](lap-splitting.md) | `LapSplitter`, `CounterSplitter`, `LineSplitter`, `StageSplitter` |
+| [Derapaj, drift și canale derivate](slip-and-drift.md) | Cum este scalat derapajul și ce derivă vizualizatorul |
+| [Fișierul heat3d-lap](lap-format.md) | Formatul fișierului de tur, canalele, unitățile, `meta` |
+| [Jocuri](games.md) | Pentru fiecare joc: cum se înregistrează, ce se trimite, ce circuite pot fi exportate |
+| [Comenzi](commands.md) | `route`, `telemetry`, `laps`, `reconstruct`, `hud`, `locate`, pas cu pas |
 | [Referința comenzilor](../cli-reference.md) | fiecare opțiune, generată din `--help` |
-| [Citirea HUD-ului dintr-o înregistrare](../hud-video.md) | `hud`: acțiunile proprii, morțile, traseul de pe harta mică și jurnalul eliminărilor dintr-o înregistrare |
-| [Localizarea cadrelor într-un nivel](../locate.md) | `locate`: unde a fost luat fiecare cadru, față de geometria nivelului |
-| [Reconstrucția nivelului](../reconstruction.md) | Pipeline-ul de la cadre la un `.glb` |
-| [Fereastra de scanare](../reconstruction-scan-ui.md) | Fiecare control, tastă rapidă și element de suprapunere |
-| [Captura, măștile și calitatea cadrelor](../reconstruction-capture.md) | Windows Graphics Capture, cadre-cheie, măști HUD, sfaturi de calitate |
-| [Adâncimea](../reconstruction-depth.md) | Depth Anything V2, ONNX Runtime, construirea modelului |
-| [Poziția camerei și scara](../reconstruction-pose.md) | Odometrie, relocalizare, poziții din telemetrie, scara solului, ajustare de pachet |
-| [Fuziunea, acoperirea și culoarea](../reconstruction-fusion-and-texture.md) | Volumul de ocupare, grila de acoperire, punctele slabe, culoarea vârfurilor |
-| [Ieșirea `.glb`](../glb-output.md) | Fișierul pe care îl încarcă vizualizatorul |
-| [Reconstrucția offline](../reconstruction-offline.md) | `reconstruct`, ferestrele VGGT și asamblarea |
-| [Modele și licențe](../models-and-licences.md) | Dimensiunile Depth Anything V2, VGGT, pachetele |
-| [Rulare și dependențe](../runtime.md) | Verificarea prealabilă, backend-urile, nivelurile de performanță |
-| [Limite și verificare](../limits.md) | Ce nu este făcut și ce nu a fost verificat |
-| [Actualizări](../updates.md) | Verificarea versiunii și `python -m heat3d_update` |
-| [Dezvoltare](../development.md) | Teste, mediul virtual, structura depozitului |
-| [Întreținerea acestor documente](../maintaining.md) | Lista de verificare pentru lansarea codului și a documentației |
+| [Citirea HUD-ului dintr-o înregistrare](hud-video.md) | `hud`: acțiunile proprii, morțile, traseul de pe harta mică și jurnalul eliminărilor dintr-o înregistrare |
+| [Localizarea cadrelor într-un nivel](locate.md) | `locate`: unde a fost luat fiecare cadru, față de geometria nivelului |
+| [Reconstrucția nivelului](reconstruction.md) | Pipeline-ul de la cadre la un `.glb` |
+| [Fereastra de scanare](reconstruction-scan-ui.md) | Fiecare control, tastă rapidă și element de suprapunere |
+| [Captura, măștile și calitatea cadrelor](reconstruction-capture.md) | Windows Graphics Capture, cadre-cheie, măști HUD, sfaturi de calitate |
+| [Adâncimea](reconstruction-depth.md) | Depth Anything V2, ONNX Runtime, construirea modelului |
+| [Poziția camerei și scara](reconstruction-pose.md) | Odometrie, relocalizare, poziții din telemetrie, scara solului, ajustare de pachet |
+| [Fuziunea, acoperirea și culoarea](reconstruction-fusion-and-texture.md) | Volumul de ocupare, grila de acoperire, punctele slabe, culoarea vârfurilor |
+| [Ieșirea `.glb`](glb-output.md) | Fișierul pe care îl încarcă vizualizatorul |
+| [Reconstrucția offline](reconstruction-offline.md) | `reconstruct`, ferestrele VGGT și asamblarea |
+| [Modele și licențe](models-and-licences.md) | Dimensiunile Depth Anything V2, VGGT, pachetele |
+| [Rulare și dependențe](runtime.md) | Verificarea prealabilă, backend-urile, nivelurile de performanță |
+| [Limite și verificare](limits.md) | Ce nu este făcut și ce nu a fost verificat |
+| [Actualizări](updates.md) | Verificarea versiunii și `python -m heat3d_update` |
+| [Dezvoltare](development.md) | Teste, mediul virtual, structura depozitului |
+| [Întreținerea acestor documente](maintaining.md) | Lista de verificare pentru lansarea codului și a documentației |
 
 ## Parte din 3DHeat {#part-of-3dheat}
 
