@@ -38,12 +38,12 @@ Még nem használt parancssort? Kezdd a [Mielőtt elkezded](before-you-start.md)
 
 Mindhárom egy szabályt követ: **semmit nem injektálunk a játékba, és semmibe nem kapcsolódunk bele.**
 A képkockák a nyilvános képernyő-rögzítő API-ból jönnek, a telemetria a játékok által erre közzétett
-felületekből. Lásd: [A szabályok](../rules.md).
+felületekből. Lásd: [A szabályok](rules.md).
 
 ![Mi megy be, melyik parancs, mi jön ki, és hol mutatja a megjelenítő](../assets/img/hu/overview.svg)
 
 A kód Python (`heat3d_capture` csomag), MIT licenc alatt. Az általa futtatható mélység- és pozemodellek
-saját licencekkel rendelkeznek – lásd: [Modellek és licencek](../models-and-licences.md).
+saját licencekkel rendelkeznek – lásd: [Modellek és licencek](models-and-licences.md).
 
 ## Gyors kezdés {#quick-start}
 
@@ -70,20 +70,20 @@ származó fájlokat dobd a megjelenítő Versenyelemzés fülére. Minden más 
 .venv\Scripts\python -m heat3d_capture telemetry --game dirtrally2 -o laps
 ```
 
-Minden játékról és kapcsolóról lásd: [Telemetriai rögzítők](../telemetry.md).
+Minden játékról és kapcsolóról lásd: [Telemetriai rögzítők](telemetry.md).
 
 ### Pálya beolvasása {#scan-a-level}
 
 Kattints duplán az eszköz mappájában lévő **`scan.bat`** fájlra. Megkeresi a Pythont (és ha nincs,
 felajánlja a telepítését a winget-tel), létrehoz egy saját `.venv` mappát, és megnyitja a beolvasó ablakot.
 Az ablak megmondja, mi hiányzik, mire szolgál az egyes csomag, és mekkora a letöltés; jóváhagyás nélkül
-semmit nem telepít. Lásd: [Futtatókörnyezet és függőségek](../runtime.md) és
-[A beolvasó ablak](../reconstruction-scan-ui.md).
+semmit nem telepít. Lásd: [Futtatókörnyezet és függőségek](runtime.md) és
+[A beolvasó ablak](reconstruction-scan-ui.md).
 
 Kézzel: `.venv\Scripts\python -m heat3d_capture.ui`.
 
 Egy felvétel offline újjáépítéséhez, a kamera útvonalát egyszerre megoldva (PyTorch, a `vggt` csomag és GPU
-kell – lásd: [Offline újjáépítés](../reconstruction-offline.md)):
+kell – lásd: [Offline újjáépítés](reconstruction-offline.md)):
 
 ```powershell
 .venv\Scripts\python -m heat3d_capture reconstruct lap.mp4 -o lap.glb
@@ -94,36 +94,36 @@ kell – lásd: [Offline újjáépítés](../reconstruction-offline.md)):
 | Oldal | Mit tartalmaz |
 |---|---|
 | [Mielőtt elkezded](before-you-start.md) | Python, egy terminál, az első parancs, gyakori hibák |
-| [A szabályok](../rules.md) | Nincs injektálás, csak közzétett felületek, és ennek ára |
-| [Telemetriai rögzítők](../telemetry.md) | A `telemetry` parancs és minden játék áttekintése |
-| [Forza](../telemetry-forza.md) | Data Out, formátumfelismerés, a FH Companion továbbító és annak `.tele.gz` fájlja |
-| [Assetto Corsa játékok](../telemetry-assetto-corsa.md) | AC, ACC, AC EVO, AC Rally megosztott memóriából |
-| [Rallyjátékok](../telemetry-rally.md) | EA SPORTS WRC, DiRT Rally 2.0 / 1 / DiRT 4, Richard Burns Rally |
-| [BeamNG.drive](../telemetry-beamng.md) | A `heat3d` protokoll-mod |
-| [Trackmania](../telemetry-trackmania.md) | A `Heat3dRecorder` Openplanet-bővítmény |
-| [iRacing](../telemetry-iracing.md) | `.ibt` fájlok olvasása a megjelenítőben |
-| [Kör- és szakaszfelosztás](../lap-splitting.md) | `LapSplitter`, `CounterSplitter`, `LineSplitter`, `StageSplitter` |
-| [Csúszás, sodródás és származtatott csatornák](../slip-and-drift.md) | Hogyan skálázódik a csúszás, és mit származtat a megjelenítő |
-| [A heat3d-lap fájl](../lap-format.md) | A körfájl formátuma, csatornák, mértékegységek, `meta` |
-| [Játékok](../games.md) | Játékonként: hogyan rögzíts, mit küld, mely pályák exportálhatók |
-| [Parancsok](../commands.md) | `route`, `telemetry`, `laps`, `reconstruct`, `hud`, `locate`, lépésről lépésre |
+| [A szabályok](rules.md) | Nincs injektálás, csak közzétett felületek, és ennek ára |
+| [Telemetriai rögzítők](telemetry.md) | A `telemetry` parancs és minden játék áttekintése |
+| [Forza](telemetry-forza.md) | Data Out, formátumfelismerés, a FH Companion továbbító és annak `.tele.gz` fájlja |
+| [Assetto Corsa játékok](telemetry-assetto-corsa.md) | AC, ACC, AC EVO, AC Rally megosztott memóriából |
+| [Rallyjátékok](telemetry-rally.md) | EA SPORTS WRC, DiRT Rally 2.0 / 1 / DiRT 4, Richard Burns Rally |
+| [BeamNG.drive](telemetry-beamng.md) | A `heat3d` protokoll-mod |
+| [Trackmania](telemetry-trackmania.md) | A `Heat3dRecorder` Openplanet-bővítmény |
+| [iRacing](telemetry-iracing.md) | `.ibt` fájlok olvasása a megjelenítőben |
+| [Kör- és szakaszfelosztás](lap-splitting.md) | `LapSplitter`, `CounterSplitter`, `LineSplitter`, `StageSplitter` |
+| [Csúszás, sodródás és származtatott csatornák](slip-and-drift.md) | Hogyan skálázódik a csúszás, és mit származtat a megjelenítő |
+| [A heat3d-lap fájl](lap-format.md) | A körfájl formátuma, csatornák, mértékegységek, `meta` |
+| [Játékok](games.md) | Játékonként: hogyan rögzíts, mit küld, mely pályák exportálhatók |
+| [Parancsok](commands.md) | `route`, `telemetry`, `laps`, `reconstruct`, `hud`, `locate`, lépésről lépésre |
 | [Parancsleírás](../cli-reference.md) | minden kapcsoló, a `--help` alapján generálva |
-| [Olvasás a HUD-ból egy felvételről](../hud-video.md) | `hud`: saját tettek, halálok, kismap-nyomvonal és gyilkossági lista egy felvételből |
-| [Képkockák elhelyezése egy pályán](../locate.md) | `locate`: hol készült minden képkocka, a pálya geometriájához mérve |
-| [Pályaújjáépítés](../reconstruction.md) | A folyamat a képkockáktól a `.glb`-ig |
-| [A beolvasó ablak](../reconstruction-scan-ui.md) | Minden vezérlő, gyorsbillentyű és rávetítés |
-| [Felvétel, maszkok és képkockaminőség](../reconstruction-capture.md) | Windows Graphics Capture, kulcskockák, HUD-maszkok, minőségi tanácsok |
-| [Mélység](../reconstruction-depth.md) | Depth Anything V2, ONNX Runtime, a modell felépítése |
-| [Kamerapozíció és méretarány](../reconstruction-pose.md) | Odometria, újralokalizálás, telemetriai pozíciók, talajméretarány, köteg-kiegyenlítés |
-| [Összeolvasztás, lefedettség és szín](../reconstruction-fusion-and-texture.md) | A kitöltési térfogat, a lefedettségi rács, gyenge pontok, csúcsszín |
-| [A .glb kimenet](../glb-output.md) | A fájl, amelyet a megjelenítő betölt |
-| [Offline újjáépítés](../reconstruction-offline.md) | `reconstruct`, VGGT-ablakok és összefűzés |
-| [Modellek és licencek](../models-and-licences.md) | Depth Anything V2 méretek, VGGT, a csomagok |
-| [Futtatókörnyezet és függőségek](../runtime.md) | Előellenőrzés, háttérrendszerek, teljesítményszintek |
-| [Korlátok és ellenőrzés](../limits.md) | Mi nincs megcsinálva, és mi nincs ellenőrizve |
-| [Frissítések](../updates.md) | A kiadás-ellenőrzés és a `python -m heat3d_update` |
-| [Fejlesztés](../development.md) | Tesztek, a virtuális környezet, a tároló felépítése |
-| [Az oldalak karbantartása](../maintaining.md) | a kiadási ellenőrzőlista a kódhoz és a dokumentációhoz |
+| [Olvasás a HUD-ból egy felvételről](hud-video.md) | `hud`: saját tettek, halálok, kismap-nyomvonal és gyilkossági lista egy felvételből |
+| [Képkockák elhelyezése egy pályán](locate.md) | `locate`: hol készült minden képkocka, a pálya geometriájához mérve |
+| [Pályaújjáépítés](reconstruction.md) | A folyamat a képkockáktól a `.glb`-ig |
+| [A beolvasó ablak](reconstruction-scan-ui.md) | Minden vezérlő, gyorsbillentyű és rávetítés |
+| [Felvétel, maszkok és képkockaminőség](reconstruction-capture.md) | Windows Graphics Capture, kulcskockák, HUD-maszkok, minőségi tanácsok |
+| [Mélység](reconstruction-depth.md) | Depth Anything V2, ONNX Runtime, a modell felépítése |
+| [Kamerapozíció és méretarány](reconstruction-pose.md) | Odometria, újralokalizálás, telemetriai pozíciók, talajméretarány, köteg-kiegyenlítés |
+| [Összeolvasztás, lefedettség és szín](reconstruction-fusion-and-texture.md) | A kitöltési térfogat, a lefedettségi rács, gyenge pontok, csúcsszín |
+| [A .glb kimenet](glb-output.md) | A fájl, amelyet a megjelenítő betölt |
+| [Offline újjáépítés](reconstruction-offline.md) | `reconstruct`, VGGT-ablakok és összefűzés |
+| [Modellek és licencek](models-and-licences.md) | Depth Anything V2 méretek, VGGT, a csomagok |
+| [Futtatókörnyezet és függőségek](runtime.md) | Előellenőrzés, háttérrendszerek, teljesítményszintek |
+| [Korlátok és ellenőrzés](limits.md) | Mi nincs megcsinálva, és mi nincs ellenőrizve |
+| [Frissítések](updates.md) | A kiadás-ellenőrzés és a `python -m heat3d_update` |
+| [Fejlesztés](development.md) | Tesztek, a virtuális környezet, a tároló felépítése |
+| [Az oldalak karbantartása](maintaining.md) | a kiadási ellenőrzőlista a kódhoz és a dokumentációhoz |
 
 ## A 3DHeat része {#part-of-3dheat}
 

@@ -39,12 +39,12 @@ permalink: /el/
 
 Όλες οι δουλειές ακολουθούν έναν κανόνα: **τίποτα δεν εισάγεται σε παιχνίδι και τίποτα δεν υποκλέπτεται.**
 Τα καρέ προέρχονται από το δημόσιο API καταγραφής οθόνης, η τηλεμετρία από διεπαφές που τα ίδια τα παιχνίδια
-δημοσιεύουν γι' αυτόν τον σκοπό. Δείτε [Οι κανόνες](../rules.md).
+δημοσιεύουν γι' αυτόν τον σκοπό. Δείτε [Οι κανόνες](rules.md).
 
 ![Τι μπαίνει, με ποια εντολή, τι βγαίνει, πού το δείχνει ο προβολέας](../assets/img/el/overview.svg)
 
 Ο κώδικας είναι Python (πακέτο `heat3d_capture`), με άδεια MIT. Τα μοντέλα βάθους και στάσης που μπορεί να τρέξει
-έχουν τις δικές τους άδειες· δείτε [Μοντέλα και άδειες](../models-and-licences.md).
+έχουν τις δικές τους άδειες· δείτε [Μοντέλα και άδειες](models-and-licences.md).
 
 ## Γρήγορη εκκίνηση {#quick-start}
 
@@ -72,19 +72,19 @@ python -m venv .venv
 .venv\Scripts\python -m heat3d_capture telemetry --game dirtrally2 -o laps
 ```
 
-Δείτε τους [Καταγραφείς τηλεμετρίας](../telemetry.md) για κάθε παιχνίδι και επιλογή.
+Δείτε τους [Καταγραφείς τηλεμετρίας](telemetry.md) για κάθε παιχνίδι και επιλογή.
 
 ### Σάρωση ενός επιπέδου {#scan-a-level}
 
 Κάντε διπλό κλικ στο **`scan.bat`** στον φάκελο του εργαλείου. Βρίσκει την Python (και σας προτείνει να την εγκαταστήσει
 με το winget αν δεν υπάρχει), φτιάχνει ένα ιδιωτικό `.venv`, και ανοίγει το παράθυρο σάρωσης. Το παράθυρο λέει τι λείπει,
 σε τι χρησιμεύει κάθε πακέτο και πόσο μεγάλο είναι το κατέβασμα, και δεν εγκαθιστά τίποτα χωρίς ναι. Δείτε
-[Χρόνος εκτέλεσης και εξαρτήσεις](../runtime.md) και [Το παράθυρο σάρωσης](../reconstruction-scan-ui.md).
+[Χρόνος εκτέλεσης και εξαρτήσεις](runtime.md) και [Το παράθυρο σάρωσης](reconstruction-scan-ui.md).
 
 Με το χέρι: `.venv\Scripts\python -m heat3d_capture.ui`.
 
 Για να ανακατασκευάσετε μια εγγραφή εκτός σύνδεσης, με τη διαδρομή της κάμερας λυμένη όλη μαζί (χρειάζεται PyTorch,
-το πακέτο `vggt` και μια GPU — δείτε [Ανακατασκευή εκτός σύνδεσης](../reconstruction-offline.md)):
+το πακέτο `vggt` και μια GPU — δείτε [Ανακατασκευή εκτός σύνδεσης](reconstruction-offline.md)):
 
 ```powershell
 .venv\Scripts\python -m heat3d_capture reconstruct lap.mp4 -o lap.glb
@@ -95,36 +95,36 @@ python -m venv .venv
 | Σελίδα | Τι καλύπτει |
 |---|---|
 | [Πριν ξεκινήσετε](before-you-start.md) | Python, τερματικό, η πρώτη εντολή, συνηθισμένα σφάλματα |
-| [Οι κανόνες](../rules.md) | Χωρίς εισαγωγή, μόνο δημοσιευμένες διεπαφές, και τι κοστίζει αυτό |
-| [Καταγραφείς τηλεμετρίας](../telemetry.md) | Η εντολή `telemetry` και μια επισκόπηση κάθε παιχνιδιού |
-| [Forza](../telemetry-forza.md) | Data Out, ανίχνευση διάταξης, η αναμετάδοση του FH Companion και το `.tele.gz` της |
-| [Παιχνίδια Assetto Corsa](../telemetry-assetto-corsa.md) | AC, ACC, AC EVO, AC Rally από κοινή μνήμη |
-| [Παιχνίδια ράλι](../telemetry-rally.md) | EA SPORTS WRC, DiRT Rally 2.0 / 1 / DiRT 4, Richard Burns Rally |
-| [BeamNG.drive](../telemetry-beamng.md) | Το mod πρωτοκόλλου `heat3d` |
-| [Trackmania](../telemetry-trackmania.md) | Το plugin Openplanet `Heat3dRecorder` |
-| [iRacing](../telemetry-iracing.md) | Ανάγνωση αρχείων `.ibt` στον προβολέα |
-| [Διαχωρισμός γύρων και ειδικών διαδρομών](../lap-splitting.md) | `LapSplitter`, `CounterSplitter`, `LineSplitter`, `StageSplitter` |
-| [Ολίσθηση, drift και παράγωγα κανάλια](../slip-and-drift.md) | Πώς κλιμακώνεται η ολίσθηση, και τι παράγει ο προβολέας |
-| [Το αρχείο heat3d-lap](../lap-format.md) | Η μορφή του αρχείου γύρου, τα κανάλια, οι μονάδες, το `meta` |
-| [Παιχνίδια](../games.md) | Ανά παιχνίδι: πώς καταγράφεται, τι στέλνεται, ποιες πίστες εξάγονται |
-| [Εντολές](../commands.md) | `route`, `telemetry`, `laps`, `reconstruct`, `hud`, `locate`, βήμα προς βήμα |
+| [Οι κανόνες](rules.md) | Χωρίς εισαγωγή, μόνο δημοσιευμένες διεπαφές, και τι κοστίζει αυτό |
+| [Καταγραφείς τηλεμετρίας](telemetry.md) | Η εντολή `telemetry` και μια επισκόπηση κάθε παιχνιδιού |
+| [Forza](telemetry-forza.md) | Data Out, ανίχνευση διάταξης, η αναμετάδοση του FH Companion και το `.tele.gz` της |
+| [Παιχνίδια Assetto Corsa](telemetry-assetto-corsa.md) | AC, ACC, AC EVO, AC Rally από κοινή μνήμη |
+| [Παιχνίδια ράλι](telemetry-rally.md) | EA SPORTS WRC, DiRT Rally 2.0 / 1 / DiRT 4, Richard Burns Rally |
+| [BeamNG.drive](telemetry-beamng.md) | Το mod πρωτοκόλλου `heat3d` |
+| [Trackmania](telemetry-trackmania.md) | Το plugin Openplanet `Heat3dRecorder` |
+| [iRacing](telemetry-iracing.md) | Ανάγνωση αρχείων `.ibt` στον προβολέα |
+| [Διαχωρισμός γύρων και ειδικών διαδρομών](lap-splitting.md) | `LapSplitter`, `CounterSplitter`, `LineSplitter`, `StageSplitter` |
+| [Ολίσθηση, drift και παράγωγα κανάλια](slip-and-drift.md) | Πώς κλιμακώνεται η ολίσθηση, και τι παράγει ο προβολέας |
+| [Το αρχείο heat3d-lap](lap-format.md) | Η μορφή του αρχείου γύρου, τα κανάλια, οι μονάδες, το `meta` |
+| [Παιχνίδια](games.md) | Ανά παιχνίδι: πώς καταγράφεται, τι στέλνεται, ποιες πίστες εξάγονται |
+| [Εντολές](commands.md) | `route`, `telemetry`, `laps`, `reconstruct`, `hud`, `locate`, βήμα προς βήμα |
 | [Αναφορά εντολών](../cli-reference.md) | κάθε επιλογή, παραγόμενη από το `--help` |
-| [Ανάγνωση του HUD από μια εγγραφή](../hud-video.md) | `hud`: οι δικές σας ενέργειες, θάνατοι, διαδρομή μίνι χάρτη και λίστα φόνων από μια εγγραφή |
-| [Εντοπισμός καρέ σε ένα επίπεδο](../locate.md) | `locate`: πού τραβήχτηκε κάθε καρέ, σε σχέση με τη γεωμετρία του επιπέδου |
-| [Ανακατασκευή επιπέδου](../reconstruction.md) | Η διαδικασία από καρέ σε `.glb` |
-| [Το παράθυρο σάρωσης](../reconstruction-scan-ui.md) | Κάθε χειριστήριο, συντόμευση και στοιχείο επικάλυψης |
-| [Λήψη, μάσκες και ποιότητα καρέ](../reconstruction-capture.md) | Windows Graphics Capture, βασικά καρέ, μάσκες HUD, συμβουλές ποιότητας |
-| [Βάθος](../reconstruction-depth.md) | Depth Anything V2, ONNX Runtime, κατασκευή του μοντέλου |
-| [Στάση κάμερας και κλίμακα](../reconstruction-pose.md) | Οδομετρία, επανατοποθέτηση, στάσεις από τηλεμετρία, κλίμακα εδάφους, bundle adjustment |
-| [Συγχώνευση, κάλυψη και χρώμα](../reconstruction-fusion-and-texture.md) | Ο όγκος κατάληψης, το πλέγμα κάλυψης, αδύναμα σημεία, χρώμα κορυφών |
-| [Η έξοδος .glb](../glb-output.md) | Το αρχείο που φορτώνει ο προβολέας |
-| [Ανακατασκευή εκτός σύνδεσης](../reconstruction-offline.md) | `reconstruct`, παράθυρα VGGT και ενοποίηση |
-| [Μοντέλα και άδειες](../models-and-licences.md) | Μεγέθη Depth Anything V2, VGGT, τα πακέτα |
-| [Χρόνος εκτέλεσης και εξαρτήσεις](../runtime.md) | Προέλεγχος, backends, βαθμίδες απόδοσης |
-| [Όρια και επαλήθευση](../limits.md) | Τι δεν γίνεται, και τι δεν έχει ελεγχθεί |
-| [Ενημερώσεις](../updates.md) | Ο έλεγχος έκδοσης και το `python -m heat3d_update` |
-| [Ανάπτυξη](../development.md) | Τεστ, το εικονικό περιβάλλον, η δομή του αποθετηρίου |
-| [Συντήρηση αυτών των σελίδων](../maintaining.md) | Η λίστα ελέγχου κυκλοφορίας για κώδικα και τεκμηρίωση |
+| [Ανάγνωση του HUD από μια εγγραφή](hud-video.md) | `hud`: οι δικές σας ενέργειες, θάνατοι, διαδρομή μίνι χάρτη και λίστα φόνων από μια εγγραφή |
+| [Εντοπισμός καρέ σε ένα επίπεδο](locate.md) | `locate`: πού τραβήχτηκε κάθε καρέ, σε σχέση με τη γεωμετρία του επιπέδου |
+| [Ανακατασκευή επιπέδου](reconstruction.md) | Η διαδικασία από καρέ σε `.glb` |
+| [Το παράθυρο σάρωσης](reconstruction-scan-ui.md) | Κάθε χειριστήριο, συντόμευση και στοιχείο επικάλυψης |
+| [Λήψη, μάσκες και ποιότητα καρέ](reconstruction-capture.md) | Windows Graphics Capture, βασικά καρέ, μάσκες HUD, συμβουλές ποιότητας |
+| [Βάθος](reconstruction-depth.md) | Depth Anything V2, ONNX Runtime, κατασκευή του μοντέλου |
+| [Στάση κάμερας και κλίμακα](reconstruction-pose.md) | Οδομετρία, επανατοποθέτηση, στάσεις από τηλεμετρία, κλίμακα εδάφους, bundle adjustment |
+| [Συγχώνευση, κάλυψη και χρώμα](reconstruction-fusion-and-texture.md) | Ο όγκος κατάληψης, το πλέγμα κάλυψης, αδύναμα σημεία, χρώμα κορυφών |
+| [Η έξοδος .glb](glb-output.md) | Το αρχείο που φορτώνει ο προβολέας |
+| [Ανακατασκευή εκτός σύνδεσης](reconstruction-offline.md) | `reconstruct`, παράθυρα VGGT και ενοποίηση |
+| [Μοντέλα και άδειες](models-and-licences.md) | Μεγέθη Depth Anything V2, VGGT, τα πακέτα |
+| [Χρόνος εκτέλεσης και εξαρτήσεις](runtime.md) | Προέλεγχος, backends, βαθμίδες απόδοσης |
+| [Όρια και επαλήθευση](limits.md) | Τι δεν γίνεται, και τι δεν έχει ελεγχθεί |
+| [Ενημερώσεις](updates.md) | Ο έλεγχος έκδοσης και το `python -m heat3d_update` |
+| [Ανάπτυξη](development.md) | Τεστ, το εικονικό περιβάλλον, η δομή του αποθετηρίου |
+| [Συντήρηση αυτών των σελίδων](maintaining.md) | Η λίστα ελέγχου κυκλοφορίας για κώδικα και τεκμηρίωση |
 
 ## Μέρος του 3DHeat {#part-of-3dheat}
 

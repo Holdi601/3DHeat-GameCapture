@@ -35,7 +35,7 @@ search_exclude: true
 | Радња | Кад | Шта тачно |
 |---|---|---|
 | Инсталира Python пакете | први пут кад се отвори прозор скенирања, после дијалога и потврде | `pip install` у интерпретер који покреће алат - уз `scan.bat`, приватни `.venv` поред њега. Никад сам од себе на нивоу целог система. |
-| Претвара модел дубине | дугме „Подеси модел дубине", после другог дијалога за PyTorch и сличне | записује `models/depth-small-518.onnx` |
+| Претвара модел дубине | дугме „Set up the depth model", после другог дијалога за PyTorch и сличне | записује `models/depth-small-518.onnx` |
 | Мења `config.json` игре EA SPORTS WRC | `telemetry --game wrc --configure <file>` | укључује пакет `wrc` / `session_update` на 127.0.0.1; стари фајл се чува као `config.json.bak` |
 | Копира BeamNG модификацију | `telemetry --game beamng --install` | `mods/beamng/heat3d` у `%LOCALAPPDATA%\BeamNG\BeamNG.drive\current\mods\unpacked\heat3d` (замењује старију копију) |
 | Копира додатак за Trackmania | `telemetry --game trackmania --install` | `mods/trackmania/Heat3dRecorder` у `%USERPROFILE%\OpenplanetNext\Plugins\Heat3dRecorder` (замењује старију копију) |

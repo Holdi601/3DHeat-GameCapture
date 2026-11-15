@@ -1,5 +1,5 @@
 ---
-title: "Naknadna rekonstrukcija"
+title: "Накнадна реконструкција"
 nav_order: 7
 lang: "sr"
 source: reconstruction-offline.md
@@ -7,7 +7,7 @@ source_hash: "1ce6bea35ee0"
 nav_exclude: true
 search_exclude: true
 ---
-# Naknadna rekonstrukcija {#offline-reconstruction}
+# Накнадна реконструкција {#offline-reconstruction}
 
 ```bash
 python -m heat3d_capture reconstruct lap.mp4 -o lap.glb [--solve-budget 260] [--fuse-interval 0.4]
@@ -44,7 +44,7 @@ VGGT се уводи са `--no-deps` јер његови метаподаци �
 
 ## Модел и његова лиценца {#the-model-and-its-licence}
 
-**VGGT**, `facebook/VGGT-1B`: **CC-BY-NC-4.0, само некомерцијално, а реконструкција направљена њиме то наслеђује.** Команда ово исписује пре почетка (`describe_licence`). Постоји и посебно licenciran `facebook/VGGT-1B-Commercial`, али је то заштићено спремиште које Meta одобрава по налогу, па не може бити подразумевано. `--model vggt-1b-commercial` решава њиме (и уместо тога исписује његов ред о лиценци); без одобреног приступа преузимање не успева. *Код* `vggt` је под Meta-овом сопственом "VGGT License", споразумом о истраживачким материјалима са политиком прихватљиве употребе (чита се из `LICENSE.txt` пакета). Видите [Модели и лиценце](models-and-licences.md).
+**VGGT**, `facebook/VGGT-1B`: **CC-BY-NC-4.0, само некомерцијално, а реконструкција направљена њиме то наслеђује.** Команда ово исписује пре почетка (`describe_licence`). Постоји и посебно лиценциран `facebook/VGGT-1B-Commercial`, али је то заштићено спремиште које Meta одобрава по налогу, па не може бити подразумевано. `--model vggt-1b-commercial` решава њиме (и уместо тога исписује његов ред о лиценци); без одобреног приступа преузимање не успева. *Код* `vggt` је под Meta-овом сопственом "VGGT License", споразумом о истраживачким материјалима са политиком прихватљиве употребе (чита се из `LICENSE.txt` пакета). Видите [Модели и лиценце](models-and-licences.md).
 
 ## Вожња, фаза по фаза {#the-run-stage-by-stage}
 

@@ -15,7 +15,7 @@ python -m heat3d_capture telemetry [--game GAME] [-o FOLDER] [--port PORT]
                                    [--configure CONFIG_JSON] [--surface SURFACE]
 ```
 
-`telemetry` снима сваки канал који игра шаље, дели ток на кругове или деонице, и пише по једну [`heat3d-lap`](lap-format.md) JSON датотеку по кругу у фасциклу. Картица Race прегледача чита те датотеке. Снимање траје док не притиснете **Ctrl+C**; круг или деоница који су отворени у том тренутку се упишу ако су довољно дугачки да се задрже (видите [Како се кругови и деонице деле](lap-splitting.md)).
+`telemetry` снима сваки канал који игра шаље, дели ток на кругове или деонице, и пише по једну [`heat3d-lap`](lap-format.md) JSON датотеку по кругу у фасциклу. Картица Анализа трке прегледача чита те датотеке. Снимање траје док не притиснете **Ctrl+C**; круг или деоница који су отворени у том тренутку се упишу ако су довољно дугачки да се задрже (видите [Како се кругови и деонице деле](lap-splitting.md)).
 
 Код: [`heat3d_capture/__main__.py`](https://github.com/Holdi601/3DHeat-GameCapture/blob/main/heat3d_capture/__main__.py)
 и модули у [`heat3d_capture/telemetry/`](https://github.com/Holdi601/3DHeat-GameCapture/tree/main/heat3d_capture/telemetry).

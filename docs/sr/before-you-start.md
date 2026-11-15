@@ -18,7 +18,7 @@ GameCapture је Python програм. Треба вам **Python 3.10 или �
 
 1. Идите на [python.org/downloads](https://www.python.org/downloads/) и преузмите најновији
    Python за Windows.
-2. Покрените инсталер. На његовом првом екрану **штиклирајте „Add python.exe to PATH"**. Без штиклирања,
+2. Покрените инсталер. На његовом првом екрану **штиклирајте „Add python.exe to PATH“**. Без штиклирања,
    терминал неће наћи Python.
 3. Кликните *Install Now*.
 

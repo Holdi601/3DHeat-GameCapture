@@ -28,7 +28,7 @@ search_exclude: true
 | `heat3d_update/` | провера издања и ажурирање |
 | `mods/beamng/heat3d/` | модификација протокола за BeamNG |
 | `mods/trackmania/Heat3dRecorder/` | Openplanet додатак |
-| `tools/export_onnx.py` | претварач модела дубине |
+| `tools/export_onnx.py` | конвертор модела дубине |
 | `tools/gen_docs_reference.py` | пише `docs/cli-reference.md` из `--help`; `--check` каже да ли је застарео |
 | `tools/docs_diagrams.py` | црта дијаграме у `docs/assets/img/` (по језику с `--lang`) |
 | `tools/sync_wiki.py` | поново прави `docs/wiki/` из `docs/` |
@@ -60,7 +60,7 @@ python -m venv .venv
 .venv\Scripts\python -m pip install -r requirements.txt
 ```
 
-За претварач модела, тестове дубине с PyTorch-ом и офлајн путању инсталирајте PyTorch (прилагођен GPU-у) **пре** `requirements.txt`; затим `requirements-offline.txt` и његов ред `vggt` за офлајн решавач, и `onnxscript` за претварач. Погледајте [Покретање и зависности](runtime.md#installing-by-hand).
+За конвертор модела, тестове дубине с PyTorch-ом и офлајн путању инсталирајте PyTorch (прилагођен GPU-у) **пре** `requirements.txt`; затим `requirements-offline.txt` и његов ред `vggt` за офлајн решавач, и `onnxscript` за претварач. Погледајте [Покретање и зависности](runtime.md#installing-by-hand).
 
 ## Покретање тестова {#running-the-tests}
 
