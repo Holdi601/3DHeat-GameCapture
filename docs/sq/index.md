@@ -38,12 +38,12 @@ Je i ri me rreshtin e komandave? Lexo së pari [Para se të fillosh](before-you-
 
 Të tria ndjekin një rregull: **asgjë nuk injektohet në lojë dhe asgjë nuk lidhet me grep (hook)**. Kuadrot vijnë
 nga API publike e kapjes së ekranit, telemetria nga ndërfaqet që i botojnë lojërat për të. Shih
-[Rregullat](../rules.md).
+[Rregullat](rules.md).
 
 ![Çfarë hyn, cila komandë, çfarë del, ku e shfaq shikuesi](../assets/img/sq/overview.svg)
 
 Kodi është Python (paketa `heat3d_capture`), me licencë MIT. Modelet e thellësisë dhe të pozës që mund
-t'i ekzekutojë kanë licencat e tyre - shih [Modelet dhe licencat](../models-and-licences.md).
+t'i ekzekutojë kanë licencat e tyre - shih [Modelet dhe licencat](models-and-licences.md).
 
 ## Fillimi i shpejtë {#quick-start}
 
@@ -70,20 +70,20 @@ në foton më sipër. Shtyp Ctrl+C për të ndalur. Hidh skedarët nga `laps\` n
 .venv\Scripts\python -m heat3d_capture telemetry --game dirtrally2 -o laps
 ```
 
-Shih [Regjistruesit e telemetrisë](../telemetry.md) për çdo lojë dhe opsion.
+Shih [Regjistruesit e telemetrisë](telemetry.md) për çdo lojë dhe opsion.
 
 ### Skano një nivel {#scan-a-level}
 
 Kliko dy herë **`scan.bat`** në dosjen e mjetit. Gjen Python (dhe ofron ta instalojë me
 winget nëse nuk ka), krijon një `.venv` privat, dhe hap dritaren e skanimit. Dritarja thotë
 çfarë mungon, për çfarë shërben çdo paketë dhe sa e madhe është shkarkimi, dhe nuk instalon asgjë
-pa një po. Shih [Mjedisi i ekzekutimit dhe varësitë](../runtime.md) dhe
-[Dritarja e skanimit](../reconstruction-scan-ui.md).
+pa një po. Shih [Mjedisi i ekzekutimit dhe varësitë](runtime.md) dhe
+[Dritarja e skanimit](reconstruction-scan-ui.md).
 
 Me dorë: `.venv\Scripts\python -m heat3d_capture.ui`.
 
 Për të rindërtuar një regjistrim jashtë linje, me rrugën e kamerës të zgjidhur të gjithën njëherësh (kërkon PyTorch,
-paketën `vggt` dhe një GPU - shih [Rindërtimi jashtë linje](../reconstruction-offline.md)):
+paketën `vggt` dhe një GPU - shih [Rindërtimi jashtë linje](reconstruction-offline.md)):
 
 ```powershell
 .venv\Scripts\python -m heat3d_capture reconstruct lap.mp4 -o lap.glb
@@ -94,36 +94,36 @@ paketën `vggt` dhe një GPU - shih [Rindërtimi jashtë linje](../reconstructio
 | Faqja | Çfarë mbulon |
 |---|---|
 | [Para se të fillosh](before-you-start.md) | Python, një terminal, komanda e parë, gabimet e zakonshme |
-| [Rregullat](../rules.md) | Pa injektim, vetëm ndërfaqe të botuara, dhe çfarë kushton kjo |
-| [Regjistruesit e telemetrisë](../telemetry.md) | Komanda `telemetry` dhe një pasqyrë e çdo loje |
-| [Forza](../telemetry-forza.md) | Data Out, zbulimi i skemës, rele FH Companion dhe `.tele.gz` i saj |
-| [Lojërat Assetto Corsa](../telemetry-assetto-corsa.md) | AC, ACC, AC EVO, AC Rally nga memoria e përbashkët |
-| [Lojërat e rally-t](../telemetry-rally.md) | EA SPORTS WRC, DiRT Rally 2.0 / 1 / DiRT 4, Richard Burns Rally |
-| [BeamNG.drive](../telemetry-beamng.md) | Modi i protokollit `heat3d` |
-| [Trackmania](../telemetry-trackmania.md) | Shtojca Openplanet `Heat3dRecorder` |
-| [iRacing](../telemetry-iracing.md) | Leximi i skedarëve `.ibt` në shikues |
-| [Ndarja e xhirove dhe etapave](../lap-splitting.md) | `LapSplitter`, `CounterSplitter`, `LineSplitter`, `StageSplitter` |
-| [Rrëshqitja, drifti dhe kanalet e derivuara](../slip-and-drift.md) | Si shkallëzohet rrëshqitja, dhe çfarë nxjerr shikuesi |
-| [Skedari heat3d-lap](../lap-format.md) | Formati i skedarit të xhiros, kanalet, njësitë, `meta` |
-| [Lojërat](../games.md) | Për çdo lojë: si regjistrohet, çfarë dërgohet, cilat piste mund të eksportohen |
-| [Komandat](../commands.md) | `route`, `telemetry`, `laps`, `reconstruct`, `hud`, `locate`, hap pas hapi |
+| [Rregullat](rules.md) | Pa injektim, vetëm ndërfaqe të botuara, dhe çfarë kushton kjo |
+| [Regjistruesit e telemetrisë](telemetry.md) | Komanda `telemetry` dhe një pasqyrë e çdo loje |
+| [Forza](telemetry-forza.md) | Data Out, zbulimi i skemës, rele FH Companion dhe `.tele.gz` i saj |
+| [Lojërat Assetto Corsa](telemetry-assetto-corsa.md) | AC, ACC, AC EVO, AC Rally nga memoria e përbashkët |
+| [Lojërat e rally-t](telemetry-rally.md) | EA SPORTS WRC, DiRT Rally 2.0 / 1 / DiRT 4, Richard Burns Rally |
+| [BeamNG.drive](telemetry-beamng.md) | Modi i protokollit `heat3d` |
+| [Trackmania](telemetry-trackmania.md) | Shtojca Openplanet `Heat3dRecorder` |
+| [iRacing](telemetry-iracing.md) | Leximi i skedarëve `.ibt` në shikues |
+| [Ndarja e xhirove dhe etapave](lap-splitting.md) | `LapSplitter`, `CounterSplitter`, `LineSplitter`, `StageSplitter` |
+| [Rrëshqitja, drifti dhe kanalet e derivuara](slip-and-drift.md) | Si shkallëzohet rrëshqitja, dhe çfarë nxjerr shikuesi |
+| [Skedari heat3d-lap](lap-format.md) | Formati i skedarit të xhiros, kanalet, njësitë, `meta` |
+| [Lojërat](games.md) | Për çdo lojë: si regjistrohet, çfarë dërgohet, cilat piste mund të eksportohen |
+| [Komandat](commands.md) | `route`, `telemetry`, `laps`, `reconstruct`, `hud`, `locate`, hap pas hapi |
 | [Referenca e komandave](../cli-reference.md) | çdo opsion, e gjeneruar nga `--help` |
-| [Leximi i HUD-it nga një regjistrim](../hud-video.md) | `hud`: veprimet, vdekjet, gjurma e minimapit dhe kill feed nga një regjistrim |
-| [Gjetja e kuadrove në një nivel](../locate.md) | `locate`: ku u mor çdo kuadër, kundrejt gjeometrisë së nivelit |
-| [Rindërtimi i niveleve](../reconstruction.md) | Rrjedha nga kuadrot te një `.glb` |
-| [Dritarja e skanimit](../reconstruction-scan-ui.md) | Çdo kontroll, shkurtore tastiere dhe element mbivendosjeje |
-| [Kapja, maskat dhe cilësia e kuadrove](../reconstruction-capture.md) | Windows Graphics Capture, kuadrot kyç, maskat e HUD, këshilla cilësie |
-| [Thellësia](../reconstruction-depth.md) | Depth Anything V2, ONNX Runtime, ndërtimi i modelit |
-| [Poza e kamerës dhe shkalla](../reconstruction-pose.md) | Odometria, rilokalizimi, pozat e telemetrisë, shkalla e tokës, bundle adjustment |
-| [Bashkimi, mbulimi dhe ngjyra](../reconstruction-fusion-and-texture.md) | Vëllimi i zënies, rrjeta e mbulimit, pikat e dobëta, ngjyra e kulmeve |
-| [Dalja .glb](../glb-output.md) | Skedari që e ngarkon shikuesi |
-| [Rindërtimi jashtë linje](../reconstruction-offline.md) | `reconstruct`, dritaret VGGT dhe qepja |
-| [Modelet dhe licencat](../models-and-licences.md) | Madhësitë e Depth Anything V2, VGGT, paketat |
-| [Mjedisi i ekzekutimit dhe varësitë](../runtime.md) | Kontrolli paraprak, backend-et, nivelet e performancës |
-| [Kufizimet dhe verifikimi](../limits.md) | Çfarë nuk është bërë, dhe çfarë nuk është kontrolluar |
-| [Përditësimet](../updates.md) | Kontrolli i botimit dhe `python -m heat3d_update` |
-| [Zhvillimi](../development.md) | Testet, mjedisi virtual, struktura e depos |
-| [Mirëmbajtja e këtyre dokumenteve](../maintaining.md) | Lista e kontrollit të botimit për kodin dhe dokumentacionin |
+| [Leximi i HUD-it nga një regjistrim](hud-video.md) | `hud`: veprimet, vdekjet, gjurma e minimapit dhe kill feed nga një regjistrim |
+| [Gjetja e kuadrove në një nivel](locate.md) | `locate`: ku u mor çdo kuadër, kundrejt gjeometrisë së nivelit |
+| [Rindërtimi i niveleve](reconstruction.md) | Rrjedha nga kuadrot te një `.glb` |
+| [Dritarja e skanimit](reconstruction-scan-ui.md) | Çdo kontroll, shkurtore tastiere dhe element mbivendosjeje |
+| [Kapja, maskat dhe cilësia e kuadrove](reconstruction-capture.md) | Windows Graphics Capture, kuadrot kyç, maskat e HUD, këshilla cilësie |
+| [Thellësia](reconstruction-depth.md) | Depth Anything V2, ONNX Runtime, ndërtimi i modelit |
+| [Poza e kamerës dhe shkalla](reconstruction-pose.md) | Odometria, rilokalizimi, pozat e telemetrisë, shkalla e tokës, bundle adjustment |
+| [Bashkimi, mbulimi dhe ngjyra](reconstruction-fusion-and-texture.md) | Vëllimi i zënies, rrjeta e mbulimit, pikat e dobëta, ngjyra e kulmeve |
+| [Dalja .glb](glb-output.md) | Skedari që e ngarkon shikuesi |
+| [Rindërtimi jashtë linje](reconstruction-offline.md) | `reconstruct`, dritaret VGGT dhe qepja |
+| [Modelet dhe licencat](models-and-licences.md) | Madhësitë e Depth Anything V2, VGGT, paketat |
+| [Mjedisi i ekzekutimit dhe varësitë](runtime.md) | Kontrolli paraprak, backend-et, nivelet e performancës |
+| [Kufizimet dhe verifikimi](limits.md) | Çfarë nuk është bërë, dhe çfarë nuk është kontrolluar |
+| [Përditësimet](updates.md) | Kontrolli i botimit dhe `python -m heat3d_update` |
+| [Zhvillimi](development.md) | Testet, mjedisi virtual, struktura e depos |
+| [Mirëmbajtja e këtyre dokumenteve](maintaining.md) | Lista e kontrollit të botimit për kodin dhe dokumentacionin |
 
 ## Pjesë e 3DHeat {#part-of-3dheat}
 

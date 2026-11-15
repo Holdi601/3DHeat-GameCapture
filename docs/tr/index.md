@@ -26,11 +26,11 @@ Komut satırında yeni misiniz? Önce [Başlamadan önce](before-you-start.md) s
 2. **Oynanıştan seviyeler.** Bir seviyede yürürken ya da sürerken ekranın gösterdiklerini bir `.glb` 3B modeline çevirir; görüntüleyici bunu ısı haritasının altına yerleştirir.
 3. **Maçınız, sonrasında.** `hud` kendi kaydınızın HUD'unu okur: eylemleriniz, ölümleriniz, mini harita izi ve öldürme akışı. `locate` (deneysel: şimdiye kadar birkaç gerçek kareyi yerleştirir), her karenin bir seviyenin 3B modeli üzerinde nerede çekildiğini bulur.
 
-Üç iş de tek bir kurala uyar: **hiçbir şey bir oyuna enjekte edilmez ve hiçbir şey kancalanmaz.** Kareler genel ekran yakalama API'sinden, telemetri ise oyunların bunun için yayımladığı arayüzlerden gelir. Bkz. [Kurallar](../rules.md).
+Üç iş de tek bir kurala uyar: **hiçbir şey bir oyuna enjekte edilmez ve hiçbir şey kancalanmaz.** Kareler genel ekran yakalama API'sinden, telemetri ise oyunların bunun için yayımladığı arayüzlerden gelir. Bkz. [Kurallar](rules.md).
 
 ![Ne girer, hangi komut, ne çıkar, görüntüleyici nerede gösterir](../assets/img/tr/overview.svg)
 
-Kod Python'dur (paket `heat3d_capture`), MIT lisanslıdır. Çalıştırabileceği derinlik ve poz modellerinin kendi lisansları vardır: bkz. [Modeller ve lisanslar](../models-and-licences.md).
+Kod Python'dur (paket `heat3d_capture`), MIT lisanslıdır. Çalıştırabileceği derinlik ve poz modellerinin kendi lisansları vardır: bkz. [Modeller ve lisanslar](models-and-licences.md).
 
 ## Hızlı başlangıç {#quick-start}
 
@@ -55,15 +55,15 @@ python -m venv .venv
 .venv\Scripts\python -m heat3d_capture telemetry --game dirtrally2 -o laps
 ```
 
-Her oyun ve seçenek için [Telemetri kaydediciler](../telemetry.md) sayfasına bakın.
+Her oyun ve seçenek için [Telemetri kaydediciler](telemetry.md) sayfasına bakın.
 
 ### Bir seviyeyi tarayın {#scan-a-level}
 
-Aracın klasöründeki **`scan.bat`** dosyasına çift tıklayın. Python'u bulur (yoksa winget ile kurmayı önerir), özel bir `.venv` oluşturur ve tarama penceresini açar. Pencere neyin eksik olduğunu, her paketin ne işe yaradığını ve indirmenin ne kadar büyük olduğunu gösterir; onay vermeden hiçbir şey kurmaz. Bkz. [Çalışma zamanı ve bağımlılıklar](../runtime.md) ve [Tarama penceresi](../reconstruction-scan-ui.md).
+Aracın klasöründeki **`scan.bat`** dosyasına çift tıklayın. Python'u bulur (yoksa winget ile kurmayı önerir), özel bir `.venv` oluşturur ve tarama penceresini açar. Pencere neyin eksik olduğunu, her paketin ne işe yaradığını ve indirmenin ne kadar büyük olduğunu gösterir; onay vermeden hiçbir şey kurmaz. Bkz. [Çalışma zamanı ve bağımlılıklar](runtime.md) ve [Tarama penceresi](reconstruction-scan-ui.md).
 
 Elle: `.venv\Scripts\python -m heat3d_capture.ui`.
 
-Bir kaydı çevrim dışı yeniden kurmak için, kamera yolu bir kerede çözülerek (PyTorch, `vggt` paketi ve bir GPU gerekir; bkz. [Çevrim dışı yeniden kurma](../reconstruction-offline.md)):
+Bir kaydı çevrim dışı yeniden kurmak için, kamera yolu bir kerede çözülerek (PyTorch, `vggt` paketi ve bir GPU gerekir; bkz. [Çevrim dışı yeniden kurma](reconstruction-offline.md)):
 
 ```powershell
 .venv\Scripts\python -m heat3d_capture reconstruct lap.mp4 -o lap.glb
@@ -74,36 +74,36 @@ Bir kaydı çevrim dışı yeniden kurmak için, kamera yolu bir kerede çözül
 | Sayfa | Neyi anlatır |
 |---|---|
 | [Başlamadan önce](before-you-start.md) | Python, bir terminal, ilk komut, sık görülen hatalar |
-| [Kurallar](../rules.md) | Enjeksiyon yok, yalnızca yayımlanmış arayüzler ve bunun bedeli |
-| [Telemetri kaydediciler](../telemetry.md) | `telemetry` komutu ve her oyuna genel bakış |
-| [Forza](../telemetry-forza.md) | Data Out, düzen algılama, FH Companion aktarıcısı ve `.tele.gz` |
-| [Assetto Corsa oyunları](../telemetry-assetto-corsa.md) | AC, ACC, AC EVO, AC Rally: paylaşılan bellekten |
-| [Rally oyunları](../telemetry-rally.md) | EA SPORTS WRC, DiRT Rally 2.0 / 1 / DiRT 4, Richard Burns Rally |
-| [BeamNG.drive](../telemetry-beamng.md) | `heat3d` protokol modu |
-| [Trackmania](../telemetry-trackmania.md) | `Heat3dRecorder` Openplanet eklentisi |
-| [iRacing](../telemetry-iracing.md) | Görüntüleyicide `.ibt` dosyalarını okuma |
-| [Tur ve etap bölme](../lap-splitting.md) | `LapSplitter`, `CounterSplitter`, `LineSplitter`, `StageSplitter` |
-| [Kayma, sürüklenme ve türetilmiş kanallar](../slip-and-drift.md) | Kayma nasıl ölçeklenir ve görüntüleyici neyi türetir |
-| [heat3d-lap dosyası](../lap-format.md) | Tur dosyası biçimi, kanallar, birimler, `meta` |
-| [Oyunlar](../games.md) | Oyun başına: nasıl kaydedilir, ne gönderilir, hangi pistler dışa aktarılabilir |
-| [Komutlar](../commands.md) | `route`, `telemetry`, `laps`, `reconstruct`, `hud`, `locate`, adım adım |
+| [Kurallar](rules.md) | Enjeksiyon yok, yalnızca yayımlanmış arayüzler ve bunun bedeli |
+| [Telemetri kaydediciler](telemetry.md) | `telemetry` komutu ve her oyuna genel bakış |
+| [Forza](telemetry-forza.md) | Data Out, düzen algılama, FH Companion aktarıcısı ve `.tele.gz` |
+| [Assetto Corsa oyunları](telemetry-assetto-corsa.md) | AC, ACC, AC EVO, AC Rally: paylaşılan bellekten |
+| [Rally oyunları](telemetry-rally.md) | EA SPORTS WRC, DiRT Rally 2.0 / 1 / DiRT 4, Richard Burns Rally |
+| [BeamNG.drive](telemetry-beamng.md) | `heat3d` protokol modu |
+| [Trackmania](telemetry-trackmania.md) | `Heat3dRecorder` Openplanet eklentisi |
+| [iRacing](telemetry-iracing.md) | Görüntüleyicide `.ibt` dosyalarını okuma |
+| [Tur ve etap bölme](lap-splitting.md) | `LapSplitter`, `CounterSplitter`, `LineSplitter`, `StageSplitter` |
+| [Kayma, sürüklenme ve türetilmiş kanallar](slip-and-drift.md) | Kayma nasıl ölçeklenir ve görüntüleyici neyi türetir |
+| [heat3d-lap dosyası](lap-format.md) | Tur dosyası biçimi, kanallar, birimler, `meta` |
+| [Oyunlar](games.md) | Oyun başına: nasıl kaydedilir, ne gönderilir, hangi pistler dışa aktarılabilir |
+| [Komutlar](commands.md) | `route`, `telemetry`, `laps`, `reconstruct`, `hud`, `locate`, adım adım |
 | [Komut başvurusu](../cli-reference.md) | her seçenek, `--help`'ten üretilmiş |
-| [Bir kayıttan HUD okumak](../hud-video.md) | `hud`: kayıttan kendi eylemleriniz, ölümleriniz, mini harita izi ve öldürme akışı |
-| [Bir seviyede kareleri bulmak](../locate.md) | `locate`: her karenin çekildiği yer, seviyenin geometrisine karşı |
-| [Seviye yeniden kurma](../reconstruction.md) | Karelerden `.glb`'ye giden hat |
-| [Tarama penceresi](../reconstruction-scan-ui.md) | Her denetim, kısayol ve ekran öğesi |
-| [Yakalama, maskeler ve kare kalitesi](../reconstruction-capture.md) | Windows Graphics Capture, anahtar kareler, HUD maskeleri, kalite önerileri |
-| [Derinlik](../reconstruction-depth.md) | Depth Anything V2, ONNX Runtime, modeli oluşturma |
-| [Kamera pozu ve ölçek](../reconstruction-pose.md) | Odometri, yeniden konumlandırma, telemetri pozları, zemin ölçeği, demet ayarı |
-| [Füzyon, kapsama ve renk](../reconstruction-fusion-and-texture.md) | Doluluk hacmi, kapsama ızgarası, zayıf noktalar, köşe rengi |
-| [.glb çıktısı](../glb-output.md) | Görüntüleyicinin yüklediği dosya |
-| [Çevrim dışı yeniden kurma](../reconstruction-offline.md) | `reconstruct`, VGGT pencereleri ve birleştirme |
-| [Modeller ve lisanslar](../models-and-licences.md) | Depth Anything V2 boyutları, VGGT, paketler |
-| [Çalışma zamanı ve bağımlılıklar](../runtime.md) | Ön kontrol, arka uçlar, performans kademeleri |
-| [Sınırlar ve doğrulama](../limits.md) | Yapılmayanlar ve denetlenmemiş olanlar |
-| [Güncellemeler](../updates.md) | Sürüm denetimi ve `python -m heat3d_update` |
-| [Geliştirme](../development.md) | Testler, sanal ortam, depo yapısı |
-| [Bu belgelerin bakımı](../maintaining.md) | Kod ve belgeler için sürüm kontrol listesi |
+| [Bir kayıttan HUD okumak](hud-video.md) | `hud`: kayıttan kendi eylemleriniz, ölümleriniz, mini harita izi ve öldürme akışı |
+| [Bir seviyede kareleri bulmak](locate.md) | `locate`: her karenin çekildiği yer, seviyenin geometrisine karşı |
+| [Seviye yeniden kurma](reconstruction.md) | Karelerden `.glb`'ye giden hat |
+| [Tarama penceresi](reconstruction-scan-ui.md) | Her denetim, kısayol ve ekran öğesi |
+| [Yakalama, maskeler ve kare kalitesi](reconstruction-capture.md) | Windows Graphics Capture, anahtar kareler, HUD maskeleri, kalite önerileri |
+| [Derinlik](reconstruction-depth.md) | Depth Anything V2, ONNX Runtime, modeli oluşturma |
+| [Kamera pozu ve ölçek](reconstruction-pose.md) | Odometri, yeniden konumlandırma, telemetri pozları, zemin ölçeği, demet ayarı |
+| [Füzyon, kapsama ve renk](reconstruction-fusion-and-texture.md) | Doluluk hacmi, kapsama ızgarası, zayıf noktalar, köşe rengi |
+| [.glb çıktısı](glb-output.md) | Görüntüleyicinin yüklediği dosya |
+| [Çevrim dışı yeniden kurma](reconstruction-offline.md) | `reconstruct`, VGGT pencereleri ve birleştirme |
+| [Modeller ve lisanslar](models-and-licences.md) | Depth Anything V2 boyutları, VGGT, paketler |
+| [Çalışma zamanı ve bağımlılıklar](runtime.md) | Ön kontrol, arka uçlar, performans kademeleri |
+| [Sınırlar ve doğrulama](limits.md) | Yapılmayanlar ve denetlenmemiş olanlar |
+| [Güncellemeler](updates.md) | Sürüm denetimi ve `python -m heat3d_update` |
+| [Geliştirme](development.md) | Testler, sanal ortam, depo yapısı |
+| [Bu belgelerin bakımı](maintaining.md) | Kod ve belgeler için sürüm kontrol listesi |
 
 ## 3DHeat'in parçası {#part-of-3dheat}
 

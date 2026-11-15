@@ -38,12 +38,12 @@ Ny til kommandolinjen? Læs [Før du går i gang](before-you-start.md) først.
 
 Alle tre følger én regel: **intet indsprøjtes i et spil, og intet hookes**. Billederne kommer fra det
 offentlige API til skærmoptagelse, telemetrien fra grænseflader, spillene udgiver til det. Se
-[Reglerne](../rules.md).
+[Reglerne](rules.md).
 
 ![Hvad der går ind, hvilken kommando, hvad der kommer ud, hvor vieweren viser det](../assets/img/da/overview.svg)
 
 Koden er Python (pakken `heat3d_capture`), MIT-licenseret. De dybde- og positionsmodeller, den kan
-køre, har deres egne licenser - se [Modeller og licenser](../models-and-licences.md).
+køre, har deres egne licenser - se [Modeller og licenser](models-and-licences.md).
 
 ## Hurtig start {#quick-start}
 
@@ -70,19 +70,19 @@ Løbsanalyse-fanen. Alle andre spil er ét `--game` væk:
 .venv\Scripts\python -m heat3d_capture telemetry --game dirtrally2 -o laps
 ```
 
-Se [Telemetrioptagere](../telemetry.md) for hvert spil og hver valgmulighed.
+Se [Telemetrioptagere](telemetry.md) for hvert spil og hver valgmulighed.
 
 ### Scan en bane {#scan-a-level}
 
 Dobbeltklik på **`scan.bat`** i værktøjets mappe. Den finder Python (og tilbyder at installere det med
 winget, hvis der ikke er nogen), laver en privat `.venv` og åbner scanvinduet. Vinduet siger, hvad der mangler,
 hvad hver pakke bruges til, og hvor stor downloaden er, og det installerer intet uden et ja. Se
-[Kørsel og afhængigheder](../runtime.md) og [Scanvinduet](../reconstruction-scan-ui.md).
+[Kørsel og afhængigheder](runtime.md) og [Scanvinduet](reconstruction-scan-ui.md).
 
 I hånden: `.venv\Scripts\python -m heat3d_capture.ui`.
 
 For at genskabe en optagelse offline, med kameraets bane løst på én gang (kræver PyTorch, pakken `vggt`
-og en GPU - se [Offline-rekonstruktion](../reconstruction-offline.md)):
+og en GPU - se [Offline-rekonstruktion](reconstruction-offline.md)):
 
 ```powershell
 .venv\Scripts\python -m heat3d_capture reconstruct lap.mp4 -o lap.glb
@@ -93,36 +93,36 @@ og en GPU - se [Offline-rekonstruktion](../reconstruction-offline.md)):
 | Side | Hvad den dækker |
 |---|---|
 | [Før du går i gang](before-you-start.md) | Python, en terminal, den første kommando, almindelige fejl |
-| [Reglerne](../rules.md) | Ingen indsprøjtning, kun offentliggjorte grænseflader, og hvad det koster |
-| [Telemetrioptagere](../telemetry.md) | Kommandoen `telemetry` og en oversigt over hvert spil |
-| [Forza](../telemetry-forza.md) | Data Out, layoutgenkendelse, FH Companion-relæet og dets `.tele.gz` |
-| [Assetto Corsa-spil](../telemetry-assetto-corsa.md) | AC, ACC, AC EVO, AC Rally fra delt hukommelse |
-| [Rally-spil](../telemetry-rally.md) | EA SPORTS WRC, DiRT Rally 2.0 / 1 / DiRT 4, Richard Burns Rally |
-| [BeamNG.drive](../telemetry-beamng.md) | `heat3d`-protokolmodden |
-| [Trackmania](../telemetry-trackmania.md) | `Heat3dRecorder`-pluginnet til Openplanet |
-| [iRacing](../telemetry-iracing.md) | Læsning af `.ibt`-filer i vieweren |
-| [Opdeling i omgange og etaper](../lap-splitting.md) | `LapSplitter`, `CounterSplitter`, `LineSplitter`, `StageSplitter` |
-| [Slip, drift og afledte kanaler](../slip-and-drift.md) | Hvordan slip skaleres, og hvad vieweren udleder |
-| [Filen heat3d-lap](../lap-format.md) | Omgangsfilens format, kanaler, enheder, `meta` |
-| [Spil](../games.md) | Pr. spil: hvordan man optager, hvad der sendes, hvilke baner der kan eksporteres |
-| [Kommandoer](../commands.md) | `route`, `telemetry`, `laps`, `reconstruct`, `hud`, `locate`, trin for trin |
+| [Reglerne](rules.md) | Ingen indsprøjtning, kun offentliggjorte grænseflader, og hvad det koster |
+| [Telemetrioptagere](telemetry.md) | Kommandoen `telemetry` og en oversigt over hvert spil |
+| [Forza](telemetry-forza.md) | Data Out, layoutgenkendelse, FH Companion-relæet og dets `.tele.gz` |
+| [Assetto Corsa-spil](telemetry-assetto-corsa.md) | AC, ACC, AC EVO, AC Rally fra delt hukommelse |
+| [Rally-spil](telemetry-rally.md) | EA SPORTS WRC, DiRT Rally 2.0 / 1 / DiRT 4, Richard Burns Rally |
+| [BeamNG.drive](telemetry-beamng.md) | `heat3d`-protokolmodden |
+| [Trackmania](telemetry-trackmania.md) | `Heat3dRecorder`-pluginnet til Openplanet |
+| [iRacing](telemetry-iracing.md) | Læsning af `.ibt`-filer i vieweren |
+| [Opdeling i omgange og etaper](lap-splitting.md) | `LapSplitter`, `CounterSplitter`, `LineSplitter`, `StageSplitter` |
+| [Slip, drift og afledte kanaler](slip-and-drift.md) | Hvordan slip skaleres, og hvad vieweren udleder |
+| [Filen heat3d-lap](lap-format.md) | Omgangsfilens format, kanaler, enheder, `meta` |
+| [Spil](games.md) | Pr. spil: hvordan man optager, hvad der sendes, hvilke baner der kan eksporteres |
+| [Kommandoer](commands.md) | `route`, `telemetry`, `laps`, `reconstruct`, `hud`, `locate`, trin for trin |
 | [Kommandoreference](../cli-reference.md) | hver valgmulighed, genereret ud fra `--help` |
-| [Læs HUD'et fra en optagelse](../hud-video.md) | `hud`: egne handlinger, dødsfald, minikortets spor og dræbningsfeed fra en optagelse |
-| [Find billeder i en bane](../locate.md) | `locate`: hvor hvert billede er taget, mod banens geometri |
-| [Banerekonstruktion](../reconstruction.md) | Forløbet fra billeder til en `.glb` |
-| [Scanvinduet](../reconstruction-scan-ui.md) | Hver kontrol, genvej og overlay-element |
-| [Optagelse, masker og billedkvalitet](../reconstruction-capture.md) | Windows Graphics Capture, nøglebilleder, HUD-masker, kvalitetsråd |
-| [Dybde](../reconstruction-depth.md) | Depth Anything V2, ONNX Runtime, opbygning af modellen |
-| [Kameraposition og skala](../reconstruction-pose.md) | Odometri, relokalisering, telemetripositioner, jordskala, bundle adjustment |
-| [Sammensmeltning, dækning og farve](../reconstruction-fusion-and-texture.md) | Belægningsvolumen, dækningsgitteret, svage steder, vertexfarve |
-| [.glb-outputtet](../glb-output.md) | Filen, vieweren indlæser |
-| [Offline-rekonstruktion](../reconstruction-offline.md) | `reconstruct`, VGGT-vinduer og sammensyning |
-| [Modeller og licenser](../models-and-licences.md) | Størrelser af Depth Anything V2, VGGT, pakkerne |
-| [Kørsel og afhængigheder](../runtime.md) | Preflight, backends, ydelsesniveauer |
-| [Begrænsninger og verificering](../limits.md) | Hvad der ikke er gjort, og hvad der ikke er kontrolleret |
-| [Opdateringer](../updates.md) | Udgivelsestjekket og `python -m heat3d_update` |
-| [Udvikling](../development.md) | Tests, det virtuelle miljø, repositoriets layout |
-| [Vedligeholdelse af disse dokumenter](../maintaining.md) | Udgivelsestjeklisten for kode og dokumentation |
+| [Læs HUD'et fra en optagelse](hud-video.md) | `hud`: egne handlinger, dødsfald, minikortets spor og dræbningsfeed fra en optagelse |
+| [Find billeder i en bane](locate.md) | `locate`: hvor hvert billede er taget, mod banens geometri |
+| [Banerekonstruktion](reconstruction.md) | Forløbet fra billeder til en `.glb` |
+| [Scanvinduet](reconstruction-scan-ui.md) | Hver kontrol, genvej og overlay-element |
+| [Optagelse, masker og billedkvalitet](reconstruction-capture.md) | Windows Graphics Capture, nøglebilleder, HUD-masker, kvalitetsråd |
+| [Dybde](reconstruction-depth.md) | Depth Anything V2, ONNX Runtime, opbygning af modellen |
+| [Kameraposition og skala](reconstruction-pose.md) | Odometri, relokalisering, telemetripositioner, jordskala, bundle adjustment |
+| [Sammensmeltning, dækning og farve](reconstruction-fusion-and-texture.md) | Belægningsvolumen, dækningsgitteret, svage steder, vertexfarve |
+| [.glb-outputtet](glb-output.md) | Filen, vieweren indlæser |
+| [Offline-rekonstruktion](reconstruction-offline.md) | `reconstruct`, VGGT-vinduer og sammensyning |
+| [Modeller og licenser](models-and-licences.md) | Størrelser af Depth Anything V2, VGGT, pakkerne |
+| [Kørsel og afhængigheder](runtime.md) | Preflight, backends, ydelsesniveauer |
+| [Begrænsninger og verificering](limits.md) | Hvad der ikke er gjort, og hvad der ikke er kontrolleret |
+| [Opdateringer](updates.md) | Udgivelsestjekket og `python -m heat3d_update` |
+| [Udvikling](development.md) | Tests, det virtuelle miljø, repositoriets layout |
+| [Vedligeholdelse af disse dokumenter](maintaining.md) | Udgivelsestjeklisten for kode og dokumentation |
 
 ## Del af 3DHeat {#part-of-3dheat}
 
