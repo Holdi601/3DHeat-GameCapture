@@ -48,7 +48,7 @@ sur les axes de la voiture (EA WRC, DiRT, BeamNG), ou du cap par rapport à la t
 que la voiture soit en l'air vient du contact, des charges ou de la suspension de ses roues.
 
 Lorsque le monde d'un jeu est gaucher (celui de Forza l'est), le parcours sort en miroir dans une
-visionneuse droitière ; la direction et la suspension propres aux tours le révèlent. Les jeux dont la
+visualiseur droitière ; la direction et la suspension propres aux tours le révèlent. Les jeux dont la
 latéralité n'est pas documentée (RBR, BeamNG, Trackmania) sont traités de la même façon : mesurée,
 pas supposée.
 
@@ -75,7 +75,7 @@ canal qu'il enregistre sous son propre nom.
   active le paquet sur le port 20777.
 - **DiRT :** le document UDP de DiRT 4 de Codemasters, ErlerPhilipp/dr2_logger,
   soong-construction/dirt-rally-time-recorder. Le sens du vecteur latéral et l'unité de la position de
-  suspension sont documentés dans les deux sens ; aucun des deux ne tranche une conclusion.
+  suspension sont documentés dans les deux sens ; aucun des deux ne change une conclusion.
 - **RBR :** `rbr.telemetry.data.TelemetryData.h` de NGP (via mika-n/RBRUDPTelemetryLogger,
   groybe/rbr-udp-telem). Les axes de position, les unités d'attitude et l'unité de vitesse ne sont pas
   documentés : l'enregistreur prend le haut à partir de l'étape, et la vitesse à partir des positions.
@@ -90,7 +90,7 @@ canal qu'il enregistre sous son propre nom.
 Aucun des enregistreurs n'a encore été lancé contre les jeux en direct ici ; la première vraie session
 de chacun est le test qui compte, et `tests/test_kunos.py`, `test_rally.py` et `test_beamng.py`
 figent les dispositions pour lesquelles ils ont été conçus. Chaque enregistreur vérifie ses paquets au
-fur et à mesure qu'ils arrivent - la vitesse par rapport à la vitesse indiquée, la taille de la
+fur et à mesure qu'ils arrivent - la vélocité par rapport à la vitesse, la taille de la
 structure - et le signale lorsqu'une disposition ne correspond pas.
 
 ## Parcours : ce qui est exporté, par jeu {#courses-what-is-exported-per-game}

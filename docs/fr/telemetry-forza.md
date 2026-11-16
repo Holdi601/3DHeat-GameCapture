@@ -69,7 +69,7 @@ Chaque champ du paquet est décodé (`decode_full`) et converti :
 - `latAcc`, `longAcc`, `vertAcc` et `yawRate` sont des copies de `accelX`, `accelZ`, `accelY` et `angVelY` sous les noms canoniques (repère de
   la voiture : x à droite, y vers le haut, z vers l'avant) ;
 - la vitesse du bloc Sled, qui est dans le repère propre à la voiture (x à droite, y vers le haut, z vers l'avant - et non celui du monde), est
-  écrite telle quelle sous les noms canoniques `latVel`, `vertVel` et `longVel`, de sorte que la visionneuse lit l'angle de dérive directement au
+  écrite telle quelle sous les noms canoniques `latVel`, `vertVel` et `longVel`, de sorte que le visualiseur lit l'angle de dérive directement au
   lieu de l'estimer à partir du cap et de la trajectoire.
 
 Les canaux du fichier de tour sont tous ceux-ci, sauf les champs par tour :
@@ -116,11 +116,11 @@ FH Companion est une application séparée, et non une partie de 3DHeat. Elle ti
 un dossier par parcours, un fichier de tour par tour échantillonné environ tous les cinq mètres, et à côté de chaque fichier de tour
 `<lap>.json.tele.gz`, la totalité du Data Out du tour au débit du jeu. 3DHeat lit les deux :
 
-- **La visionneuse lit directement les `.tele.gz`** lorsque vous les déposez (avec ou sans leur fichier de tour) dans l'onglet Analyse de course. Elle
+- **Le visualiseur lit directement les `.tele.gz`** lorsque vous les déposez (avec ou sans leur fichier de tour) dans l'onglet Analyse de course. Il
   fait correspondre les noms de champs propres à Forza (`PositionX`, `VelocityX`, `TireSlipRatio` + roue, ...) aux canaux canoniques, transforme les
   `VelocityX/Y/Z` locales à la voiture en `latVel`, `vertVel`, `longVel`, convertit les températures des pneus depuis les Fahrenheit, supprime les lignes
   qui répètent la précédente à l'exception de l'horloge de l'enregistreur, et marque le glissement comme `peak`. Si le fichier de tour est aussi fourni,
-  le tour prend sa voiture et son temps de tour à partir de lui. Ce lecteur est dans la visionneuse (`src/race/adapters.ts`, `readForzaTelemetry`), et
+  le tour prend sa voiture et son temps de tour à partir de lui. Ce lecteur est dans le visualiseur (`src/race/adapters.ts`, `readForzaTelemetry`), et
   non dans ce dépôt.
 - **La commande `laps`** lit la bibliothèque de tours et écrit le tracé d'un parcours ainsi qu'un CSV de chaque échantillon ; voir
   [Référence des commandes](commands.md#laps).
@@ -134,7 +134,7 @@ un dossier par parcours, un fichier de tour par tour échantillonné environ tou
 
 ## Remarques et réserves {#notes-and-caveats}
 
-- Ce à quoi Forza normalise son glissement n'est pas documenté. `1` est lu comme le bord de l'adhérence, mais la visionneuse mesure l'endroit où
+- Ce à quoi Forza normalise son glissement n'est pas documenté. `1` est lu comme le bord de l'adhérence, mais le visualiseur mesure l'endroit où
   l'adhérence de chaque voiture lâche réellement.
 - La vitesse du bloc Sled est locale à la voiture, comme l'indique la documentation Data Out de Forza et comme le confirment les tours enregistrés
   (sa composante avant porte la vitesse, sa composante latérale reste proche de zéro). La détection de la disposition n'utilise que sa longueur, qui

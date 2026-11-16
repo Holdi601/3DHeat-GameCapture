@@ -26,7 +26,7 @@ Codice: [`pose/odometry.py`](https://github.com/Holdi601/3DHeat-GameCapture/blob
 `Intrinsics.from_fov(width, height, fov)` costruisce una camera stenopeica dal **campo visivo orizzontale**
 che imposti nella finestra: `fx = (width / 2) / tan(fov / 2)`, pixel quadrati (`fy = fx`), il punto
 principale al centro del fotogramma. Un gioco non pubblica la sua proiezione, quindi questo è l'unico numero
-supposto: troppo stretto e la scena sembra più profonda di quanto sia. Il percorso offline usa 65 gradi.
+ipotizzato: troppo stretto e la scena sembra più profonda di quanto sia. Il percorso offline usa 65 gradi.
 
 Una `Pose` è memorizzata **mondo-da-camera**: `rotation` (3 x 3) e `translation` = il centro della camera nel
 mondo, che è ciò che vogliono la traiettoria, la mappa di copertura e la sovrapposizione.

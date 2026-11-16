@@ -105,8 +105,8 @@ de zéros. Les indices utilisés :
 | 8-10 | vitesse du monde | `longVel` (sur l'avant), `latVel` (sur le vecteur latéral) |
 | 11-13 | vecteur latéral | |
 | 14-16 | vecteur avant | `yaw = atan2(forward.x, forward.z)` |
-| 17-20 | position de suspension AR AD AG AV | `suspensionM.*` |
-| 25-28 | vitesse de l'aire de contact des roues AR AD AG AV | `wheelSurfaceSpeed.*` |
+| 17-20 | position de suspension arrière gauche, arrière droite, avant gauche, avant droite | `suspensionM.*` |
+| 25-28 | vitesse de l'aire de contact des roues arrière gauche, arrière droite, avant gauche, avant droite | `wheelSurfaceSpeed.*` |
 | 29-33 | accélérateur, direction, frein, embrayage, rapport | `throttle`, `steer`, `brake`, `clutch`, `gear` (10 ou plus signifie la marche arrière, écrit -1) |
 | 34, 35 | accélérations latérale et longitudinale en g | `latAcc`, `longAcc` (multipliés par 9,80665) |
 | 37 | régime / 10 | `rpm` (multiplié par 10) |
@@ -114,7 +114,7 @@ de zéros. Les indices utilisés :
 | 59, 60, 61, 62 | tours effectués, tours totaux, longueur de circuit, temps du dernier tour | découpage |
 
 Il n'y a **pas de canal de frein à main**. Le sens du vecteur latéral est documenté dans les deux sens, donc le signe de `latVel` ne doit pas
-être utilisé tel quel (la visionneuse lit la taille de l'angle de dérive).
+être utilisé tel quel (le visualiseur lit la taille de l'angle de dérive).
 
 Une étape est **terminée** lorsque le nombre de tours effectués dépasse sa valeur au départ de l'étape (un tour de rallycross à chaque fois), ou,
 pour un événement d'un seul tour, lorsque la distance du tour atteint 99,9 % de la longueur du circuit. Le temps de l'étape est le temps du dernier
@@ -127,7 +127,7 @@ Sources : le document UDP de DiRT 4 de Codemasters ; ErlerPhilipp/dr2_logger ; s
 
 ### Activer {#switching-it-on-2}
 
-Dans `RichardBurnsRally.ini`, section `[NGP]` : `udpTelemetry=1` et le point d'arrivée (127.0.0.1, port 6776 sauf si vous passez un autre
+Dans `RichardBurnsRally.ini`, section `[NGP]` : `udpTelemetry=1` et l'adresse de destination (127.0.0.1, port 6776 sauf si vous passez un autre
 `--port`). L'enregistreur ne modifie pas ce fichier.
 
 ### Ce qu'il envoie {#what-it-sends-2}
@@ -168,11 +168,11 @@ fichier `_partial` si elle compte plus de 10 échantillons et au moins 300 m. Le
 
 `game` vaut `ea-sports-wrc`, `dirt-rally-2`, `dirt-rally`, `dirt-4` ou `richard-burns-rally`. `meta` vaut
 `{"discipline": "rally", "slip": null}`, plus `"surface": "<valeur>"` lorsque `--surface` a été donné. `slip` est nul parce qu'aucun de ces jeux
-n'envoie de glissement des pneus. La vitesse de l'aire de contact de chaque roue (EA WRC, DiRT) est en revanche dans le fichier ; la visionneuse en
+n'envoie de glissement des pneus. La vitesse de l'aire de contact de chaque roue (EA WRC, DiRT) est en revanche dans le fichier ; le visualiseur en
 déduit le glissement et l'angle de dérive à partir d'elle et des axes de la voiture ; voir [Glissement, dérive et canaux dérivés](slip-and-drift.md).
 Les canaux `suspension.*` (0..1 du débattement utilisé) sont ajoutés à partir de `suspensionM.*`.
 
 Lorsque aucun `--surface` n'est donné, le fichier ne contient volontairement aucune surface : une valeur par défaut écrite ici remplacerait l'inférence
-propre à la visionneuse. Celle-ci prend alors la surface du nom de l'étape ou de l'événement (rallyes sur asphalte, rallyes d'hiver, le Monte en mixte),
+propre au visualiseur. Celui-ci prend alors la surface du nom de l'étape ou de l'événement (rallyes sur asphalte, rallyes d'hiver, le Monte en mixte),
 sinon d'après la façon dont la voiture a été conduite sur elle (les virages appuyés à petit angle de dérive indiquent l'asphalte), et « meuble » lorsque rien
 ne l'indique - ce qu'est le plus souvent une étape de rallye. Donnez `--surface` lorsque vous en savez davantage.

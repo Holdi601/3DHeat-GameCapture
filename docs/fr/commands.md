@@ -112,7 +112,7 @@ tour. Ils sont écrits ensemble pour ne jamais se désynchroniser. Code :
 | `--library` | `%LOCALAPPDATA%\FHCompanion\laps` | Où se trouvent les dossiers des circuits. |
 | `--margin` | `80` | Mètres ajoutés autour de l'étendue du circuit en x et z, dans les `bounds` du tracé. |
 
-### Listing {#listing}
+### Liste {#listing}
 
 Sans circuit, la commande affiche le nombre de dossiers de circuits et, pour chacun, le nombre de fichiers de
 tours (`*.json` à n'importe quelle profondeur, sauf `course.json`) et le nom du circuit, puis

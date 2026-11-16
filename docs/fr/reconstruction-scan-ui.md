@@ -88,7 +88,7 @@ dernières images » - Brouillon garde à peu près les 15 % les plus actifs, D�
 ### Réglages fixes dans la fenêtre {#settings-that-are-fixed-in-the-window}
 
 La fenêtre reconstruit toujours pendant le scan, utilise une hauteur de caméra de **1,15 m** pour l'échelle du plan du sol (la
-valeur de marche, 1,70 m, n'est pas réglable), et laisse l'échelle des moteurs choisir le GPU. Ce sont des champs de
+valeur de marche, 1,70 m, n'est pas réglable), et laisse l'ordre de préférence des moteurs choisir le GPU. Ce sont des champs de
 `ScanSettings` (`camera_height`, `prefer_backend`) que seul un script peut modifier.
 
 ## Colonne de droite : ce que fait le scan {#right-column-what-the-scan-is-doing}
@@ -98,7 +98,7 @@ valeur de marche, 1,70 m, n'est pas réglable), et laisse l'échelle des moteurs
 | **Ce que voit la caméra** | la dernière image-clé |
 | **Forme lue** | sa profondeur prédite, colorée avec la palette Turbo, normalisée entre le 2e et le 98e centile de cette image (pour qu'un seul pixel de ciel n'aplatisse pas l'échelle) |
 | **Couverture - où vous êtes passé, et avec quelle qualité** | une vue en plan (voir ci-dessous) |
-| **À revoir** | les points faibles, numérotés pour correspondre aux anneaux de la carte, chacun avec une consigne ; du plus grand au plus petit, au plus 8 ; puis les points que vous avez marqués (`M1.  Marked by you, at x …, z … m — drive past again.`) |
+| **À revoir** | les points faibles, numérotés pour correspondre aux anneaux de la carte, chacun avec une consigne ; les pires d'abord (les plus grands), au plus 8 ; puis les points que vous avez marqués (`M1.  Marked by you, at x …, z … m — drive past again.`) |
 | Barre de vitesse de marche | `walk speed — N% of the way to the next view` : le changement d'image de la dernière image divisé par le **seuil utilisé** - la valeur de départ du préréglage pour les 30 premières images, la valeur adaptée ensuite ([Images-clés](reconstruction-capture.md#keyframes)) |
 | Ligne d'état | la santé du suivi, ou un avertissement de capture (ci-dessous) |
 | Ligne de taille | `Size: ...`, comment l'échelle du niveau a été fixée, ou pourquoi elle ne l'a pas été ([Échelle](reconstruction-pose.md#scale)) |
@@ -200,7 +200,7 @@ Un panneau figé en vert continuerait sinon d'être lu comme une confirmation.
 
 **Enregistrer le niveau…** écrit la reconstruction sous forme de `.glb` (voir [La sortie .glb](glb-output.md)). Si le volume ne
 produit aucune surface, « Nothing to save » explique que le suivi a sans doute été perdu pendant la plus grande partie du scan.
-En cas de succès : « Written to <path> ... Load it in 3DHeat through the Level panel. », en nommant aussi le fichier des marques
+En cas de succès : « Written to <path> ... Load it in 3DHeat through the Level panel. » (dans le visualiseur : le panneau Arrière-plan / niveau), en nommant aussi le fichier des marques
 quand il y a des points marqués.
 
 Les points marqués sont écrits à côté du niveau sous **`<name>.marks.json`** :

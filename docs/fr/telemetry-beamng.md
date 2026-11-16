@@ -73,7 +73,7 @@ matériau -1.
 
 ## Ce que fait l'enregistreur {#what-the-recorder-does-with-it}
 
-Le monde de BeamNG a Z vers le haut ; celui de la visionneuse a Y vers le haut. Les positions et les
+Le monde de BeamNG a Z vers le haut ; celui du visualiseur a Y vers le haut. Les positions et les
 vecteurs tournent autour de X, `(x, y, z) -> (x, z, -y)`, ce qui conserve le sens du système du monde.
 Ensuite :
 
@@ -107,7 +107,7 @@ course ouverte à cet instant est d'abord fermée - écrite comme course partiel
 ## Le fichier de tour {#the-lap-file}
 
 `game` vaut `beamng`, `meta` vaut `{"discipline": "circuit"}`, et les fichiers portent le nom
-`beamng_<horodatage>_lap<n>_<secondes>s[_partial].json`. Aucun glissement n'est écrit ; la visionneuse le
+`beamng_<horodatage>_lap<n>_<secondes>s[_partial].json`. Aucun glissement n'est écrit ; le visualiseur le
 calcule à partir des vitesses de surface des roues (voir [Glissement, dérive et canaux dérivés](slip-and-drift.md)).
 Les positions sont dans le même repère que celui qu'écrit l'export de parcours BeamNG de GameFiles ; un tour
 enregistré se pose donc sur un parcours exporté.

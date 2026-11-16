@@ -22,7 +22,7 @@ fragment trop court pour être comparé.
 | `StageSplitter` | [`rally.py`](https://github.com/Holdi601/3DHeat-GameCapture/blob/main/heat3d_capture/telemetry/rally.py) | EA SPORTS WRC, DiRT Rally 2.0, DiRT Rally, DiRT 4, Richard Burns Rally |
 
 Trackmania découpe ses courses dans son plugin ([Trackmania](telemetry-trackmania.md)), et les fichiers
-iRacing sont découpés par la visionneuse sur le compteur de tours du simulateur ([iRacing](telemetry-iracing.md)).
+iRacing sont découpés par le visualiseur sur le compteur de tours du simulateur ([iRacing](telemetry-iracing.md)).
 
 Lors d'un **Ctrl+C**, chaque enregistreur appelle `flush()` de son découpeur, de sorte qu'un tour ou une
 étape ouvert est écrit s'il respecte les mêmes minimums que ci-dessous.

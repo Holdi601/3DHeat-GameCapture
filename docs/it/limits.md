@@ -31,8 +31,7 @@ Altri limiti della telemetria:
 - Nessuno dei giochi rally invia lo slittamento delle gomme; viene derivato nel visualizzatore. RBR non invia le
   velocità delle ruote.
 - La superficie di una tappa rally viene scritta solo quando è dato `--surface`; altrimenti il file non ne indica
-  nessuna e il visualizzatore la deduce (nome della tappa o dell'evento, poi lo stile di guida, in modo approssimativo
-  per impostazione predefinita).
+  nessuna e il visualizzatore la deduce (nome della tappa o dell'evento, poi lo stile di guida, sciolto per impostazione predefinita).
 - Il rilevamento dei giri senza un contatore di giri (AC EVO, AC Rally, BeamNG) usa il punto in cui è iniziata la
   registrazione come linea, quindi inizia a registrare sulla linea di partenza.
 - Un reset del veicolo in BeamNG chiude il giro aperto in quel momento: viene scritto come corsa parziale quando ha

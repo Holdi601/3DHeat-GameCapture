@@ -10,7 +10,7 @@ search_exclude: true
 # Reconstruction de niveau à partir du gameplay {#level-reconstruction-from-gameplay}
 
 Parcourez un niveau lentement, ou conduisez sur une piste, et le scanner transforme ce que l'écran a
-montré en un `.glb` que la visionneuse 3DHeat charge comme contexte sous la télémétrie - le même contrat
+montré en un `.glb` que le visualiseur 3DHeat charge comme contexte sous la télémétrie - le même contrat
 de fichier que celui qu'écrit l'exportateur Unreal. Il sert au cas où personne n'a exporté la carte et
 où les fichiers du jeu ne peuvent pas être lus ; un export du moteur ou un export des fichiers de jeu
 est exact, celui-ci est une estimation.
@@ -84,7 +84,7 @@ qu'une marche droit devant soi, et qu'une scène sans aspérités est refusée p
 La profondeur analytique isole la pose, l'échelle et la fusion du réseau ; la façon dont le réseau se
 comporte sur du gameplay réel est une question à part qu'aucune scène synthétique ne répond.
 `tests/test_track_width.py` vérifie qu'un tour conduit hors centre sur une route de largeur connue
-reconstruit la largeur de la route, et pas seulement la ligne conduite.
+reconstruit la largeur de la route, et pas seulement la trajectoire suivie.
 
 ## Pages {#pages}
 

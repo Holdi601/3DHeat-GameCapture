@@ -144,7 +144,7 @@ lecteur doit tolérer toutes ces variantes (vérifiées dans le code) :
 |---|---|---|---|---|---|
 | Forza (`fulllap.py`) | `null` (le numéro de circuit de Forza Motorsport 2023 est `lap.trackOrdinal`) | la disposition de paquet détectée | `slip: peak`, `discipline: circuit` | seulement les unités des canaux présents | `distanceTravelled`, `currentLap`, `lapNumber`, `racePosition`, `accelX/Y/Z`, `angVelX/Y/Z`, `drivingLine`, `aiBrakeDifference`, l'horloge du jeu `timestampMs`, `raceTime`, `bestLap`, `lastLap` ; la vitesse locale à la voiture est sous les noms canoniques `latVel`, `vertVel`, `longVel` ; `unparsed` à côté des canaux |
 | Jeux Assetto Corsa (`kunos.py`) | depuis la page statique, ou `null` | absent | `slip: scaled`, `discipline: circuit` ou `rally` | une liste fixe | `slipRatioRaw.*`, `slipAngleRaw.*`, `packetId`, `steerAngle` (tel qu'envoyé), `worldVelX/Y/Z`, `angVelX`, `angVelZ`, `tcActing`, `absActing`, `wheelSlip.*`, `contactX/Y/Z.*` |
-| Jeux de rallye (`rally.py` via `lapfile.py`) | `null` | absent | `discipline: rally`, `slip: null`, `surface` seulement lorsque `--surface` a été donné (sinon la visionneuse le déduit) | seulement les unités des canaux présents | `stageDistance` ; WRC `gameTime`, `gameDelta`, `packetUid`, `gearIndex`, `transmissionSpeed`, `rpmMax`, `rpmIdle`, `stageLength`, `hubVel.*`, `worldVel/worldAcc/left/forward/up` `X/Y/Z` ; DiRT `totalTime`, `lapNumber`, `lapsCompleted`, `totalLaps`, `stageLength`, `lastLapTime`, `suspensionVel.*`, `worldVel/side/forward` `X/Y/Z`, `float<i>` pour les flottants sans nom établi ; RBR `attitudeX/Y/Z`, `totalSteps`, `stageIndex`, `progress`, `raceTime`, `distanceToEnd`, `speedRaw`, `accelZ` |
+| Jeux de rallye (`rally.py` via `lapfile.py`) | `null` | absent | `discipline: rally`, `slip: null`, `surface` seulement lorsque `--surface` a été donné (sinon le visualiseur le déduit) | seulement les unités des canaux présents | `stageDistance` ; WRC `gameTime`, `gameDelta`, `packetUid`, `gearIndex`, `transmissionSpeed`, `rpmMax`, `rpmIdle`, `stageLength`, `hubVel.*`, `worldVel/worldAcc/left/forward/up` `X/Y/Z` ; DiRT `totalTime`, `lapNumber`, `lapsCompleted`, `totalLaps`, `stageLength`, `lastLapTime`, `suspensionVel.*`, `worldVel/side/forward` `X/Y/Z`, `float<i>` pour les flottants sans nom établi ; RBR `attitudeX/Y/Z`, `totalSteps`, `stageIndex`, `progress`, `raceTime`, `distanceToEnd`, `speedRaw`, `accelZ` |
 | BeamNG (`beamng.py` via `lapfile.py`) | `null` | absent | `discipline: circuit` | seulement les unités des canaux présents | `wheelSurfaceSpeedRaw.*`, `wheelMaterial.*`, `forward/up/worldVel` `X/Y/Z` |
 | Plugin Trackmania (CSV) | le nom de la carte | - | `slip: index`, `discipline: arcade` | - | `respawns` |
 
@@ -165,12 +165,12 @@ du JSON, et le `JSON.parse` d'un navigateur refuse tout le fichier à cause de l
 doit s'attendre à trouver `null` dans le tableau d'un canal.
 
 Les fichiers Forza portent `"game": "forza-horizon"`, `"forza-motorsport"` ou `"forza"` selon la
-disposition détectée. Le lecteur de la visionneuse pour les fichiers `.tele.gz` de FH Companion produit
-des tours avec `"game": "forza-horizon"` et `meta.slip = "peak"` ; ce lecteur est dans la visionneuse,
-pas ici. Les tours iRacing (lus depuis `.ibt` dans la visionneuse) portent `"game": "iracing"`, qui ne
+disposition détectée. Le lecteur du visualiseur pour les fichiers `.tele.gz` de FH Companion produit
+des tours avec `"game": "forza-horizon"` et `meta.slip = "peak"` ; ce lecteur est dans le visualiseur,
+pas ici. Les tours iRacing (lus depuis `.ibt` dans le visualiseur) portent `"game": "iracing"`, qui ne
 figure pas dans la liste des valeurs `game` des enregistreurs ci-dessus, car aucun enregistreur
 n'écrit cette valeur.
 
 Voir [Découpage des tours et des étapes](lap-splitting.md) pour la façon dont `lap.number`, `lap.seconds`
 et `lap.complete` sont décidés, et [Glissement, dérive et canaux dérivés](slip-and-drift.md) pour ce que
-la visionneuse déduit de ces canaux.
+le visualiseur déduit de ces canaux.

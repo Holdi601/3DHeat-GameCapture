@@ -16,13 +16,13 @@ python -m heat3d_capture telemetry --game trackmania --install
 Code : le plugin Openplanet
 [`mods/trackmania/Heat3dRecorder`](https://github.com/Holdi601/3DHeat-GameCapture/tree/main/mods/trackmania/Heat3dRecorder)
 (`info.toml`, `main.as`). **Le plugin n'a pas encore été lancé dans le jeu** ; le lecteur de son CSV dans
-la visionneuse est testé.
+le visualiseur est testé.
 
 ## Pourquoi un plugin qui écrit des fichiers {#why-a-plugin-that-writes-files}
 
 Trackmania n'a pas de sortie de télémétrie propre. Openplanet, la plateforme de plugins du jeu, expose à
 ceux-ci l'état du véhicule regardé, mais les plugins Openplanet ne peuvent pas envoyer d'UDP. Le plugin
-écrit donc un fichier CSV par course dans son propre dossier de stockage, et la visionneuse lit ces
+écrit donc un fichier CSV par course dans son propre dossier de stockage, et le visualiseur lit ces
 fichiers tels quels. Il n'y a pas de processus d'enregistrement : `telemetry --game trackmania` se contente
 d'installer le plugin (avec `--install`) et d'indiquer où apparaîtront les fichiers.
 
@@ -38,7 +38,7 @@ d'installer le plugin (avec `--install`) et d'indiquer où apparaîtront les fic
   ligne. Le plugin peut être signé sur openplanet.dev ; il ne l'est pas ici.
 
 Les courses sont écrites dans `%USERPROFILE%\OpenplanetNext\PluginStorage\Heat3dRecorder`. Chargez ces
-fichiers CSV dans l'onglet Analyse de course de la visionneuse. `-o` et `--port` sont ignorés pour
+fichiers CSV dans l'onglet Analyse de course du visualiseur. `-o` et `--port` sont ignorés pour
 Trackmania.
 
 ## Ce que le plugin enregistre {#what-the-plugin-records}

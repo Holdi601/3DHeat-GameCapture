@@ -30,7 +30,7 @@ sert, poser des questions - se passe dans Python, sous forme de boîte de dialog
 
 ## Première vérification {#first-run-preflight}
 
-Avant que la fenêtre n'importe quoi de lourd, chaque dépendance est vérifiée (avec `importlib.util.find_spec`, donc un paquet
+Avant que la fenêtre ne charge quoi que ce soit de lourd, chaque dépendance est vérifiée (avec `importlib.util.find_spec`, donc un paquet
 à moitié supprimé compte comme manquant). Les règles :
 
 - **Tout est vérifié d'abord.** La liste complète est établie avant que quoi que ce soit ne soit dit, afin que réparer un paquet
@@ -44,7 +44,7 @@ Avant que la fenêtre n'importe quoi de lourd, chaque dépendance est vérifiée
   - avec `scan.bat`, le `.venv` privé. En cas d'échec, la boîte de dialogue affiche la dernière ligne de sortie de pip et la
   commande à essayer à la main.
 
-| Paquet | Importé comme | Affiché comme ce à quoi il sert | Téléchargement approximatif |
+| Paquet | Importé comme | Description affichée | Téléchargement approximatif |
 |---|---|---|---|
 | numpy | `numpy` | le calcul sur lequel tout le reste est bâti | 20 Mo |
 | opencv-python | `cv2` | lecture des fichiers vidéo et des images de caméra | 40 Mo |
@@ -85,7 +85,7 @@ non plus, pour la raison exposée ci-dessous.
 
 **PyTorch est volontairement absent.** La bonne roue dépend du GPU et de la version de CUDA ; en épingler une installerait une version
 CPU sur les machines qui ont le plus besoin de la version GPU. Si vous le voulez (conversion du modèle, voie hors ligne `reconstruct`),
-installez-le **avant** `requirements.txt` : les roues torch peuvent se fixer sur numpy 1.x, avec lequel scipy refuse de tourner, et
+installez-le **avant** `requirements.txt` : les roues torch peuvent installer numpy 1.x, avec lequel scipy refuse de tourner, et
 l'échec apparaît sous la forme `module numpy has no attribute long` depuis l'intérieur de scipy, loin de sa cause.
 
 `onnxruntime-directml` et `onnxruntime-gpu` sont en conflit : n'en installez qu'un.
@@ -109,7 +109,7 @@ installé, pas du matériel. La disponibilité est donc découverte, du meilleur
 
 **DirectML est l'installation par défaut** parce qu'il atteint les GPU AMD et Intel aussi bien que NVIDIA. NVIDIA est plus rapide avec
 ses propres fournisseurs - installer `onnxruntime-gpu` ajoute CUDA, et la fenêtre le dit lorsqu'elle voit une carte NVIDIA tourner sous
-DirectML - mais NVIDIA n'a pas le droit d'être la seule option. Le CPU vient toujours en dernier, donc une machine sans GPU utilisable
+DirectML - mais NVIDIA ne doit pas être la seule option. Le CPU vient toujours en dernier, donc une machine sans GPU utilisable
 obtient un scan lent plutôt qu'aucun scan, et il est ajouté comme secours lorsqu'une session GPU est créée.
 
 Le nom de l'adaptateur est lu dans la clé de classe des adaptateurs d'affichage Windows du registre (et non depuis un outil du
@@ -162,7 +162,7 @@ La voie hors ligne `reconstruct` est différente : quelques minutes par fenêtre
 
 - Les images ne sont pas conservées après la fusion, sauf **160** pour colorier le maillage.
 - Un scan s'arrête à **3000** vues conservées par défaut (« Views kept »), comme garde-fou.
-- La file de capture en direct contient 4 images ; le tampon de poses de télémétrie 30 secondes.
+- La file de capture en direct contient 4 images ; le tampon de poses de télémétrie garde 30 secondes.
 - Les deux grilles de voxels sont creuses, et le maillage est extrait bloc par bloc, donc la mémoire suit ce qui a été scanné,
   et non la boîte englobante.
 

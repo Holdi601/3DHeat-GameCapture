@@ -65,7 +65,7 @@ depth-base-518.onnx`. Per scansionare con Base, sposta il file Small fuori da `m
 | | Surface detail | 0.25 m | 0.05-2.0 m, passo 0.05 | Dimensione del voxel della superficie. Più piccolo è più fine e più pesante |
 | Stop after | Time | no limit | 0-120 min | Termina la scansione dopo questo tempo (0 = nessun limite) |
 | | Views kept | 3000 | 0-100.000 | Termina la scansione dopo questo numero di fotogrammi chiave, come protezione della memoria (0 = nessun limite) |
-| What to ignore | Ignore HUD and anything on the camera | on | | Impara e maschera la HUD, il mirino, l'arma, il cofano, l'abitacolo ([Cattura](reconstruction-capture.md#what-is-not-the-world)). La riga sotto dice cosa decide attualmente il rilevatore |
+| What to ignore | Ignore HUD and anything on the camera | on | | Impara e maschera l'HUD, il mirino, l'arma, il cofano, l'abitacolo ([Cattura](reconstruction-capture.md#what-is-not-the-world)). La riga sotto dice cosa decide attualmente il rilevatore |
 | While you play | Show feedback over the game | on | | Apre la sovrapposizione che lascia passare i clic durante la scansione. Il suggerimento sotto: esegui il gioco in **finestra senza bordi**; lo schermo intero esclusivo non può essere disegnato sopra da nulla |
 | Racing telemetry (Forza) | Listen for position data | off | | Prende il percorso della camera da Data Out di Forza invece di stimarlo ([Posa](reconstruction-pose.md#telemetry-poses)) |
 | | (port) | 5300 | 1-65535 | La porta di Data Out |
@@ -90,7 +90,7 @@ degli ultimi 240 fotogrammi" - Draft conserva circa il 15% più movimentato, Det
 ### Impostazioni fisse nella finestra {#settings-that-are-fixed-in-the-window}
 
 La finestra ricostruisce sempre durante la scansione, usa un'altezza della camera di **1,15 m** per la scala del piano del
-terreno (il valore a piedi, 1,70 m, non è selezionabile), e lascia che la scala dei backend scelga la GPU. Sono campi di
+terreno (il valore a piedi, 1,70 m, non è selezionabile), e lascia che la graduatoria dei backend scelga la GPU. Sono campi di
 `ScanSettings` (`camera_height`, `prefer_backend`) che solo uno script può cambiare.
 
 ## Colonna destra: cosa sta facendo la scansione {#right-column-what-the-scan-is-doing}
@@ -127,9 +127,9 @@ Come sono calcolati qualità e punti deboli: [Fusione, copertura e colore](recon
 | Salute del tracciamento (fotogrammi collocati / fotogrammi) | Testo | Colore |
 |---|---|---|
 | nessun fotogramma ancora | Waiting for the first frame. | grigio |
-| 90% o più | Tracking well — N of M frames placed. (Tracciamento buono.) | verde |
-| 60% o più | Tracking is patchy — N of M frames could not be placed. Turn more slowly. (Tracciamento a tratti: gira più lentamente.) | ambra |
-| sotto il 60% | Losing track — only N of M frames placed. Move slowly, and avoid blank walls and sky. (Stai perdendo il tracciamento: muoviti lentamente ed evita muri vuoti e cielo.) | rosso |
+| 90% o più | Tracking well — N of M frames placed. | verde |
+| 60% o più | Tracking is patchy — N of M frames could not be placed. Turn more slowly. | ambra |
+| sotto il 60% | Losing track — only N of M frames placed. Move slowly, and avoid blank walls and sky. | rosso |
 
 Un avviso di cattura dalla griglia di copertura sostituisce questa riga (rosso quando la scansione è giudicata non
 ricostruibile, ambra altrimenti): quasi nessuna parallasse, tutto visto da più di 25 m, oppure parallasse sottile. Vedi
@@ -139,9 +139,9 @@ ricostruibile, ambra altrimenti): quasi nessuna parallasse, tutto visto da più 
 
 | Condizione | Suggerimento |
 |---|---|
-| più della metà dei fotogrammi scartati, dopo 6 s | Falling behind — N frames dropped ... Try Draft quality, or a coarser surface detail. (Sei indietro: prova la qualità Draft, o un dettaglio di superficie più grossolano.) |
-| meno di 0,3 viste conservate al secondo, dopo 8 s | Very little is being kept — you may be standing still, or looking at something featureless. Move sideways rather than turning on the spot. (Si conserva pochissimo: muoviti di lato invece di girare sul posto.) |
-| più di 8 viste conservate al secondo, dopo 8 s | Keeping a lot. Slow down a little for cleaner geometry. (Ne conservi molte: rallenta un po' per una geometria più pulita.) |
+| più della metà dei fotogrammi scartati, dopo 6 s | Falling behind — N frames dropped ... Try Draft quality, or a coarser surface detail. |
+| meno di 0,3 viste conservate al secondo, dopo 8 s | Very little is being kept — you may be standing still, or looking at something featureless. Move sideways rather than turning on the spot. |
+| più di 8 viste conservate al secondo, dopo 8 s | Keeping a lot. Slow down a little for cleaner geometry. |
 | scansione terminata | il messaggio della sessione: `stopped`, `finished`, `reached the Ns limit`, `reached N keyframes`, oppure `failed: <error>` |
 
 ## Scorciatoie {#hotkeys}

@@ -24,7 +24,7 @@ Codice: [`depth/onnx_estimator.py`](https://github.com/Holdi601/3DHeat-GameCaptu
 **Depth Anything V2**, variante relativa. Prevede la *profondità inversa relativa*: un campo simile
 alla disparità, corretto solo a meno di una trasformazione affine sconosciuta,
 `metric_disparity = a * predicted + b`, diversa per ogni fotogramma. La rete è brava in ciò che è
-difficile da un'unica immagine (forma relativa, bordi, strutture sottili) e muta su ciò che non
+difficile da un'unica immagine (forma relativa, bordi, strutture sottili) e tace su ciò che non
 può sapere (la scala). La scala arriva da un'altra parte - vedi [Posa della camera e scala](reconstruction-pose.md).
 
 | Dimensione | Id su Hugging Face | Licenza |
@@ -81,8 +81,8 @@ scansione indica il file, la sua licenza e ogni altro modello lasciato inutilizz
 
 ## Esecuzione: ONNX Runtime {#running-it-onnx-runtime}
 
-`OnnxDepthEstimator` crea una sessione ONNX Runtime, in modo pigro, con piena ottimizzazione del
-grafo, sul backend scelto dalla scala, con la CPU aggiunta come ripiego così che un provider che
+`OnnxDepthEstimator` crea una sessione ONNX Runtime, al primo uso, con piena ottimizzazione del
+grafo, sul backend scelto dalla graduatoria, con la CPU aggiunta come ripiego così che un provider che
 fallisce alla creazione della sessione (un driver vecchio) significhi una scansione lenta, non un
 crash. Vedi [Runtime e dipendenze](runtime.md#inference-backends).
 
@@ -95,10 +95,10 @@ crash. Vedi [Runtime e dipendenze](runtime.md#inference-backends).
 
 Il grafo accetta un quadrato fisso; il gioco è 16:9. Schiacciare un fotogramma in un quadrato
 cambierebbe la forma apparente di tutto, e poiché l'output è una stima geometrica verrebbe fuso
-come geometria sbagliata reale. Quindi ogni fotogramma viene:
+come geometria reale ma sbagliata. Quindi ogni fotogramma viene:
 
-1. scalato per entrare nel quadrato, mantenendo il rapporto d'aspetto (interpolazione per area in
-   discesa, cubica in salita);
+1. scalato per entrare nel quadrato, mantenendo il rapporto d'aspetto (interpolazione per area quando si riduce,
+   cubica quando si ingrandisce);
 2. riempito con **grigio medio (114)** - il nero o il bianco si leggono come un bordo forte e
    trascinano una falsa discontinuità di profondità nel contenuto accanto;
 3. passato al modello;

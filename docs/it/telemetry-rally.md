@@ -138,7 +138,7 @@ passi un altro `--port`). Il registratore non modifica questo file.
 
 664 byte (`Plugins/NGP/sdk/rbr.telemetry.data.TelemetryData.h`): orologio di tappa e distanza dalla fine, pedali,
 sterzo, marcia, posizione nel mondo, assetto, le velocità proprie dell'auto (avanzamento in avanti, oscillazione
-laterale, sussulto verticale), accelerazioni, giri, e quattro blocchi di ruota da 128 byte (AS, AD, PS, PD) con
+laterale, sussulto verticale), accelerazioni, giri, e quattro blocchi di ruota da 128 byte (LF, RF, LB, RB) con
 deflessione e forza della molla. Nessuna velocità delle ruote.
 
 | Canale | Da |

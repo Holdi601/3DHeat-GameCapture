@@ -174,7 +174,7 @@ ffmpeg decodifica sulla GPU, riduce alla frequenza di campionamento mentre i fot
 ritaglia le regioni del profilo (minimappa, feed delle uccisioni, due strisce della bussola, lista della squadra,
 il popup dei punti, le parole della schermata di caduta, l'angolo in basso a destra), scala ciascuna a una
 dimensione fissa e le impila in un'unica piccola immagine per campione. Solo quell'immagine attraversa la pipe
-verso Python. Decodificare ogni fotogramma del flusso H.264 è il minimo del tempo di esecuzione.
+verso Python. Decodificare ogni fotogramma del flusso H.264 è il limite minimo del tempo di esecuzione.
 
 Due thread di lavoro prendono i campioni: uno registra le minimappe (OpenCV), l'altro legge il testo (ONNX Runtime).
 
@@ -484,7 +484,7 @@ non alla rianimazione.
   a sinistra, oltre il bordo della zona letta. È stata contata finché era visibile; un conteggio che guadagna mentre è
   mezza fuori schermo può essere perso.
 - **Un popup perso per più tempo di quanto avrebbe potuto durare** (oltre circa 4 s di campioni illeggibili mentre
-  cresceva ancora) viene preso per due, e un'etichetta con conteggio superiore a uno viene allora contata di nuovo.
+  cresceva ancora) viene contato come due popup, e un'etichetta con conteggio superiore a uno viene allora contata di nuovo.
   Non visto nei controlli sotto.
 - **Altre lingue dell'interfaccia**: le etichette escono come `points` con il loro testo, e le morti vengono dal solo
   feed (le schermate di morte vengono riconosciute dalle loro parole inglesi).

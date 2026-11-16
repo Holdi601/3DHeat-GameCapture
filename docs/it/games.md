@@ -58,7 +58,7 @@ vengono trattati allo stesso modo: misurata, non data per scontata.
 
 Oltre ai canali di guida, i registratori conservano ciò che ogni gioco aggiunge: su
 i giochi AC, l'ABS e il controllo di trazione in funzione, la ripartizione della
-frenata, DRS, limitatore di corsia dei box, turbo e durata delle pastiglie e dei
+frenata, DRS, limitatore di velocità ai box, turbo e durata delle pastiglie e dei
 dischi; per iRacing, le impostazioni degli aiuti, la ripartizione della frenata,
 carburante, temperature di olio e acqua, e ogni altro canale che registra con il proprio
 nome.

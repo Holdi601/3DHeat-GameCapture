@@ -469,7 +469,7 @@ Les endroits sosies sont la principale source d'erreurs sûres : une pose exacte
 
 ### Images réelles : expérimental {#real-frames-experimental}
 
-Sur de vrais enregistrements, `locate` **ne fonctionne pas encore bien**: il ne place à partir de l'image qu'une faible part des images, surtout des images de véhicule (la caméra à la troisième personne voit plus du niveau depuis le haut), et presque aucune image à pied (le joueur regarde les murs et le sol de près). Ce qui a été appris sur les enregistrements d'essai :
+Sur de vrais enregistrements, `locate` **ne fonctionne pas encore bien** : il ne place à partir de l'image qu'une faible part des images, surtout des images de véhicule (la caméra à la troisième personne voit plus du niveau depuis le haut), et presque aucune image à pied (le joueur regarde les murs et le sol de près). Ce qui a été appris sur les enregistrements d'essai :
 
 - **Trouver la bonne vue est ce qui échoue.** La lumière du jeu, ses effets et ses textures d'export grossières éloignent une image réelle des rendus plus que ne le faisait l'imitation du banc, de sorte que la bonne vue se classe près de la liste courte, mais en dehors.
 - **Un modèle propre à la carte aide** (`locate train`) : il classe la bonne vue beaucoup plus haut, et les images réelles ajoutées comme paires d'entraînement aident davantage sur les images qui les entourent.

@@ -25,7 +25,7 @@ Codice: [`telemetry/forza.py`](https://github.com/Holdi601/3DHeat-GameCapture/bl
 `--port`). Forza Motorsport offre anche un formato di pacchetto: deve essere **Dash**, non Sled. Sled non porta
 alcuna posizione, e il registratore lo rifiuta.
 
-Il registratore si collega a `127.0.0.1`, quindi il gioco deve girare sullo stesso PC.
+Il registratore ascolta su `127.0.0.1`, quindi il gioco deve girare sullo stesso PC.
 
 ## Cosa invia il gioco, e come si trova il layout {#what-the-game-sends-and-how-the-layout-is-found}
 

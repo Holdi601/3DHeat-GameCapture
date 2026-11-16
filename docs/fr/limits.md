@@ -34,7 +34,7 @@ Autres limites de la télémétrie :
   visualiseur la déduit (nom de l'épreuve ou de l'événement, puis style de conduite, souple par défaut).
 - La détection des tours sans compteur de tours (AC EVO, AC Rally, BeamNG) prend comme ligne le point où
   l'enregistrement a commencé ; commencez donc à enregistrer sur la ligne de départ.
-- Une remise à zéro du véhicule dans BeamNG ferme le tour ouvert à ce moment : il est écrit comme une partie partielle
+- Une remise à zéro du véhicule dans BeamNG ferme le tour ouvert à ce moment : il est écrit comme une `run` incomplète
   quand il a couvert la distance minimale (300 m), et abandonné sinon.
 - `route` sauvegarde environ toutes les 2 secondes pendant la conduite ; un plantage ou un processus tué perd au plus les
   positions depuis la dernière sauvegarde.

@@ -42,7 +42,7 @@ quiconque l'exécute. La profondeur est donc **estimée** à partir de l'image (
 et une grande partie du pipeline de reconstruction existe pour retrouver le plus possible de cette
 précision perdue à partir de sources librement utilisables : les poses de télémétrie là où un jeu les
 publie, une échelle fondée sur le plan de sol là où il ne les publie pas, et des masques qui gardent le
-HUD et le cockpit hors de la résolution.
+HUD et le cockpit hors du calcul.
 
 Le tampon de profondeur de ReShade a été envisagé et n'a pas été retenu. ReShade désactive l'accès à la
 profondeur dans les sessions multijoueur par conception ; il n'aiderait donc que les titres solo (voir
@@ -50,7 +50,7 @@ profondeur dans les sessions multijoueur par conception ; il n'aiderait donc que
 
 ## Ce que l'outil modifie sur votre machine, et seulement sur demande {#things-the-tool-changes-on-your-machine-and-only-when-asked}
 
-| Action | Quand | Ce qui exactement |
+| Action | Quand | Détail |
 |---|---|---|
 | Installe des paquets Python | la première exécution de la fenêtre de scan, après une boîte de dialogue et un oui | `pip install` dans l'interpréteur qui exécute l'outil - avec `scan.bat`, le `.venv` privé à côté de lui. Jamais à l'échelle du système par lui-même. |
 | Convertit le modèle de profondeur | le bouton « Set up the depth model », après une seconde boîte de dialogue pour PyTorch et consorts | écrit `models/depth-small-518.onnx` |

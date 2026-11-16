@@ -163,7 +163,7 @@ caratteristiche persistono senza spostarsi?**
   proprio la firma "persistente ma fermo" che si cerca. Le finestre più corte di 20 fotogrammi
   vengono saltate. Le finestre corte contano: su un percorso lungo quasi ogni caratteristica del
   mondo esce dall'inquadratura e le prove si assottigliano fino a sparire.
-- Lo spostamento netto di ogni caratteristica sopravvissuta viene confrontato con **2% della
+- Lo spostamento netto di ogni caratteristica sopravvissuta viene confrontato con il **2% della
   larghezza del fotogramma**: sotto, è "ferma"; sopra, "in movimento". I conteggi vengono
   accumulati su una griglia di celle di schermo **24 x 24** a seconda di dove la caratteristica
   è partita.
@@ -218,7 +218,7 @@ Il consiglio, vince la prima corrispondenza (ordinate da ciò che blocca di più
 | piatto | Niente da misurare - punta la camera sul livello, non sul cielo. | stop |
 | buio | Troppo buio per ricostruire. Accendi i fari, o percorri questo tratto di giorno. | stop |
 | sfocato | Sfocato - rallenta. | warn |
-| meno della metà dei fotogrammi tracciati | Si perde il tracciamento - rallenta e tieni più livello nell'inquadratura. | warn |
+| meno della metà dei fotogrammi tracciati | Si perde il tracciamento - rallenta e tieni più parte del livello nell'inquadratura. | warn |
 | meno del 40% dei fotogrammi tracciati fusi | Le posizioni sono buone ma la profondità non tiene. Guida più vicino al paesaggio. | warn |
 | ci sono punti deboli | N punti deboli - la mappa li segna. | ok |
 | altrimenti | Buono - continua così. | ok |

@@ -85,7 +85,7 @@ Ce qui s'ignore tout seul, et pourquoi :
 | `test_onnx_estimator.py`, `test_launch.py`, les tests de pilotage de fenêtre dans `test_ui_drives_a_scan.py` | aucun `models/depth-*.onnx` - lancez d'abord `tools/export_onnx.py` |
 | les tests de l'estimateur GPU dans `test_depth.py` | PyTorch n'est pas installé, ou il n'y a pas de périphérique CUDA ; les tests `fit_scale` et `AffineFit` s'exécutent dans tous les cas |
 | certains cas de `test_offline.py` et `test_solveprep.py` | OpenCV n'a pas d'encodeur vidéo pour écrire le clip synthétique |
-| `test_hotkeys.py` | les tests d'enregistrement exigent Windows ; le test de repli s'exécute ailleurs |
+| `test_hotkeys.py` | les tests d'enregistrement des raccourcis exigent Windows ; le test de repli s'exécute ailleurs |
 | `test_course_ground.py` | `HEAT3D_COURSE` n'est pas défini |
 | quelques tests de fusion | un cas synthétique n'a rien fusionné |
 
@@ -116,14 +116,14 @@ une faute dans la façon dont l'environnement est construit.
   l'enregistreur.
 - `tests/test_telemetry_pose.py` - poses Forza dans les propres coordonnées du jeu, le sens du lacet,
   du tangage et du roulis, et un trou de télémétrie comblé visuellement dans le monde miroir.
-- `tests/test_glb.py` - le contrat GLB ; les tests de la visionneuse analysent un niveau de référence
+- `tests/test_glb.py` - le contrat GLB ; les tests du visualiseur analysent un niveau de référence
   écrit par cet écrivain, si bien que le format est testé des deux côtés.
 
 ### Vérifier un parcours exporté par rapport aux tours {#checking-an-exported-course-against-laps}
 
 `tests/test_course_ground.py` vérifie qu'un parcours exporté par
 [3DHeat GameFiles](https://github.com/Holdi601/3DHeat-GameFiles) se trouve bien sous la voiture
-enregistrée - la voiture doit être à une hauteur de suspension au-dessus de la surface située juste
+enregistrée - la voiture doit être à sa garde au sol au-dessus de la surface située juste
 en dessous d'elle. Indiquez-lui la racine d'un parcours exporté (le `.glb` et le `.json` qui
 l'accompagne) :
 

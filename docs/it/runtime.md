@@ -139,7 +139,7 @@ scansione prima che possa partire:
 | da 2 a 12 | lenta | Registra prima, ricostruisci dopo. | Registra un video della passeggiata e ricostruisci dal file dopo. Il risultato è identico; solo il riscontro non è in diretta. |
 | sotto 2 | impraticabile | Questa macchina è troppo lenta per una scansione utile. | Un percorso più corto, o un modello più piccolo. **L'avvio è disabilitato.** |
 
-Su CPU la nota aggiunge che installare `onnxruntime-directml` di solito risolve su Windows. Abbassare solo la risoluzione di cattura non servirebbe, perché il modello di profondità gira alla sua dimensione
+Su CPU la nota aggiunge che installare `onnxruntime-directml` di solito risolve su Windows. Cambiare da solo la risoluzione di cattura non servirebbe, perché il modello di profondità gira alla sua dimensione
 d'ingresso fissa qualunque cosa riceva; ciò che tiene in piedi una macchina più lenta è tenere meno viste,
 che è ciò che fa Draft.
 
@@ -170,7 +170,7 @@ Il percorso offline `reconstruct` è diverso: minuti per finestra di 16 fotogram
 - I fotogrammi non vengono conservati dopo la fusione, tranne **160** per colorare la mesh.
 - Una scansione si ferma a **3000** viste tenute per impostazione predefinita ("Views kept"), come
   protezione.
-- La coda di cattura in diretta contiene 4 fotogrammi; il buffer delle pose della telemetria 30 secondi.
+- La coda di cattura in diretta contiene 4 fotogrammi; il buffer delle pose della telemetria conserva 30 secondi.
 - Entrambe le griglie di voxel sono sparse, e la mesh viene estratta blocco per blocco, quindi la memoria
   segue ciò che è stato scansionato, non il bounding box.
 

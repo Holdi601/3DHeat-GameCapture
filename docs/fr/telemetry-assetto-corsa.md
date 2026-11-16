@@ -85,8 +85,8 @@ AC Rally envoie ses températures de pneus et de freins en kelvins : pour `--gam
 
 Forza envoie le glissement normalisé pour que 1 soit le bord de l'adhérence. Kunos envoie le taux et l'angle de glissement physiques.
 L'enregistreur les divise donc par un pic typique sur asphalte - **0,12** pour le taux de glissement et **0,14 rad (environ 8 degrés)** pour
-l'angle de glissement - afin que la lecture « au-delà de 1 signifie qu'il glisse » de la visionneuse reste à peu près vraie, conserve les
-valeurs brutes à côté, et écrit `"meta": {"slip": "scaled"}`. Là où l'adhérence cède réellement, la visionneuse la mesure voiture par
+l'angle de glissement - afin que la lecture « au-delà de 1 signifie qu'il glisse » du visualiseur reste à peu près vraie, conserve les
+valeurs brutes à côté, et écrit `"meta": {"slip": "scaled"}`. Là où l'adhérence cède réellement, le visualiseur la mesure voiture par
 voiture à partir des tours. Voir [Glissement, dérive et canaux dérivés](slip-and-drift.md).
 
 ## Tours {#laps}

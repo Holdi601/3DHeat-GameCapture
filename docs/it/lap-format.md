@@ -158,8 +158,8 @@ valori vengono arrotondati in scrittura: `time` a 4 decimali, `distance` a 3, gl
 float a 5. Il JSON viene scritto compatto (senza spazi).
 
 Ogni pacchetto o pagina ricevuto dal registratore - non solo quelli dei giri - viene
-conservato intero accanto ai file dei giri in `<data>_<gioco>.raw.parquet`, con un
-controllo di completezza in `<data>_<gioco>.summary.json` (la sezione "Completeness"
+conservato intero accanto ai file dei giri in `<stamp>_<game>.raw.parquet`, con un
+controllo di completezza in `<stamp>_<game>.summary.json` (la sezione "Completeness"
 del README).
 
 Un campione per cui un canale non ha valore - mancante in quel fotogramma, o non un

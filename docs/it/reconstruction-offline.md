@@ -55,7 +55,7 @@ Nessuno di questi è in `requirements.txt`, perché lo scanner non ne ha bisogno
 ```
 
 VGGT si installa con `--no-deps` perché i suoi metadati fissano `numpy<2`, che pip rispetterebbe
-declassando il numpy di cui ha bisogno scipy. `reconstruct` controlla tutti questi requisiti subito dopo
+retrocedendo il numpy di cui ha bisogno scipy. `reconstruct` controlla tutti questi requisiti subito dopo
 aver stampato la riga della licenza (la lista `OFFLINE` in
 [`runtime/preflight.py`](https://github.com/Holdi601/3DHeat-GameCapture/blob/main/heat3d_capture/runtime/preflight.py)),
 elenca cosa manca con le dimensioni, e installa solo con un sì - VGGT con `--no-deps`, come sopra.

@@ -83,7 +83,7 @@ La progression s'affiche toutes les cinq secondes ; à la fin, le joueur, les fr
 
 Une ligne par échantillon où le joueur était en jeu et où la mini-carte pouvait être située, plus une par événement qui le
 concerne. Le pied de page porte les instructions de lecture du visualiseur (clé `heat3d`, `kind: heat3d-hud`), pour que le
-visualiseur associe chaque colonne sans rien demander.
+le visualiseur associe chaque colonne sans rien demander.
 
 | Colonne | Signification |
 |---|---|
@@ -97,7 +97,7 @@ visualiseur associe chaque colonne sans rien demander.
 | `x`, `y`, `z` | Position sur la mosaïque : `x` vers l'est, `y` vers le nord, `z` 0 (le pied de page indique que `z` est vers le haut). Le nord est le vrai nord lorsque la boussole l'a permis (voir `north_up` dans le résumé). |
 | `player` | Toujours `me`. Seules les lignes du joueur ont des positions. |
 | `team` | `own`. |
-| `session` | `<nom de la vidéo>#NN`, une par vie. Les tracés de carte de lignes ne traversent jamais une session. |
+| `session` | `<nom de la vidéo>#NN`, une par vie. Les tracés de chaleur en lignes ne traversent jamais une session. |
 | `heading` | Degrés dans le sens horaire depuis le nord (depuis le haut de la mosaïque quand le nord est inconnu) : la direction de la vue. |
 | `dir_x`, `dir_y`, `dir_z` | La même chose sous forme de vecteur de direction, pour la direction de regard du visualiseur. |
 | `zoom` | De combien la mini-carte était dézoomée par rapport à son zoom habituel (au-dessus de 1 en véhicule). |
@@ -105,7 +105,7 @@ visualiseur associe chaque colonne sans rien demander.
 
 Chaque ligne d'événement prend la position du joueur à l'heure de l'événement (pour une mort ou une chute, la dernière
 position avant celle-ci ; pour une réanimation, la première après). Les lignes s'adaptent directement à la
-[carte de lignes](https://holdi601.github.io/3DHeat/line-heat.html) du visualiseur : sa suggestion choisit `event`, commence
+[chaleur en lignes](https://holdi601.github.io/3DHeat/line-heat.html) du visualiseur : sa suggestion choisit `event`, commence
 à `start`, `spawn` et `revived`, termine à `death`, `downed` et `end`, et les lignes `position` suivent le tracé. Les autres
 événements sont nommés de façon que la suggestion n'en prenne aucun pour un début ou une fin : donner une réanimation est
 `reviving` (et non `revive`), tenir un point `defense`, un coéquipier qui apparaît sur le joueur `teammate_arrived`, les
@@ -157,7 +157,7 @@ placés, non placés, îlots), les hypothèses faites et la durée.
 ### `<out>.map.png` et `<out>.map.json` - la carte sous la piste {#mappng-and-mapjson---the-map-under-the-track}
 
 La mosaïque de toutes les mini-cartes de l'exécution, moyennée, les superpositions retirées, tournée et mise à l'échelle
-exactement comme le tableau. Le fichier JSON annexe contient les deux ancres que demande le placement **Image de carte** du
+exactement comme le tableau. Le fichier JSON annexe contient les deux ancres que demande le placement **Image de carte** de la
 visualiseur ([Images de carte](https://holdi601.github.io/3DHeat/map-images.html) dans la documentation du visualiseur) :
 chargez le PNG avec **Image de carte...**, gardez **Inverser nord/sud** activé, et saisissez l'ancre 1 et l'ancre 2 (`px`, `py`,
 `worldX`, `worldZ`) à partir de l'annexe. L'image se place alors exactement sous la piste.
@@ -362,7 +362,7 @@ Ce que devient chaque étiquette, chaque titre et chaque écran. Plusieurs étiq
 | `points` | tout le reste dans la rangée d'étiquettes | Une action que le tableau ne connaît pas : `text` est ce qui a été lu. |
 | `multi_kills` | DOUBLE KILL, TRIPLE KILL, QUAD KILL, MULTI KILL (titre) | Des frags en succession rapide. |
 | `ribbon` | tout autre titre | Un ruban, d'après son nom (BALLISTIC, TANK BUSTER, ENGINEER EXPERT, SPEARHEAD...). |
-| `downed` | écran de chute, puis le jeu | Le joueur est tombé et a été réanimé. |
+| `downed` | écran de chute, puis retour en jeu | Le joueur est tombé et a été réanimé. |
 | `revived` | la disparition des écrans, le jeu reprend | Le joueur a été réanimé par un coéquipier. |
 | `death` | écran de chute ou de carte, puis déploiement ou hors jeu | Le joueur est mort. |
 

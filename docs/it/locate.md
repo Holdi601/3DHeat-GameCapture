@@ -18,10 +18,10 @@ Battlefield 6 è il primo.
 > [Fotogrammi reali: sperimentale](#real-frames-experimental).
 
 ```bash
-# Once per level: render it from every place a player can stand, and index the renders.
+# Una volta per livello: renderizza da ogni punto in cui un giocatore può stare, e indicizza i render.
 .venv\Scripts\python -m heat3d_capture locate build level.glb -o level.db
 
-# Per recording: where was each frame taken?
+# Per registrazione: dove è stato ripreso ogni fotogramma?
 .venv\Scripts\python -m heat3d_capture locate frames "<recording>.mp4" --db level.db -o out/match
 ```
 
@@ -68,7 +68,7 @@ collocare, e ogni riga dice da quale delle due viene.
 Renderizza il livello da ogni punto in cui un giocatore potrebbe stare, e memorizza, per ogni render, la sua posa e un
 descrittore globale.
 
-| Opzione | Default | Significato |
+| Opzione | Predefinito | Significato |
 |---|---|---|
 | `level` | | Il `.glb` / `.gltf` del livello. |
 | `-o`, `--out` | | La cartella del database da scrivere. |
@@ -89,7 +89,7 @@ Scrive `<db>/db.json` (da cosa è stato costruito e con cosa) e `<db>/views.npz`
 
 ### `locate frames <recording> --db <db>` {#locate-frames----db-}
 
-| Opzione | Default | Significato |
+| Opzione | Predefinito | Significato |
 |---|---|---|
 | `source` | | Un video, un'immagine, o una cartella di immagini (prese in ordine di nome, a `--fps` di distanza). |
 | `--db` | | Il database scritto da `build`. Il suo file di livello deve trovarsi ancora dov'era (o `--level`). |
@@ -115,7 +115,7 @@ Scrive `<db>/db.json` (da cosa è stato costruito e con cosa) e `<db>/views.npz`
 | `--check-every` | 0 | Anche ogni N fotogrammi, collocati o no, un'immagine in `<out>.check`. |
 | `--no-checks` | disattivo | Non scrive le immagini di controllo delle correzioni visive (sotto). |
 | `--no-zoomed` | disattivo | Non risolve le viste ingrandite a partire dalle correzioni dei vicini (sotto). |
-| `--no-grow` | disattivo | Non cerca di nuovo vicino a ogni correzione i fotogrammi attorno che ne sono ancora privi. |
+| `--no-grow` | disattivo | Non cerca di nuovo vicino a ogni correzione i fotogrammi attorno a essa che ne sono ancora privi. |
 | `--game`, `--eye`, `--fov`, `--vfov`, `--mask`, `--no-hud-mask`, `--max-speed` | quelli del profilo | Come sopra; `--mask x,y,w,h` aggiunge un riquadro dello schermo (su uno schermo 1920x1080) che non è il livello. |
 | `--vehicle-vfov` | quello del profilo | Il campo visivo verticale delle camere dei veicoli (lo slider dei veicoli di Battlefield). |
 | `--settings` | il file di impostazioni più recente | `bf6`: il file delle impostazioni del gioco da cui si leggono i campi visivi (in sola lettura) quando non è dato `--fov`/`--vfov`; per impostazione predefinita l'ultimo `PROFSAVE*_profile` sotto `Documents/Battlefield 6/settings`. Contiene le impostazioni così come sono adesso, che potrebbero non essere come era fatta una registrazione più vecchia. |
@@ -222,7 +222,7 @@ qui sotto. Il costo è che `frames` richiede il file del livello e una GPU, non 
    2D-3D; i punti chiave su un bordo di profondità (la cui profondità può appartenere a ciò che sta dietro) vengono
    scartati.
 4. **Posa**: PnP con RANSAC (SQPnP), poi un perfezionamento robusto che mantiene la camera orizzontale - una vista in
-   prima persona non rolla - e minimizza l'errore di riproiezione degli inlier.
+   prima persona non si inclina di lato - e minimizza l'errore di riproiezione degli inlier.
 5. **È possibile?** Una posa deve essere all'altezza degli occhi di un giocatore sopra un pavimento e fuori dalla
    geometria (un render di profondità dritto verso il basso). Una texture simile altrove - un pavimento a piastrelle
    abbinato a un muro dello stesso materiale - può dare centinaia di inlier in una posa che nessun giocatore potrebbe
@@ -359,7 +359,7 @@ trovi le viste giuste dei fotogrammi reali e non solo dei render:
 
 `locate build --head <head.pt>` costruisce il database con essa; `frames` la usa poi per i fotogrammi.
 
-| Opzione di `locate train` | Default | Significato |
+| Opzione di `locate train` | Predefinito | Significato |
 |---|---|---|
 | `-o`, `--out` | obbligatoria | Il file della testa da scrivere (`.pt`). |
 | `--steps` | 600 | Passi di addestramento. |

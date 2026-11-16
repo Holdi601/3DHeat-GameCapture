@@ -164,7 +164,7 @@ le nomina entrambe.
 
 ## Colore {#colour}
 
-Il colore per voxel della fusione è economico e in diretta, ed è sfocato: ogni pixel di una cella di un
+Il colore per voxel della fusione è leggero e in diretta, ed è sfocato: ogni pixel di una cella di un
 quarto di metro viene mediato, compresi quelli visti di taglio da trenta metri. Quindi all'esportazione
 la mesh viene colorata di nuovo, una volta, dai fotogrammi stessi:
 

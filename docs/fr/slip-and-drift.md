@@ -9,18 +9,18 @@ search_exclude: true
 ---
 # Glissement, dérive et canaux dérivés {#slip-drift-and-derived-channels}
 
-L'analyse de la conduite de la voiture, dans l'onglet Analyse de course de la visionneuse, veut les mêmes quelques grandeurs
+L'analyse de la conduite de la voiture, dans l'onglet Analyse de course du visualiseur, veut les mêmes quelques grandeurs
 pour chaque jeu : de combien chaque pneu glisse, de combien la voiture pointe ailleurs que là où elle va (l'angle de dérive), si
 elle est en l'air, si elle roule sur un sol meuble. Les jeux les envoient sous des formes très différentes, ou pas du tout. Les
 enregistreurs d'ici écrivent ce que chaque jeu envoie, sous des noms canoniques, plus une note `meta.slip` qui indique ce que
-signifient les nombres de glissement ; la visionneuse déduit ensuite ce qui manque, une fois, au chargement d'un tour. **La valeur
+signifient les nombres de glissement ; le visualiseur déduit ensuite ce qui manque, une fois, au chargement d'un tour. **La valeur
 propre d'un jeu l'emporte toujours sur une valeur dérivée.**
 
 ## Ce que les enregistreurs écrivent {#what-the-recorders-write}
 
 | Jeu | Canaux de glissement | `meta.slip` | Données de l'angle de dérive |
 |---|---|---|---|
-| Forza | `slipRatio`, `slipAngle`, `combinedSlip` par roue, tels qu'envoyés | `peak` (écrit par l'enregistreur ; le lecteur `.tele.gz` de la visionneuse met la même valeur) | `latVel`, `longVel` à partir de la vitesse locale à la voiture |
+| Forza | `slipRatio`, `slipAngle`, `combinedSlip` par roue, tels qu'envoyés | `peak` (écrit par l'enregistreur ; le lecteur `.tele.gz` du visualiseur met la même valeur) | `latVel`, `longVel` à partir de la vitesse locale à la voiture |
 | AC, ACC, AC EVO, AC Rally | `slipRatio` / 0,12, `slipAngle` / 0,14 rad, plus `slipRatioRaw`, `slipAngleRaw` | `scaled` | `latVel`, `longVel` à partir de la vitesse dans le repère de la voiture |
 | EA SPORTS WRC, jeux DiRT | aucun ; `wheelSurfaceSpeed` par roue à la place | `null` | `latVel`, `longVel` = vitesse du monde projetée sur les axes de la voiture |
 | Richard Burns Rally | aucun ; pas non plus de vitesses de roue | aucun | `latVel`, `longVel` = le balancement et l'avance propres de la voiture |
@@ -37,19 +37,19 @@ lâche), `scaled` (un glissement physique divisé par un pic typique sur asphalt
 Le glissement de Forza est normalisé pour que 1 soit le bord de l'adhérence ; ce à quoi il se normalise n'est pas documenté. Kunos envoie
 le taux de glissement physique (une fraction) et l'angle de glissement (en radians). En divisant par un pic typique sur asphalte - 0,12
 pour le taux, 0,14 rad (environ 8 degrés) pour l'angle - on rend à peu près vraie la règle « au-delà de 1 signifie qu'il glisse » pour les
-deux familles, ce qui garde une seule lecture pour les affichages de la visionneuse. C'est une approximation : les vrais pics varient selon
-le pneu et la surface, ce qui explique pourquoi les valeurs brutes sont conservées à côté des valeurs mises à l'échelle, et pourquoi la
-visionneuse mesure, à partir des tours eux-mêmes, l'endroit où l'adhérence de chaque voiture lâche réellement.
+deux familles, ce qui garde une seule lecture pour les affichages du visualiseur. C'est une approximation : les vrais pics varient selon
+le pneu et la surface, ce qui explique pourquoi les valeurs brutes sont conservées à côté des valeurs mises à l'échelle, et pourquoi le
+visualiseur mesure, à partir des tours eux-mêmes, l'endroit où l'adhérence de chaque voiture lâche réellement.
 
-## Ce que la visionneuse dérive (`deriveChannels`) {#what-the-viewer-derives-derivechannels}
+## Ce que le visualiseur dérive (`deriveChannels`) {#what-the-viewer-derives-derivechannels}
 
-Ces calculs se font dans la visionneuse (`src/race/derive.ts` dans la visionneuse 3DHeat), et non dans ce dépôt.
+Ces calculs se font dans le visualiseur (`src/race/derive.ts` dans le visualiseur 3DHeat), et non dans ce dépôt.
 
 ### Angle de dérive, `bodySlip` {#drift-angle-bodyslip}
 
 - **À partir de la vitesse dans le repère de la voiture** lorsque `latVel` et `longVel` sont présents :
   `atan2(latVel, |longVel|)`, et 0 en dessous de 3 m/s (une voiture arrêtée de travers ne dérive pas).
-  Son signe suit la vitesse latérale du jeu, dont le sens est documenté dans les deux sens pour certains jeux - lisez la taille.
+  Son signe suit la vitesse latérale du jeu, dont le sens est documenté dans les deux sens pour certains jeux - ne lisez que la grandeur.
 - **Sinon à partir du cap par rapport à la trajectoire** : la direction de marche est prise à partir des positions à environ 2 m de
   part et d'autre de chaque échantillon (`atan2(dx, dz)`) ; le `yaw` du jeu est ajusté sur elle avec un signe et un décalage (chaque
   jeu a son propre zéro et son propre sens de rotation) en utilisant les échantillons au-dessus de 10 m/s, et n'est retenu que s'il
@@ -101,6 +101,6 @@ Lorsqu'un tour a `yaw` mais pas `yawRate`, c'est la variation du lacet sur les �
 
 ## Latéralité {#handedness}
 
-Lorsque le monde d'un jeu est gaucher - celui de Forza l'est - un parcours sort en miroir dans une visionneuse droitière ; la direction et la
+Lorsque le monde d'un jeu est gaucher - celui de Forza l'est - un parcours sort en miroir dans un visualiseur droitier ; la direction et la
 suspension des tours le révèlent. Les enregistreurs ne modifient pas la latéralité : un monde Z vers le haut (BeamNG) est tourné pour avoir Y
 vers le haut par une rotation, ce qui conserve la latéralité, et tout le reste est écrit tel qu'envoyé.

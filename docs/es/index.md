@@ -1,9 +1,9 @@
 ---
-title: Inicio
+title: "Inicio"
 nav_order: 1
 lang: "es"
 source: index.md
-source_hash: "4723321adf14"
+source_hash: "af8f09bf55f3"
 nav_exclude: true
 search_exclude: true
 permalink: /es/
@@ -150,6 +150,15 @@ partida está en [Un archivo por partida (.3dheat)](https://holdi601.github.io/3
 | [Ext-Squad](https://github.com/Holdi601/3DHeat-Ext-Squad) | demos de servidores de Squad en tablas y documentos de partida | [docs](https://holdi601.github.io/3DHeat-Ext-Squad/) |
 | [Ext-DCS](https://github.com/Holdi601/3DHeat-Ext-DCS) | mapas de DCS World en modelos 3D | [docs](https://holdi601.github.io/3DHeat-Ext-DCS/) |
 | [Ext-IL2](https://github.com/Holdi601/3DHeat-Ext-IL2) | mapas de IL-2 Sturmovik en modelos 3D | [docs](https://holdi601.github.io/3DHeat-Ext-IL2/) |
+| [Ext-Dota](https://github.com/Holdi601/3DHeat-Ext-Dota) | el mapa de Dota 2 de tu propia instalación, como nivel 3D | [docs](https://holdi601.github.io/3DHeat-Ext-Dota/) |
+| [Ext-DotaReplay](https://github.com/Holdi601/3DHeat-Ext-DotaReplay) | repeticiones de Dota 2 | [docs](https://holdi601.github.io/3DHeat-Ext-DotaReplay/) |
+| [Ext-Riot](https://github.com/Holdi601/3DHeat-Ext-Riot) | repeticiones de League of Legends y VALORANT (lo que llevan sin cifrar) | [docs](https://holdi601.github.io/3DHeat-Ext-Riot/) |
+| [Ext-Forza](https://github.com/Holdi601/3DHeat-Ext-Forza) | circuitos, carreras y coches de Forza de tu propia instalación | [docs](https://holdi601.github.io/3DHeat-Ext-Forza/) |
+| [Ext-Battlefield](https://github.com/Holdi601/3DHeat-Ext-Battlefield) | niveles de Battlefield (Frostbite) como niveles 3D | [docs](https://holdi601.github.io/3DHeat-Ext-Battlefield/) |
+| [Ext-BeamNG](https://github.com/Holdi601/3DHeat-Ext-BeamNG) | circuitos de BeamNG.drive | [docs](https://holdi601.github.io/3DHeat-Ext-BeamNG/) |
+| [Ext-ACRally](https://github.com/Holdi601/3DHeat-Ext-ACRally) | tramos de Assetto Corsa Rally como circuitos | [docs](https://holdi601.github.io/3DHeat-Ext-ACRally/) |
+| [Ext-Reforger](https://github.com/Holdi601/3DHeat-Ext-Reforger) | mundos de Arma Reforger (Enfusion) como niveles 3D | [docs](https://holdi601.github.io/3DHeat-Ext-Reforger/) |
+| [Ext-R6](https://github.com/Holdi601/3DHeat-Ext-R6) | repeticiones de partidas de Rainbow Six Siege | [docs](https://holdi601.github.io/3DHeat-Ext-R6/) |
 
 Un desarrollador con el proyecto del juego abierto debería usar el exportador de Unreal, que lee la
 geometría real y es exacto. Cuando se pueden leer los archivos propios de un juego, GameFiles extrae

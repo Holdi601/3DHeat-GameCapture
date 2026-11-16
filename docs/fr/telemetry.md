@@ -16,7 +16,7 @@ python -m heat3d_capture telemetry [--game GAME] [-o FOLDER] [--port PORT]
 ```
 
 `telemetry` enregistre chaque canal qu'un jeu envoie, découpe le flux en tours ou en étapes, et écrit un fichier JSON
-[`heat3d-lap`](lap-format.md) par tour dans un dossier. L'onglet Analyse de course de la visionneuse lit ces fichiers.
+[`heat3d-lap`](lap-format.md) par tour dans un dossier. L'onglet Analyse de course du visualiseur lit ces fichiers.
 L'enregistrement continue jusqu'à ce que vous appuyiez sur **Ctrl+C** ; le tour ou l'étape ouvert à ce moment-là est écrit
 s'il est assez long pour être conservé (voir [Découpage des tours et des étapes](lap-splitting.md)).
 
@@ -51,7 +51,7 @@ et les modules de [`heat3d_capture/telemetry/`](https://github.com/Holdi601/3DHe
 | `rbr` | Richard Burns Rally (RSF / NGP) | UDP NGP | 6776 | horloge d'étape (`StageSplitter`) | `richard-burns-rally` | [Jeux de rallye](telemetry-rally.md) |
 | `beamng` | BeamNG.drive | mod de protocole `heat3d`, UDP | 4460 | ligne de départ (`LineSplitter`) | `beamng` | [BeamNG.drive](telemetry-beamng.md) |
 | `trackmania` | Trackmania (2020) | plugin Openplanet, fichiers CSV | - | par course, dans le plugin | `trackmania` | [Trackmania](telemetry-trackmania.md) |
-| - | iRacing | ses propres fichiers `.ibt`, lus par la visionneuse | - | le compteur de tours du simulateur | `iracing` | [iRacing](telemetry-iracing.md) |
+| - | iRacing | ses propres fichiers `.ibt`, lus par le visualiseur | - | le compteur de tours du simulateur | `iracing` | [iRacing](telemetry-iracing.md) |
 
 ## État {#status}
 
@@ -92,7 +92,7 @@ celui de l'écriture du fichier, et non celui du début du tour.
 
 À côté des fichiers de tour, chaque enregistreur écrit `<YYYY-MM-DD_HH-MM-SS>_<game>.raw.parquet` - chaque paquet ou page reçu, conservé en entier, y
 compris dans les menus et entre les tours - et `<YYYY-MM-DD_HH-MM-SS>_<game>.summary.json`, l'autocontrôle : pour chaque type de paquet, combien sont
-arrivés, combien sont entrés dans des fichiers de tour, et `lost`, qui vaut 0. La visionneuse ignore ces deux fichiers lorsqu'un dossier est chargé.
+arrivés, combien sont entrés dans des fichiers de tour, et `lost`, qui vaut 0. Le visualiseur ignore ces deux fichiers lorsqu'un dossier est chargé.
 Voir [Completeness](https://github.com/Holdi601/3DHeat-GameCapture#completeness) dans le README.
 
 ## Pages de cette rubrique {#children-of-this-page}

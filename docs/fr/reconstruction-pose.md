@@ -11,7 +11,7 @@ search_exclude: true
 
 Une carte de profondeur indique à quelle distance se trouvent les choses depuis *un* point de vue. Pour en
 faire un seul niveau, il faut savoir où était chaque point de vue, et dans quelles unités. Cette page couvre
-les voies en direct ; la résolution hors ligne par modèle à propagation directe est décrite dans
+les voies en direct ; la résolution hors ligne par modèle en une seule passe est décrite dans
 [Reconstruction hors ligne](reconstruction-offline.md).
 
 Code : [`pose/odometry.py`](https://github.com/Holdi601/3DHeat-GameCapture/blob/main/heat3d_capture/pose/odometry.py),
@@ -42,7 +42,7 @@ le monde, ce que veulent la trajectoire, la carte de couverture et la superposit
 3. **Remontée en 3D** : la profondeur de l'image précédente est déjà en unités du monde, donc ses pixels appariés
    deviennent des points du monde.
 4. **Placer la caméra** : `solvePnPRansac` parmi ces points (erreur de reprojection 3 px, confiance 0,999, 200
-   itérations). La translation sort dans les mêmes unités, donc **l'échelle traverse l'écart**.
+   itérations). La translation sort dans les mêmes unités, donc **l'échelle se transmet d'une image à l'autre**.
 5. **Ancrer la profondeur de cette image** : sa propre inverse de profondeur prédite est ajustée (`fit_scale`)
    contre les profondeurs des inliers de PnP, et le cycle recommence.
 
@@ -59,7 +59,7 @@ Chaque image placée reçoit une confiance entre 0 et 1 qui pondère sa fusion e
 | Pose issue de | Confiance |
 |---|---|
 | télémétrie | 1.0 |
-| un solveur à propagation directe | 0,85 |
+| un solveur en une seule passe | 0,85 |
 | suivi visuel | `inliers / matches x min(1, inliers / 60)` |
 
 ### Lorsque le suivi se rompt {#when-tracking-breaks}
@@ -85,7 +85,7 @@ retours, ce qui cloue la caméra près de son point de départ pendant qu'elle c
 exige une reconnaissance de lieux (un vocabulaire de sacs de mots ou un descripteur appris) et une vérification
 géométrique contre une carte, ce qui n'est pas construit.
 
-Lorsqu'elle est activée depuis du code, une fermeture exige : une image clé d'au moins 60 images clés, à moins de 6 m
+Lorsqu'elle est activée depuis du code, une fermeture exige : une image clé vieille d'au moins 60 images clés, à moins de 6 m
 de la pose courante, appariée avec au moins 90 inliers, déplaçant la pose de plus de 0,02 m et de moins de 6 m. Même
 alors, elle ne fait que remplacer la pose courante ; ce n'est pas un graphe de poses et elle ne déplace ni les images
 précédentes ni la géométrie déjà fusionnée.
@@ -190,7 +190,7 @@ Deux pièces existent pour un futur solveur par fenêtre et ne sont **pas utilis
 
 `WindowedOdometry` combine les deux (fenêtres de 12 images clés, une résolution toutes les 3 images clés, les deux
 premières caméras fixes, points de plus de 6 px d'erreur écartés, sauts de plus de 6 fois le pas récent refusés). Sa
-docstring note que, sur de vraies images, il **a écrasé la trajectoire et a été beaucoup plus lent** que le suivi d'image
+docstring note que, sur de vraies images, il **a fait s'effondrer la trajectoire et a été beaucoup plus lent** que le suivi d'image
 à image, avec pour causes connues la liberté de jauge (l'échelle) et un amorçage fondé sur la profondeur, et une troisième
 cause non identifiée. L'odométrie d'image à image reste donc la valeur par défaut ; la correction probable notée dans le code
 est un amorçage à deux vues par matrice essentielle, avec la base fixée depuis l'étalonnage du plan du sol.

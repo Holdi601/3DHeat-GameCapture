@@ -12,11 +12,11 @@ search_exclude: true
 iRacing n'a besoin **d'aucun enregistreur**. Le simulateur écrit lui-même ses fichiers de télémétrie,
 `.ibt`, lorsque l'enregistrement de télémétrie est activé (Alt+L dans la voiture) : toute la session à 60
 Hz, chaque canal que le simulateur expose, avec la description YAML de la session à côté. Déposez le
-fichier `.ibt` dans l'onglet Analyse de course de la visionneuse.
+fichier `.ibt` dans l'onglet Analyse de course du visualiseur.
 
-Le lecteur se trouve dans la visionneuse, et non dans ce dépôt (`src/race/ibt.ts` dans la visionneuse
-3DHeat). Il est testé sur un fichier synthétique ; il est documenté ici parce qu'il constitue la moitié
-iRacing de la même histoire d'enregistrement de tours.
+Le lecteur se trouve dans le visualiseur, et non dans ce dépôt (`src/race/ibt.ts` dans le visualiseur
+3DHeat). Il est testé sur un fichier synthétique ; il est documenté ici parce qu'il constitue la partie
+iRacing du même enregistrement de tours.
 
 ## Ce que contient le fichier, et comment il est lu {#what-the-file-holds-and-how-it-is-read}
 
@@ -39,7 +39,7 @@ des champs `SessionTime`, `Lap`, `Lat`, `Lon`, ou lorsqu'aucun échantillon ne c
 iRacing donne la latitude, la longitude et l'altitude, et non une position dans le repère propre de la
 piste. Les positions sont exprimées en mètres sur un plan tangent au premier échantillon disposant d'une
 position (rayon de la Terre 6 371 008,8 m) : `x` vers l'est, `z` vers le sud, `y` l'altitude - de sorte que,
-vue d'en haut avec le cap par défaut de la caméra de la visionneuse, le nord soit en haut de l'écran.
+vue d'en haut avec le cap par défaut de la caméra du visualiseur, le nord soit en haut de l'écran.
 
 ## Tours {#laps}
 
@@ -71,7 +71,7 @@ tour, ou la distance parcourue calculée à partir des positions lorsque `LapDis
 
 Tout autre canal à une valeur par échantillon (et qui n'est pas un simple octet) est repris sous son propre
 nom ; le préfixe de roue (`LF`, `RF`, `LR`, `RR`) devient un suffixe (`.FL`, `.FR`, `.RL`, `.RR`), si bien que
-les graphiques de la visionneuse le proposent sans que quiconque le décrive.
+les graphiques du visualiseur le proposent sans que quiconque le décrive.
 
 La voiture vient de `DriverInfo` : l'entrée dont `CarIdx` correspond à `DriverCarIdx` donne `CarScreenName`,
 `CarID` et `CarClassShortName`. La piste est `TrackDisplayName` (ou `TrackName`).

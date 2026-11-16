@@ -25,13 +25,13 @@ eredita la licenza del modello che l'ha prodotta:
 
 | Modello | Licenza | Uso commerciale | Usato da |
 |---|---|---|---|
-| **Depth-Anything-V2-Small** | **Apache-2.0** | **consentito** | il default: il modello convertito dello scanner (`tools/export_onnx.py` lo usa come predefinito, e il pulsante "Set up the depth model" della finestra lo crea sempre), e la profondità del percorso offline (fusione); VGGT fornisce le sue pose |
+| **Depth-Anything-V2-Small** | **Apache-2.0** | **consentito** | il predefinito: il modello convertito dello scanner (`tools/export_onnx.py` lo usa come predefinito, e il pulsante "Set up the depth model" della finestra lo crea sempre), e la profondità del percorso offline (fusione); VGGT fornisce le sue pose |
 | Depth-Anything-V2-Base | CC-BY-NC-4.0 | solo non commerciale | solo se lo converti tu (`--size base`) |
 | Depth-Anything-V2-Large | CC-BY-NC-4.0 | solo non commerciale | solo se lo converti tu (`--size large`) |
 
 Base e Large danno una profondità migliore. Convertirli è consentito; questo rende non commerciale
 quel file di modello, e ogni ricostruzione fatta con esso. È una decisione di chi lo usa, non un
-default da ereditare. Lo scanner sceglie tra i file `models/depth-*.onnx` **in base alla licenza, non
+valore predefinito da ereditare. Lo scanner sceglie tra i file `models/depth-*.onnx` **in base alla licenza, non
 al nome**: `depth-small-*` quando ce n'è uno, poi Base, poi Large (`choose_model` in
 [`depth/onnx_estimator.py`](https://github.com/Holdi601/3DHeat-GameCapture/blob/main/heat3d_capture/depth/onnx_estimator.py)).
 La finestra indica il file che ha preso, la sua licenza, e gli altri file di modello trovati e non

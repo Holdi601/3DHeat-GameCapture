@@ -27,7 +27,7 @@ Pour chaque image clé dont la pose est connue **et** dont la profondeur a une �
 1. Un pixel sur deux dans chaque direction est utilisé (`PIXEL_STRIDE = 2` ; les pixels voisins d'une même
    surface ne sont pas des mesures indépendantes).
 2. La profondeur est convertie en mètres par l'ajustement affine de l'image.
-3. Elle n'est conservée qu'entre **0,35 m** (plus près, c'est l'arme, l'ATH, le capot) et **60 m** (l'erreur
+3. Elle n'est conservée qu'entre **0,35 m** (plus près, c'est l'arme, le HUD, le capot) et **60 m** (l'erreur
    monoculaire croît à peu près avec le carré de la distance, donc les points lointains sont du bruit en
    forme de géométrie), et seulement sur les pixels du monde du masque.
 4. Il est relevé par le modèle de caméra et placé dans le monde par la pose.
@@ -89,8 +89,8 @@ cela fonctionne à cette échelle, avec une mémoire proportionnelle à ce qui a
 ### Sol et structure {#ground-and-structure}
 
 `classify` étiquette chaque triangle selon sa normale (orientée par les normales des sommets extraits) : à
-moins de **35 degrés de la verticale** vers le haut, c'est `ground` (sol), tout le reste est `structure`. La
-visionneuse dessine le sol plein et les structures presque transparentes. **L'eau n'est jamais revendiquée** :
+moins de **35 degrés de la verticale** vers le haut, c'est `ground` (sol), tout le reste est `structure`. Le
+visualiseur dessine le sol plein et les structures presque transparentes. **L'eau n'est jamais revendiquée** :
 elle ne se distingue pas du sol plat par sa forme, et une mauvaise étiquette ferait apparaître une cour comme
 un lac. Chaque étiquette devient une partie du `.glb` ([La sortie .glb](glb-output.md)).
 
@@ -177,13 +177,13 @@ colorié une seconde fois, une seule fois, à partir des images elles-mêmes :
   profondeur de cellules de 2 pixels, en gardant le plus proche par cellule. Un sommet plus de `0,3 m + 5 %` de sa
   distance derrière le plus proche de sa cellule était caché dans cette image - un mur entre la caméra et la route
   au-delà - et cette vue ne compte pour rien. Le test ne connaît que le maillage : un occultant jamais fusionné (une
-  voiture qui passe, un montant de cockpit hors du masque de l'ATH) n'est pas détecté.
+  voiture qui passe, un montant de cockpit hors du masque du HUD) n'est pas détecté.
 - Un sommet qu'aucune image n'a vu garde sa couleur de voxel ; un sommet sans l'un ni l'autre est gris moyen (le
   noir se lirait comme un trou).
 
-La couleur est écrite en `COLOR_0` par sommet, et non en atlas de texture. L'aspect par défaut de la visionneuse
+La couleur est écrite en `COLOR_0` par sommet, et non en atlas de texture. L'aspect par défaut du visualiseur
 est une carte grise sous une chaleur saturée ; la couleur sert à repérer la route sur un circuit scanné, là où la
-géométrie seule ne la distingue pas de l'accotement, et elle s'affiche derrière l'interrupteur « Couleur capturée » de
-la visionneuse, dans son panneau Arrière-plan / niveau. Un atlas multiplierait la taille du fichier et exigerait un
+géométrie seule ne la distingue pas de l'accotement, et elle s'affiche derrière l'interrupteur « Couleur capturée » du
+le visualiseur, dans son panneau Arrière-plan / niveau. Un atlas multiplierait la taille du fichier et exigerait un
 dépliage des UV, pour une vue qui n'est volontairement pas celle par défaut. Blender et les autres outils glTF lisent
 `COLOR_0`.

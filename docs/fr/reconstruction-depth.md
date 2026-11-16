@@ -81,7 +81,7 @@ d'analyse nomme le fichier, sa licence et tout autre modèle laissé de côté.
 ## Exécution : ONNX Runtime {#running-it-onnx-runtime}
 
 `OnnxDepthEstimator` crée une seule session ONNX Runtime, de façon paresseuse, avec l'optimisation complète
-du graphe, sur le backend choisi par l'échelle, avec le CPU ajouté en secours : si un fournisseur échoue à
+du graphe, sur le backend choisi selon l'ordre de priorité, avec le CPU ajouté en secours : si un fournisseur échoue à
 la création de session (un vieux pilote), le scan sera lent au lieu de planter. Voir
 [Exécution et dépendances](runtime.md#inference-backends).
 

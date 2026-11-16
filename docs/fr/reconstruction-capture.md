@@ -69,7 +69,7 @@ quantité dont l'image a changé depuis la dernière image conservée**, et non 
 
 1. les deux images sont passées en gris et réduites à une grille de 16 x 16 moyennes de blocs (les
    moyennes de blocs réagissent au mouvement de l'image, pas au grain, au feuillage, au scintillement ni
-   à l'ATH) ;
+   au HUD) ;
 2. la différence absolue moyenne, en fraction de 255 ;
 3. lorsqu'un masque du monde est connu, chaque bloc est pondéré par la part de lui qui est le monde et
    non le cockpit, de sorte qu'un bloc à moitié tableau de bord compte pour moitié (utilisé une fois que
@@ -97,7 +97,7 @@ d'images clés.
 Deux choses dans une image de jeu ne font pas partie de la géométrie du niveau, et les deux abîment une
 reconstruction :
 
-- **L'ATH.** Un réticule est le repère le plus répétable de toute image. Un appariement de points
+- **Le HUD.** Un réticule est le repère le plus répétable de toute image. Un appariement de points
   l'adore : il correspond parfaitement entre chaque paire d'images, et chaque correspondance est une
   preuve que la caméra n'a pas bougé - ce qui compresse toute la reconstruction.
 - **Ce qui est fixé à la caméra.** Une arme, un capot, un montant de cockpit, un tableau de bord. C'est
@@ -124,21 +124,21 @@ Il **n'est pas** appliqué aux images données au solveur VGGT hors ligne (voir
 Utilisé depuis la première image clé jusqu'à ce que FlowMask soit prêt.
 
 - Chaque image est convertie en gris, réduite de moitié et floutée (gaussien 3 x 3) pour qu'un
-  décalage d'un pixel d'un élément fixe de l'ATH ne soit pas lu comme un mouvement.
+  décalage d'un pixel d'un élément fixe du HUD ne soit pas lu comme un mouvement.
 - La différence absolue par pixel avec l'image précédente est intégrée dans une moyenne exponentielle
-  (décroissance 0,9), de sorte que le masque suit un ATH qui apparaît ou disparaît en cours de scan.
+  (décroissance 0,9), de sorte que le masque suit un HUD qui apparaît ou disparaît en cours de scan.
 - Il n'apprend qu'à partir des images où l'on sait que la caméra bouge (dans le scan : une fois qu'au
   moins une image a été suivie) - une caméra immobile rend tout statique.
 - Après **12** images d'apprentissage, un pixel est statique lorsque son changement moyen est inférieur à
   **0,22** du changement médian de l'image - relatif, donc le seuil suit la vitesse du joueur.
 - Si plus de **45 %** de l'image est lue comme statique, la prémisse a échoué (un menu, une scène
   coupée) et rien n'est masqué.
-- Le masque est érodé d'un pixel (les bords crénelés de l'ATH n'appartiennent ni à un côté ni à l'autre)
+- Le masque est érodé d'un pixel (les bords crénelés du HUD n'appartiennent ni à un côté ni à l'autre)
   puis remis à la taille réelle.
 
-Sa note dans la fenêtre : `learning what is HUD (n/12 frames)` (apprentissage de l'ATH, n/12 images),
-`no HUD or attached geometry detected` (aucun ATH ni géométrie fixée détecté), ou
-`ignoring N% of the frame — HUD or camera-mounted` (on ignore N % de l'image - ATH ou fixé à la caméra).
+Sa note dans la fenêtre : `learning what is HUD (n/12 frames)` (apprentissage du HUD, n/12 images),
+`no HUD or attached geometry detected` (aucun HUD ni géométrie fixée détecté), ou
+`ignoring N% of the frame — HUD or camera-mounted` (on ignore N % de l'image - HUD ou fixé à la caméra).
 
 ### FlowMask : ce qui ne se déplace jamais {#flowmask-what-never-travels}
 

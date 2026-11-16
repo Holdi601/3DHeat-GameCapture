@@ -3,7 +3,7 @@ title: "Accueil"
 nav_order: 1
 lang: "fr"
 source: index.md
-source_hash: "4723321adf14"
+source_hash: "af8f09bf55f3"
 nav_exclude: true
 search_exclude: true
 permalink: /fr/
@@ -13,12 +13,12 @@ permalink: /fr/
 **Qu'est-ce que c'est ?** Un outil qui consigne ce qu'un jeu de course lui dit de votre conduite, un fichier
 par tour. Il peut aussi reconstruire un modèle 3D approximatif d'un niveau à partir d'une vidéo de vous en train de jouer.
 
-**À quoi ça sert ?** À voir vos tours dans la [visionneuse 3DHeat](https://holdi601.github.io/3DHeat/) :
+**À quoi ça sert ?** À voir vos tours dans le [visualiseur 3DHeat](https://holdi601.github.io/3DHeat/) :
 où vous avez freiné, où vous étiez lent, en quoi deux tours diffèrent. Et à avoir le niveau sous votre
 carte de chaleur quand personne n'en possède de modèle 3D.
 
 **Exemple :** activez le Data Out de Forza, lancez une commande, roulez deux tours. Deux fichiers de tour
-apparaissent dans `laps\`. Déposez-les dans l'onglet Analyse de course de la visionneuse.
+apparaissent dans `laps\`. Déposez-les dans l'onglet Analyse de course du visualiseur.
 
 ![télémétrie enregistrant deux tours d'un flux Forza synthétique](../assets/img/telemetry-run.svg)
 
@@ -29,9 +29,9 @@ Vous débutez avec la ligne de commande ? Lisez d'abord [Avant de commencer](bef
 1. **Télémétrie de tour.** Il enregistre chaque canal qu'un jeu de course publie - le Data Out de Forza, la
    mémoire partagée des jeux Assetto Corsa, les flux réseau des jeux de rallye, un mod BeamNG, un
    plugin Trackmania - et écrit un fichier `heat3d-lap` par tour ou par étape, pour l'onglet Analyse de course de la
-   visionneuse. iRacing n'a pas besoin d'enregistreur : la visionneuse lit ses propres fichiers `.ibt`.
+   visualiseur. iRacing n'a pas besoin d'enregistreur : le visualiseur lit ses propres fichiers `.ibt`.
 2. **Des niveaux à partir du jeu.** Il transforme ce que l'écran a montré pendant que vous marchiez ou
-   rouliez dans un niveau en un modèle 3D `.glb`, que la visionneuse place sous la carte de chaleur.
+   rouliez dans un niveau en un modèle 3D `.glb`, que le visualiseur place sous la carte de chaleur.
 3. **Votre propre match, après coup.** `hud` lit le HUD de votre propre enregistrement - vos actions, vos morts,
    la trace de la minicarte et le journal des éliminations. `locate` (expérimental : il place encore peu d'images
    réelles) trouve où chaque image a été prise, sur le modèle 3D d'un niveau.
@@ -40,7 +40,7 @@ Les trois suivent une même règle : **rien n'est injecté dans un jeu et rien n
 l'API publique de capture d'écran, la télémétrie d'interfaces que les jeux publient pour cela. Voir
 [Les règles](rules.md).
 
-![Ce qui entre, quelle commande, ce qui sort, où la visionneuse l'affiche](../assets/img/fr/overview.svg)
+![Ce qui entre, quelle commande, ce qui sort, où le visualiseur l'affiche](../assets/img/fr/overview.svg)
 
 Le code est en Python (paquet `heat3d_capture`), sous licence MIT. Les modèles de profondeur et de pose qu'il peut
 exécuter ont leurs propres licences - voir [Modèles et licences](models-and-licences.md).
@@ -63,7 +63,7 @@ python -m venv .venv
 
 **Vous devez voir** `listening on port 5300. Laps go to laps. Ctrl+C to stop.`, puis une ligne par tour à mesure que
 vous franchissez la ligne d'arrivée, comme sur l'image ci-dessus. Appuyez sur Ctrl+C pour arrêter. Déposez les fichiers de
-`laps\` dans l'onglet Analyse de course de la visionneuse. Chaque autre jeu ne demande qu'une option `--game` :
+`laps\` dans l'onglet Analyse de course du visualiseur. Chaque autre jeu ne demande qu'une option `--game` :
 
 ```powershell
 .venv\Scripts\python -m heat3d_capture telemetry --game acc -o laps
@@ -100,9 +100,9 @@ paquet `vggt` et une carte graphique - voir [Reconstruction hors ligne](reconstr
 | [Jeux de rallye](telemetry-rally.md) | EA SPORTS WRC, DiRT Rally 2.0 / 1 / DiRT 4, Richard Burns Rally |
 | [BeamNG.drive](telemetry-beamng.md) | Le mod du protocole `heat3d` |
 | [Trackmania](telemetry-trackmania.md) | Le plugin Openplanet `Heat3dRecorder` |
-| [iRacing](telemetry-iracing.md) | Lecture des fichiers `.ibt` dans la visionneuse |
+| [iRacing](telemetry-iracing.md) | Lecture des fichiers `.ibt` dans le visualiseur |
 | [Découpage en tours et en étapes](lap-splitting.md) | `LapSplitter`, `CounterSplitter`, `LineSplitter`, `StageSplitter` |
-| [Glissement, dérive et canaux dérivés](slip-and-drift.md) | Comment le glissement est mis à l'échelle, et ce que la visionneuse dérive |
+| [Glissement, dérive et canaux dérivés](slip-and-drift.md) | Comment le glissement est mis à l'échelle, et ce que le visualiseur dérive |
 | [Le fichier heat3d-lap](lap-format.md) | Le format du fichier de tour, les canaux, les unités, `meta` |
 | [Jeux](games.md) | Par jeu : comment enregistrer, ce qui est envoyé, quels circuits peuvent être exportés |
 | [Commandes](commands.md) | `route`, `telemetry`, `laps`, `reconstruct`, `hud`, `locate`, pas à pas |
@@ -115,7 +115,7 @@ paquet `vggt` et une carte graphique - voir [Reconstruction hors ligne](reconstr
 | [Profondeur](reconstruction-depth.md) | Depth Anything V2, ONNX Runtime, construction du modèle |
 | [Pose de la caméra et échelle](reconstruction-pose.md) | Odométrie, relocalisation, poses de télémétrie, échelle du sol, ajustement de faisceau |
 | [Fusion, couverture et couleur](reconstruction-fusion-and-texture.md) | Le volume d'occupation, la grille de couverture, les points faibles, couleur par sommet |
-| [La sortie .glb](glb-output.md) | Le fichier que charge la visionneuse |
+| [La sortie .glb](glb-output.md) | Le fichier que charge le visualiseur |
 | [Reconstruction hors ligne](reconstruction-offline.md) | `reconstruct`, fenêtres VGGT et raccordement |
 | [Modèles et licences](models-and-licences.md) | Tailles de Depth Anything V2, VGGT, les paquets |
 | [Exécution et dépendances](runtime.md) | Vérification préalable, moteurs de calcul, niveaux de performance |
@@ -126,16 +126,16 @@ paquet `vggt` et une carte graphique - voir [Reconstruction hors ligne](reconstr
 
 ## Partie de 3DHeat {#part-of-3dheat}
 
-Les fichiers écrits ici sont chargés par la **visionneuse 3DHeat** -
+Les fichiers écrits ici sont chargés par le **visualiseur 3DHeat** -
 [source](https://github.com/Holdi601/3DHeat), [documentation](https://holdi601.github.io/3DHeat/).
 Les fichiers de tour vont dans son onglet Analyse de course, les niveaux `.glb` dans son panneau Arrière-plan / niveau, les tables de `hud` et de `locate`
-dans son onglet Carte de chaleur ; la façon dont la visionneuse lit les tables et les fichiers de match est décrite dans
+dans son onglet Carte de chaleur ; la façon dont le visualiseur lit les tables et les fichiers de match est décrite dans
 [Un fichier par match (.3dheat)](https://holdi601.github.io/3DHeat/container.html) et
 [Charger des données](https://holdi601.github.io/3DHeat/getting-data-in.html).
 
 | Outil | Ce qu'il fait | Documentation |
 |---|---|---|
-| [Visionneuse 3DHeat](https://github.com/Holdi601/3DHeat) | affiche les cartes de chaleur, les courses et les matchs en 3D, dans le navigateur | [documentation](https://holdi601.github.io/3DHeat/) |
+| [Visualiseur 3DHeat](https://github.com/Holdi601/3DHeat) | affiche les cartes de chaleur, les courses et les matchs en 3D, dans le navigateur | [documentation](https://holdi601.github.io/3DHeat/) |
 | [GameFiles](https://github.com/Holdi601/3DHeat-GameFiles) | circuits et niveaux tirés des fichiers livrés par les jeux, en modèles 3D | [documentation](https://holdi601.github.io/3DHeat-GameFiles/) |
 | [GameCapture](https://github.com/Holdi601/3DHeat-GameCapture) | télémétrie de tour des jeux de course ; niveaux reconstruits à partir de vidéos de jeu | [documentation](https://holdi601.github.io/3DHeat-GameCapture/) |
 | [Unreal Exporter](https://github.com/Holdi601/3DHeat-UnrealExporter) | un plugin de l'éditeur Unreal qui exporte un niveau en modèle 3D | [documentation](https://holdi601.github.io/3DHeat-UnrealExporter/) |
@@ -147,6 +147,15 @@ dans son onglet Carte de chaleur ; la façon dont la visionneuse lit les tables 
 | [Ext-Squad](https://github.com/Holdi601/3DHeat-Ext-Squad) | démos de serveurs Squad en fichiers de match | [documentation](https://holdi601.github.io/3DHeat-Ext-Squad/) |
 | [Ext-DCS](https://github.com/Holdi601/3DHeat-Ext-DCS) | cartes de DCS World en modèles 3D | [documentation](https://holdi601.github.io/3DHeat-Ext-DCS/) |
 | [Ext-IL2](https://github.com/Holdi601/3DHeat-Ext-IL2) | cartes d'IL-2 Sturmovik en modèles 3D | [documentation](https://holdi601.github.io/3DHeat-Ext-IL2/) |
+| [Ext-Dota](https://github.com/Holdi601/3DHeat-Ext-Dota) | la carte de Dota 2 de votre propre installation, en niveau 3D | [documentation](https://holdi601.github.io/3DHeat-Ext-Dota/) |
+| [Ext-DotaReplay](https://github.com/Holdi601/3DHeat-Ext-DotaReplay) | replays de Dota 2 | [documentation](https://holdi601.github.io/3DHeat-Ext-DotaReplay/) |
+| [Ext-Riot](https://github.com/Holdi601/3DHeat-Ext-Riot) | replays de League of Legends et VALORANT (ce qu'ils contiennent non chiffré) | [documentation](https://holdi601.github.io/3DHeat-Ext-Riot/) |
+| [Ext-Forza](https://github.com/Holdi601/3DHeat-Ext-Forza) | circuits, courses et voitures de Forza tirés de votre propre installation | [documentation](https://holdi601.github.io/3DHeat-Ext-Forza/) |
+| [Ext-Battlefield](https://github.com/Holdi601/3DHeat-Ext-Battlefield) | niveaux de Battlefield (Frostbite) en niveaux 3D | [documentation](https://holdi601.github.io/3DHeat-Ext-Battlefield/) |
+| [Ext-BeamNG](https://github.com/Holdi601/3DHeat-Ext-BeamNG) | circuits de BeamNG.drive | [documentation](https://holdi601.github.io/3DHeat-Ext-BeamNG/) |
+| [Ext-ACRally](https://github.com/Holdi601/3DHeat-Ext-ACRally) | étapes d'Assetto Corsa Rally en circuits | [documentation](https://holdi601.github.io/3DHeat-Ext-ACRally/) |
+| [Ext-Reforger](https://github.com/Holdi601/3DHeat-Ext-Reforger) | mondes d'Arma Reforger (Enfusion) en niveaux 3D | [documentation](https://holdi601.github.io/3DHeat-Ext-Reforger/) |
+| [Ext-R6](https://github.com/Holdi601/3DHeat-Ext-R6) | replays de matchs de Rainbow Six Siege | [documentation](https://holdi601.github.io/3DHeat-Ext-R6/) |
 
 Un développeur qui a le projet du jeu ouvert doit utiliser l'exporteur Unreal, qui lit la géométrie réelle
 et donne un résultat exact. Quand les archives d'un jeu peuvent être lues, GameFiles extrait le circuit exact.

@@ -131,7 +131,7 @@ direttamente sotto. Punta il test al nome base di un tracciato esportato (il `.g
 HEAT3D_COURSE=.out/courses/my_course .venv\Scripts\python -m pytest tests/test_course_ground.py
 ```
 
-Un tracciato con salti grandi può fallire per progetto: l'auto è in aria sopra un terreno che
+Un tracciato con salti grandi può fallire di proposito: l'auto è in aria sopra un terreno che
 esiste.
 
 ## Convenzioni {#conventions}
