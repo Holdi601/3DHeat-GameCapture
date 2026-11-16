@@ -82,5 +82,6 @@ it covers the code, separately from the weights' CC-BY-NC-4.0.
 ## The games
 
 Telemetry comes only from interfaces the games publish; frames come from the screen. See
-[The rules](rules.md). What a user points the tools at remains subject to that game's licence and
-EULA, and that obligation sits with whoever runs the tool.
+[The rules](rules.md). Nothing from a game is shipped or redistributed, and what the tools produce
+stays on the user's machine. 3DHeat GameCapture is not affiliated with or endorsed by any game
+publisher; game names and related trademarks belong to their owners.

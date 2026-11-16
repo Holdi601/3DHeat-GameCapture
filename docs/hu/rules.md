@@ -3,7 +3,7 @@ title: A szabályok
 nav_order: 2
 lang: "hu"
 source: rules.md
-source_hash: "88d5b7041a49"
+source_hash: "032350a1f53a"
 nav_exclude: true
 search_exclude: true
 ---
@@ -61,9 +61,8 @@ letiltja a mélységhozzáférést, így csak egyjátékos címeknél segítene 
 A DiRT-játékok `hardware_settings_config.xml` fájlját és a Richard Burns Rally `RichardBurnsRally.ini` fájlját az
 eszköz **nem** módosítja; ezeken az UDP-kimenetet önnek kell bekapcsolnia (lásd: [Rally-játékok](telemetry-rally.md)).
 
-## Ami a felhasználó felelőssége {#what-stays-the-users-responsibility}
+## Mit olvas az eszköz, és mi marad a gépén {#what-is-read-and-what-stays-on-your-machine}
 
-Hogy mire irányítja a felhasználó az eszközöket, az továbbra is az adott játék licencére és EULA-jára tartozik.
-A körfájlok, felvételek, rekonstrukciók és exportált pályák annak a személynek a tulajdonában vannak, aki a játékot
-és az adatot birtokolja; a tároló `.gitignore` fájlja a felvételeket, körfájlokat, hálókat, modellsúlyokat és
-videókat mappa és fájltípus szerint kizárja a verziókezelésből.
+Az eszközök azt olvassák, amit a játék a képernyőn mutat, valamint a telemetriát és a fájlokat, amelyeket a játék erre a célra közzétesz, a saját számítógépén. A játékból semmit nem szállítunk és nem terjesztünk tovább: sem játékelemeket, sem a játék kódját, sem DLL-eket. A körfájlok, felvételek, rekonstrukciók és exportált pályák a gépén maradnak; a tároló `.gitignore` fájlja mappa és fájltípus szerint kívül tartja a verziókezelésen a felvételeket, körfájlokat, hálókat, modellsúlyokat és videókat.
+
+A 3DHeat GameCapture nem áll kapcsolatban egyetlen játékkiadóval sem, és egyik sem hagyta jóvá. A játékok nevei és a kapcsolódó védjegyek tulajdonosaikat illetik. Jogtulajdonosok: nyissanak egy issue-t itt: [github.com/Holdi601/3DHeat-GameCapture/issues](https://github.com/Holdi601/3DHeat-GameCapture/issues) - gyorsan válaszolunk, és kérésre bármit eltávolítunk.

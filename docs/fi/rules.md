@@ -3,7 +3,7 @@ title: "Säännöt"
 nav_order: 2
 lang: "fi"
 source: rules.md
-source_hash: "88d5b7041a49"
+source_hash: "032350a1f53a"
 nav_exclude: true
 search_exclude: true
 ---
@@ -44,6 +44,8 @@ ReShaden syvyyspuskuria harkittiin, mutta sitä ei käytetty. ReShade poistaa sy
 
 Työkalu **ei** muokkaa DiRT-pelien `hardware_settings_config.xml`-tiedostoa eikä Richard Burns Rallyn `RichardBurnsRally.ini`-tiedostoa. Kytket niiden UDP-ulostulon päälle itse (katso [Rallipelit](telemetry-rally.md)).
 
-## Mistä käyttäjä vastaa {#what-stays-the-users-responsibility}
+## Mitä luetaan ja mikä jää koneellesi {#what-is-read-and-what-stays-on-your-machine}
 
-Mihin käyttäjä työkalut osoittaa, on edelleen kyseisen pelin lisenssin ja EULA:n alainen. Kierrostiedostot, tallenteet, rekonstruktiot ja viedyt radat kuuluvat sille, joka omistaa pelin ja datan. Repositorion `.gitignore` pitää tallenteet, kierrostiedostot, verkot, mallipainot ja videot poissa versionhallinnasta kansioiden ja tiedostotyyppien mukaan.
+Työkalut lukevat sitä, mitä peli näyttää ruudulla, sekä telemetriaa ja tiedostoja, jotka peli julkaisee sitä varten, omalla tietokoneellasi. Pelistä ei toimiteta eikä levitetä mitään: ei pelin resursseja, ei pelin koodia, ei DLL-tiedostoja. Kierrostiedostot, tallenteet, rekonstruktiot ja viedyt radat jäävät koneellesi; repositorion `.gitignore` pitää tallenteet, kierrostiedostot, verkot, mallien painot ja videon versionhallinnan ulkopuolella kansion ja tiedostotyypin mukaan.
+
+3DHeat GameCapture ei ole sidoksissa mihinkään pelijulkaisijaan eikä minkään julkaisijan hyväksymä. Pelien nimet ja niihin liittyvät tavaramerkit kuuluvat omistajilleen. Oikeuksien haltijat: avatkaa issue osoitteessa [github.com/Holdi601/3DHeat-GameCapture/issues](https://github.com/Holdi601/3DHeat-GameCapture/issues) - vastaamme nopeasti ja poistamme pyynnöstä mitä tahansa.

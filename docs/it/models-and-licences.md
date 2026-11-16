@@ -3,7 +3,7 @@ title: Modelli e licenze
 nav_order: 7
 lang: "it"
 source: models-and-licences.md
-source_hash: "87be1ce962da"
+source_hash: "b5410116f001"
 nav_exclude: true
 search_exclude: true
 ---
@@ -89,5 +89,4 @@ La licenza del pacchetto `vggt` è stata letta dal suo `LICENSE.txt` ed è regis
 ## I giochi {#the-games}
 
 La telemetria viene solo dalle interfacce che i giochi pubblicano; i fotogrammi vengono dallo
-schermo. Vedi [Le regole](rules.md). Ciò a cui un utente punta i tool resta soggetto alla licenza e
-all'EULA di quel gioco, e quell'obbligo spetta a chi esegue il tool.
+schermo. Vedi [Le regole](rules.md). Nulla di un gioco viene fornito o ridistribuito, e ciò che gli strumenti producono resta sul computer dell'utente. 3DHeat GameCapture non è affiliato ad alcun editore di giochi né approvato da alcuno di essi; i nomi dei giochi e i relativi marchi appartengono ai rispettivi proprietari.

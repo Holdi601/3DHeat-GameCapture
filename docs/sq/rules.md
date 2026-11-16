@@ -3,7 +3,7 @@ title: "Rregullat"
 nav_order: 2
 lang: "sq"
 source: rules.md
-source_hash: "88d5b7041a49"
+source_hash: "032350a1f53a"
 nav_exclude: true
 search_exclude: true
 ---
@@ -62,9 +62,8 @@ Skedari `hardware_settings_config.xml` i lojërave DiRT dhe `RichardBurnsRally.i
 **nuk** ndryshohen nga mjeti; ti e ndez vetë daljen e tyre UDP
 (shih [Lojërat e rally-t](telemetry-rally.md)).
 
-## Çfarë mbetet përgjegjësi e përdoruesit {#what-stays-the-users-responsibility}
+## Çfarë lexohet dhe çfarë mbetet në makinën tënde {#what-is-read-and-what-stays-on-your-machine}
 
-Ajo ku i drejton përdoruesi mjetet mbetet nën licencën dhe EULA-n e asaj loje. Skedarët e xhirave,
-regjistrimet, rindërtimet dhe kurset e eksportuara i përkasin atij që zotëron lojën dhe
-të dhënat; `.gitignore` i repozitorit i mban regjistrimet, skedarët e xhirave, rrjetat, peshat e modeleve dhe
-videon jashtë kontrollit të versioneve sipas dosjes dhe llojit të skedarit.
+Mjetet lexojnë atë që loja shfaq në ekran, si dhe telemetrinë dhe skedarët që loja publikon për këtë, në kompjuterin tënd. Asgjë nga një lojë nuk dorëzohet as rishpërndahet: asnjë burim i lojës, asnjë kod i lojës, asnjë DLL. Skedarët e xhirove, regjistrimet, rindërtimet dhe pistat e eksportuara mbeten në makinën tënde; `.gitignore` i depos i mban regjistrimet, skedarët e xhirove, rrjetat, peshat e modeleve dhe videon jashtë kontrollit të versioneve sipas dosjes dhe llojit të skedarit.
+
+3DHeat GameCapture nuk është i lidhur me asnjë botues lojërash dhe nuk është miratuar nga asnjë prej tyre. Emrat e lojërave dhe markat tregtare përkatëse u përkasin pronarëve të tyre. Mbajtësit e të drejtave: hapni një issue në [github.com/Holdi601/3DHeat-GameCapture/issues](https://github.com/Holdi601/3DHeat-GameCapture/issues) - përgjigjemi shpejt dhe heqim çdo gjë me kërkesë.

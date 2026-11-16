@@ -3,7 +3,7 @@ title: "Las reglas"
 nav_order: 2
 lang: "es"
 source: rules.md
-source_hash: "88d5b7041a49"
+source_hash: "032350a1f53a"
 nav_exclude: true
 search_exclude: true
 ---
@@ -44,6 +44,8 @@ Se consideró el búfer de profundidad de ReShade y no se usó. ReShade desactiv
 
 La herramienta **no** edita el `hardware_settings_config.xml` de los juegos DiRT ni el `RichardBurnsRally.ini` de Richard Burns Rally; tú mismo activas su salida UDP (véase [Juegos de rally](telemetry-rally.md)).
 
-## Lo que sigue siendo responsabilidad del usuario {#what-stays-the-users-responsibility}
+## Qué se lee y qué se queda en tu equipo {#what-is-read-and-what-stays-on-your-machine}
 
-Lo que el usuario apunte con las herramientas sigue sujeto a la licencia y al EULA de ese juego. Los archivos de vuelta, las grabaciones, las reconstrucciones y los circuitos exportados pertenecen a quien posea el juego y los datos; el `.gitignore` del repositorio mantiene las grabaciones, los archivos de vuelta, las mallas, los pesos de los modelos y el vídeo fuera del control de versiones, por carpeta y por tipo de archivo.
+Las herramientas leen lo que el juego muestra en pantalla y la telemetría y los archivos que publica para ello, en tu propio ordenador. Nada de un juego se incluye ni se redistribuye: ningún recurso del juego, ningún código del juego, ninguna DLL. Los archivos de vuelta, las grabaciones, las reconstrucciones y los circuitos exportados se quedan en tu equipo; el `.gitignore` del repositorio deja fuera del control de versiones las grabaciones, los archivos de vuelta, las mallas, los pesos de los modelos y el vídeo, por carpeta y por tipo de archivo.
+
+3DHeat GameCapture no está afiliado a ningún editor de juegos ni cuenta con su respaldo. Los nombres de los juegos y las marcas relacionadas pertenecen a sus propietarios. Titulares de derechos: abrid un issue en [github.com/Holdi601/3DHeat-GameCapture/issues](https://github.com/Holdi601/3DHeat-GameCapture/issues) - respondemos rápido y retiramos lo que se pida.

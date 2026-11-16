@@ -3,7 +3,7 @@ title: Kurallar
 nav_order: 2
 lang: "tr"
 source: rules.md
-source_hash: "88d5b7041a49"
+source_hash: "032350a1f53a"
 nav_exclude: true
 search_exclude: true
 ---
@@ -62,9 +62,8 @@ DiRT oyunlarının `hardware_settings_config.xml` dosyası ve Richard Burns Rall
 `RichardBurnsRally.ini` dosyası aracın **değiştirmediği** dosyalardır; UDP çıktısını siz kendiniz açarsınız
 (bkz. [Ralli oyunları](telemetry-rally.md)).
 
-## Sorumluluğun kullanıcıda kaldığı yerler {#what-stays-the-users-responsibility}
+## Neyin okunduğu ve makinenizde ne kaldığı {#what-is-read-and-what-stays-on-your-machine}
 
-Bir kullanıcının araçları yönelttiği şey, o oyunun lisansına ve EULA'sına tabi kalır. Tur dosyaları, kayıtlar,
-yeniden oluşturmalar ve dışa aktarılan parkurlar, oyunun ve verinin sahibine aittir; deponun `.gitignore`
-dosyası, kayıtları, tur dosyalarını, ağları, model ağırlıklarını ve videoyu klasöre ve dosya türüne göre
-sürüm kontrolünün dışında tutar.
+Araçlar, oyunun ekranda gösterdiğini ve oyunun bunun için yayımladığı telemetri ile dosyaları kendi bilgisayarınızda okur. Bir oyundan hiçbir şey birlikte dağıtılmaz veya yeniden dağıtılmaz: oyun varlıkları yok, oyun kodu yok, DLL yok. Tur dosyaları, kayıtlar, yeniden yapılandırmalar ve dışa aktarılan pistler makinenizde kalır; deponun `.gitignore` dosyası kayıtları, tur dosyalarını, ağları, model ağırlıklarını ve videoyu klasöre ve dosya türüne göre sürüm denetiminin dışında tutar.
+
+3DHeat GameCapture hiçbir oyun yayıncısıyla bağlantılı değildir ve hiçbiri tarafından onaylanmamıştır. Oyun adları ve ilgili ticari markalar sahiplerine aittir. Hak sahipleri: [github.com/Holdi601/3DHeat-GameCapture/issues](https://github.com/Holdi601/3DHeat-GameCapture/issues) adresinde bir issue açın - hızlı yanıt veririz ve istek üzerine her şeyi kaldırırız.

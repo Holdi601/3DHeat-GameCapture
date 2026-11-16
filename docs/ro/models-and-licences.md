@@ -3,7 +3,7 @@ title: "Modele și licențe"
 nav_order: 7
 lang: "ro"
 source: models-and-licences.md
-source_hash: "87be1ce962da"
+source_hash: "b5410116f001"
 nav_exclude: true
 search_exclude: true
 ---
@@ -90,5 +90,4 @@ ea acoperă codul, separat de CC-BY-NC-4.0 al greutăților.
 ## Jocurile {#the-games}
 
 Telemetria vine doar din interfețele pe care jocurile le publică; cadrele vin de pe ecran. Vezi
-[Regulile](rules.md). Ce indică un utilizator uneltele către rămâne supus licenței și EULA-ei
-jocului respectiv, iar această obligație aparține celui care rulează unealta.
+[Regulile](rules.md). Nimic dintr-un joc nu este livrat sau redistribuit, iar ce produc uneltele rămâne pe calculatorul utilizatorului. 3DHeat GameCapture nu este afiliat cu niciun editor de jocuri și nu este aprobat de vreunul; numele jocurilor și mărcile asociate aparțin proprietarilor lor.

@@ -3,7 +3,7 @@ title: Pravidla
 nav_order: 2
 lang: "cs"
 source: rules.md
-source_hash: "88d5b7041a49"
+source_hash: "032350a1f53a"
 nav_exclude: true
 search_exclude: true
 ---
@@ -44,6 +44,8 @@ Hloubkový buffer ReShade se zvažoval a nepoužil se. ReShade přístup k hloub
 
 Soubory `hardware_settings_config.xml` her DiRT a `RichardBurnsRally.ini` nástroj **neupravuje**. Výstup UDP zapnete sami (viz [Rally hry](telemetry-rally.md)).
 
-## Co zůstává odpovědností uživatele {#what-stays-the-users-responsibility}
+## Co se čte a co zůstává ve vašem počítači {#what-is-read-and-what-stays-on-your-machine}
 
-Co uživatel nasměruje nástroje na, zůstává podřízeno licenci a EULA dané hry. Soubory kol, záznamy, rekonstrukce a exportované kurzy patří tomu, kdo vlastní hru a data. `.gitignore` v repozitáři drží záznamy, soubory kol, sítě, váhy modelů a video mimo správu verzí, podle složky i podle typu souboru.
+Nástroje čtou to, co hra ukazuje na obrazovce, a telemetrii a soubory, které k tomu hra zveřejňuje, ve vašem vlastním počítači. Nic ze hry se nedodává ani dále nešíří: žádná herní data, žádný kód hry, žádné knihovny DLL. Soubory kol, záznamy, rekonstrukce a exportované tratě zůstávají ve vašem počítači; `.gitignore` repozitáře drží záznamy, soubory kol, sítě, váhy modelů a video mimo správu verzí podle složky a typu souboru.
+
+3DHeat GameCapture není spojen s žádným vydavatelem her ani jím schválen. Názvy her a související ochranné známky patří jejich vlastníkům. Držitelé práv: založte issue na [github.com/Holdi601/3DHeat-GameCapture/issues](https://github.com/Holdi601/3DHeat-GameCapture/issues) - odpovídáme rychle a na požádání cokoli odstraníme.

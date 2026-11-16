@@ -3,7 +3,7 @@ title: Modellek és licencek
 nav_order: 7
 lang: "hu"
 source: models-and-licences.md
-source_hash: "87be1ce962da"
+source_hash: "b5410116f001"
 nav_exclude: true
 search_exclude: true
 ---
@@ -86,5 +86,4 @@ súlyokra vonatkozó CC-BY-NC-4.0-tól külön áll.
 ## A játékok {#the-games}
 
 A telemetria csak olyan felületekről származik, amelyeket a játékok közzétesznek; a képkockák a képernyőről
-jönnek. Lásd: [A szabályok](rules.md). Hogy mire irányítja a felhasználó az eszközöket, az továbbra is az adott
-játék licencére és EULA-jára tartozik, és ez a kötelezettség azt terheli, aki az eszközt futtatja.
+jönnek. Lásd: [A szabályok](rules.md). A játékból semmit nem szállítunk és nem terjesztünk tovább, és amit az eszközök előállítanak, a felhasználó gépén marad. A 3DHeat GameCapture nem áll kapcsolatban egyetlen játékkiadóval sem, és egyik sem hagyta jóvá; a játékok nevei és a kapcsolódó védjegyek tulajdonosaikat illetik.

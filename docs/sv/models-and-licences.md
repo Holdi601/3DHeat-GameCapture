@@ -3,7 +3,7 @@ title: Modeller och licenser
 nav_order: 7
 lang: "sv"
 source: models-and-licences.md
-source_hash: "87be1ce962da"
+source_hash: "b5410116f001"
 nav_exclude: true
 search_exclude: true
 ---
@@ -87,5 +87,4 @@ koden, separat från vikternas CC-BY-NC-4.0.
 ## Spelen {#the-games}
 
 Telemetri kommer bara från gränssnitt som spelen publicerar; bilder kommer från skärmen. Se
-[Reglerna](rules.md). Vad en användare riktar verktygen mot lyder fortfarande under det spelets
-licens och slutanvändarlicensavtal, och den skyldigheten ligger hos den som kör verktyget.
+[Reglerna](rules.md). Inget från ett spel levereras med eller vidaredistribueras, och det verktygen tar fram stannar på användarens dator. 3DHeat GameCapture är inte knutet till eller godkänt av någon spelutgivare; spelnamn och tillhörande varumärken tillhör sina ägare.

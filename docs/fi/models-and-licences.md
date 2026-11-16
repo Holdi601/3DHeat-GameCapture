@@ -3,7 +3,7 @@ title: "Mallit ja lisenssit"
 nav_order: 7
 lang: "fi"
 source: models-and-licences.md
-source_hash: "87be1ce962da"
+source_hash: "b5410116f001"
 nav_exclude: true
 search_exclude: true
 ---
@@ -64,4 +64,4 @@ Kaikki kolme sallivat kaupallisen käytön, ja ne haetaan ensimmäisellä käytt
 
 ## Pelit {#the-games}
 
-Telemetria tulee vain rajapinnoista, jotka pelit julkaisevat. Kehykset tulevat ruudulta. Katso [Säännöt](rules.md). Mihin käyttäjä työkalut osoittaa, on edelleen kyseisen pelin lisenssin ja EULA:n alainen. Tämä velvollisuus kuuluu sille, joka työkalun ajaa.
+Telemetria tulee vain rajapinnoista, jotka pelit julkaisevat. Kehykset tulevat ruudulta. Katso [Säännöt](rules.md). Pelistä ei toimiteta eikä levitetä mitään, ja se, mitä työkalut tuottavat, jää käyttäjän koneelle. 3DHeat GameCapture ei ole sidoksissa mihinkään pelijulkaisijaan eikä minkään julkaisijan hyväksymä; pelien nimet ja niihin liittyvät tavaramerkit kuuluvat omistajilleen.

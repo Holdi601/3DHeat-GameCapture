@@ -3,7 +3,7 @@ title: Modely a licence
 nav_order: 7
 lang: "cs"
 source: models-and-licences.md
-source_hash: "87be1ce962da"
+source_hash: "b5410116f001"
 nav_exclude: true
 search_exclude: true
 ---
@@ -64,4 +64,4 @@ Vlastní licence balíčku `vggt` byla přečtena z jeho souboru `LICENSE.txt` a
 
 ## Hry {#the-games}
 
-Telemetrie pochází jen z rozhraní, která hry zveřejňují. Snímky pocházejí z obrazovky. Viz [Pravidla](rules.md). Co uživatel nasměruje nástroje na, zůstává podřízeno licenci a EULA dané hry; ta povinnost patří tomu, kdo nástroj spouští.
+Telemetrie pochází jen z rozhraní, která hry zveřejňují. Snímky pocházejí z obrazovky. Viz [Pravidla](rules.md). Nic ze hry se nedodává ani dále nešíří a to, co nástroje vytvoří, zůstává v počítači uživatele. 3DHeat GameCapture není spojen s žádným vydavatelem her ani jím schválen; názvy her a související ochranné známky patří jejich vlastníkům.

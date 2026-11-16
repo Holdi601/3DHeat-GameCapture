@@ -108,11 +108,9 @@ What `locate` renders is the level the user exported from their own copy of the
 game; that file, the database built from it and the renders are the user's to keep
 local, like any other export (see below).
 
-## How geometry is obtained, and what that obliges
+## How geometry is obtained
 
-Not a licence question, but it belongs next to one: both are obligations that are
-easy to breach without noticing. Three routes exist to a level's geometry, and
-they are constrained by quite different things.
+Three routes exist to a level's geometry, and they work quite differently.
 
 **Nothing here injects into a game process.** Frames come from Windows Graphics
 Capture, the public API screen recorders use, and telemetry from feeds games
@@ -127,46 +125,30 @@ at all. So it is usable for single-player and offline titles, where it would be 
 genuine improvement, and unavailable for exactly the always-online case an
 analytics capture usually needs.
 
-**Extracting geometry from shipped game files** — `.pak` archives and the like —
-is a third route, and it is now built, as `gamefiles/`. An earlier
-draft of this document ruled it out wholesale. That was too broad, and the
-correction is worth recording because the reasoning matters more than the
-conclusion.
+**Reading geometry from the files of the user's own installation** — `.pak`
+archives and the like — is the third route, built as the separate GameFiles tool:
 
-A tool is not the same thing as a distribution. Extractors are published openly
-and used widely — FModel, UModel, AssetRipper, Noesis — and the obvious
-legitimate use is a developer reading *their own* game's build. Nothing about
-parsing a container format is itself a circumvention.
-
-The line that does matter is **encryption**, and it falls inside the tool rather
-than around it. DMCA §1201(a)(2) reaches technologies, not only acts: a tool
-whose purpose is to defeat an access control is in scope even if nobody
-distributes a single extracted file. That is why the established extractors are
-built the way they are — **they ship no keys and no key-recovery**. FModel cannot
-open an encrypted archive until the user supplies an AES key they obtained
-themselves. The tool reads containers; it does not break locks.
-
-So the design, which is what was built:
-
-- **Read unencrypted archives directly.** Ordinary parsing, no circumvention
-  question arises. Every archive tested so far has been in this category.
-- **For encrypted archives, take a key from the user and never recover one.** No
-  bundled keys, no key extraction from the executable, no memory scraping.
+- **Unencrypted archives are read directly.** Every archive tested so far has been
+  in this category.
+- **For an encrypted archive, a key is taken from the user and never recovered.**
+  No bundled keys, no key extraction from the executable, no memory scraping.
   `pak.py` takes `aes_key=` and has no code path that obtains one.
-- **Extract geometry, not assets to redistribute.** The output wanted here is a
-  decimated collision or terrain mesh for spatial context, which is also the
-  least of what an archive holds.
+- **Geometry is extracted, not assets.** The output wanted here is a decimated
+  collision or terrain mesh for spatial context, which is also the least of what
+  an archive holds.
 
-One consequence worth stating plainly: Frostbite's obfuscated table form is
-*detected and declined*. Its key sits in the file itself, so it is obfuscation
-rather than an access control and no key would be needed from anyone — but no
-file on hand uses it, and implementing a format with nothing to check it against
-produces something that looks like support and is not.
+Frostbite's obfuscated table form is *detected and declined*: no file on hand uses
+it, and implementing a format with nothing to check it against produces something
+that looks like support and is not.
 
-What remains the user's responsibility either way is the EULA of the game they
-point it at. Those commonly prohibit reverse engineering and are enforceable
-contracts; that obligation sits with whoever runs the tool, on whichever game,
-and no design choice here discharges it.
+## Games
+
+Nothing from a game is shipped or redistributed: no game assets, no game code, no
+DLLs. What the tools produce stays on the user's machine. 3DHeat GameCapture is not
+affiliated with or endorsed by any game publisher. Game names and related
+trademarks belong to their owners. Rights holders: open an issue at
+[github.com/Holdi601/3DHeat-GameCapture/issues](https://github.com/Holdi601/3DHeat-GameCapture/issues) -
+we respond quickly and remove anything on request.
 
 ---
 
@@ -178,9 +160,6 @@ and no design choice here discharges it.
 - [ALIKED](https://github.com/Shiaoming/ALIKED) — BSD-3-Clause; [LightGlue](https://github.com/cvg/LightGlue) — Apache-2.0
 - [ReShade — PCGamingWiki](https://www.pcgamingwiki.com/wiki/ReShade) — anti-cheat position
 - [ReShade forum, depth buffer detection](https://reshade.me/forum/general-discussion/4083-depth-buffer-detection-modifications?start=1200) — multiplayer depth disabling
-- [Reverse engineering and the law](https://ipwatchdog.com/2021/03/27/reverse-engineering-law-understand-restrictions-minimize-risks/) — EULA and DMCA position
-- [DMCA §1201 anti-circumvention](https://copyrightalliance.org/education/copyright-law-explained/the-digital-millennium-copyright-act-dmca/section-1201-technology-protection/) — the tools provisions reach technologies, not only acts
-- [FModel setup](https://modding.wiki/en/aewff/developers/fmodel) — established extractors require a user-supplied AES key rather than shipping one
 - [facebook/VGGT-1B-Commercial](https://huggingface.co/facebook/VGGT-1B-Commercial) — gated; access is granted per account, so it cannot be a default
 - [Oodle Data Compression](http://www.radgametools.com/oodle.htm) — proprietary, no redistributable build, hence found rather than bundled
 - [Review of Feed-forward 3D Reconstruction: DUSt3R to VGGT](https://arxiv.org/abs/2507.08448)

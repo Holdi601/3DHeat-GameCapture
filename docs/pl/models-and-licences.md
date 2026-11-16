@@ -3,7 +3,7 @@ title: "Modele i licencje"
 nav_order: 7
 lang: "pl"
 source: models-and-licences.md
-source_hash: "87be1ce962da"
+source_hash: "b5410116f001"
 nav_exclude: true
 search_exclude: true
 ---
@@ -86,5 +86,4 @@ kodu, osobno od wag CC-BY-NC-4.0.
 ## Gry {#the-games}
 
 Telemetria pochodzi tylko z interfejsów, które gry publikują; klatki pochodzą z ekranu. Zobacz
-[Obowiązujące zasady](rules.md). To, na co użytkownik kieruje narzędzia, nadal podlega licencji i EULA tej
-gry, a ten obowiązek spoczywa na tym, kto uruchamia narzędzie.
+[Obowiązujące zasady](rules.md). Nic z gry nie jest dostarczane ani rozpowszechniane dalej, a to, co tworzą narzędzia, zostaje na komputerze użytkownika. 3DHeat GameCapture nie jest powiązany z żadnym wydawcą gier ani przez żadnego zatwierdzony; nazwy gier i powiązane znaki towarowe należą do ich właścicieli.

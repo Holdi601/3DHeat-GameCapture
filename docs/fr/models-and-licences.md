@@ -3,7 +3,7 @@ title: Modèles et licences
 nav_order: 7
 lang: "fr"
 source: models-and-licences.md
-source_hash: "87be1ce962da"
+source_hash: "b5410116f001"
 nav_exclude: true
 search_exclude: true
 ---
@@ -91,5 +91,4 @@ elle couvre le code, séparément des poids, qui sont en CC-BY-NC-4.0.
 ## Les jeux {#the-games}
 
 La télémétrie ne vient que des interfaces que les jeux publient ; les images viennent de l'écran. Voir
-[Les règles](rules.md). Ce que l'utilisateur fait pointer vers les outils reste soumis à la licence et
-au CLUF de ce jeu, et cette obligation incombe à celui qui exécute l'outil.
+[Les règles](rules.md). Rien d'un jeu n'est livré ni redistribué, et ce que produisent les outils reste sur la machine de l'utilisateur. 3DHeat GameCapture n'est affilié à aucun éditeur de jeux ni approuvé par l'un d'eux ; les noms des jeux et les marques associées appartiennent à leurs propriétaires.

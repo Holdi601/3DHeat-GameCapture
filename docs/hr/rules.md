@@ -3,7 +3,7 @@ title: Pravila na kojima je ovo izgrađeno
 nav_order: 2
 lang: "hr"
 source: rules.md
-source_hash: "88d5b7041a49"
+source_hash: "032350a1f53a"
 nav_exclude: true
 search_exclude: true
 ---
@@ -60,9 +60,8 @@ višekorisničkim sesijama po dizajnu, pa bi pomogao samo jednoigračkim naslovi
 Datoteke `hardware_settings_config.xml` igara DiRT i `RichardBurnsRally.ini` alat **ne** mijenja;
 izlaz UDP-a uključujete sami (vidi [Rally igre](telemetry-rally.md)).
 
-## Što ostaje odgovornost korisnika {#what-stays-the-users-responsibility}
+## Što se čita i što ostaje na vašem računalu {#what-is-read-and-what-stays-on-your-machine}
 
-Što korisnik usmjeri prema alatima ostaje podložno licenci i EULA-i te igre. Datoteke krugova,
-snimke, rekonstrukcije i izvezene staze pripadaju onome tko posjeduje igru i podatke; `.gitignore`
-repozitorija drži snimke, datoteke krugova, mreže, težine modela i video izvan verzioniranja, po mapi i
-po vrsti datoteke.
+Alati čitaju ono što igra prikazuje na zaslonu te telemetriju i datoteke koje igra za to objavljuje, na vašem vlastitom računalu. Ništa iz igre ne isporučuje se niti dalje distribuira: nikakvi resursi igre, nikakav kôd igre, nikakvi DLL-ovi. Datoteke krugova, snimke, rekonstrukcije i izvezene staze ostaju na vašem računalu; `.gitignore` repozitorija drži snimke, datoteke krugova, mreže, težine modela i video izvan kontrole verzija po mapi i po vrsti datoteke.
+
+3DHeat GameCapture nije povezan ni s jednim izdavačem igara niti ga on podržava. Nazivi igara i povezani žigovi pripadaju njihovim vlasnicima. Nositelji prava: otvorite issue na [github.com/Holdi601/3DHeat-GameCapture/issues](https://github.com/Holdi601/3DHeat-GameCapture/issues) - brzo odgovaramo i na zahtjev uklanjamo bilo što.

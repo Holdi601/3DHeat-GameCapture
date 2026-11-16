@@ -913,7 +913,14 @@ settings, exports - are never touched. To update on request: `python -m heat3d_u
 ## Licence
 
 MIT - see [`LICENSE`](LICENSE), and [`LICENSES.md`](LICENSES.md) for the
-third-party packages it uses and what the games it reads oblige.
+third-party packages and models it uses.
+
+The tools read what the game shows on screen and the telemetry it publishes, on your own
+computer. Nothing from a game is shipped or redistributed - no game assets, no game code, no
+DLLs - and what the tools produce stays on your machine. 3DHeat GameCapture is not affiliated with or endorsed by any game publisher. Game names and
+related trademarks belong to their owners. Rights holders: open an issue at
+[github.com/Holdi601/3DHeat-GameCapture/issues](https://github.com/Holdi601/3DHeat-GameCapture/issues) -
+we respond quickly and remove anything on request.
 
 Documentation: the [GameCapture site](https://holdi601.github.io/3DHeat-GameCapture/) (from `docs/`),
 and the viewer's at [holdi601.github.io/3DHeat](https://holdi601.github.io/3DHeat/).

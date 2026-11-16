@@ -3,7 +3,7 @@ title: "Regulile"
 nav_order: 2
 lang: "ro"
 source: rules.md
-source_hash: "88d5b7041a49"
+source_hash: "032350a1f53a"
 nav_exclude: true
 search_exclude: true
 ---
@@ -63,9 +63,8 @@ accesul la adâncime în sesiunile multiplayer prin design, deci ar ajuta doar t
 **nu** sunt editate de unealtă; pornirea ieșirii UDP trebuie s-o faceți dumneavoastră (vezi
 [Jocurile de raliu](telemetry-rally.md)).
 
-## Ce rămâne în responsabilitatea utilizatorului {#what-stays-the-users-responsibility}
+## Ce se citește și ce rămâne pe calculatorul dumneavoastră {#what-is-read-and-what-stays-on-your-machine}
 
-Ce indicați uneltelor către rămâne supus licenței și EULA-ei jocului respectiv. Fișierele de tur,
-înregistrările, reconstrucțiile și traseele exportate aparțin celui care deține jocul și datele;
-`.gitignore` al depozitului ține înregistrările, fișierele de tur, plasele, greutățile modelelor și
-video-ul afară din controlul versiunilor, pe foldere și pe tip de fișier.
+Uneltele citesc ce arată jocul pe ecran, precum și telemetria și fișierele pe care jocul le publică pentru asta, pe propriul dumneavoastră calculator. Nimic dintr-un joc nu este livrat sau redistribuit: nicio resursă a jocului, niciun cod al jocului, niciun DLL. Fișierele de tur, înregistrările, reconstrucțiile și traseele exportate rămân pe calculatorul dumneavoastră; `.gitignore` al depozitului ține înregistrările, fișierele de tur, rețelele, ponderile modelelor și video-ul în afara controlului versiunilor, după dosar și după tipul fișierului.
+
+3DHeat GameCapture nu este afiliat cu niciun editor de jocuri și nu este aprobat de vreunul. Numele jocurilor și mărcile asociate aparțin proprietarilor lor. Deținători de drepturi: deschideți un issue la [github.com/Holdi601/3DHeat-GameCapture/issues](https://github.com/Holdi601/3DHeat-GameCapture/issues) - răspundem repede și eliminăm orice la cerere.

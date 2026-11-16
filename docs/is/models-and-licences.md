@@ -3,7 +3,7 @@ title: "Líkön og leyfi"
 nav_order: 7
 lang: "is"
 source: models-and-licences.md
-source_hash: "87be1ce962da"
+source_hash: "b5410116f001"
 nav_exclude: true
 search_exclude: true
 ---
@@ -86,5 +86,4 @@ Leyfi `vggt` pakkans sjálfs var lesið úr `LICENSE.txt` hans og er skráð í 
 ## Leikirnir {#the-games}
 
 Mælingagögn koma aðeins úr viðmótum sem leikirnir birta; rammar koma af skjánum. Sjá
-[Reglurnar](rules.md). Það sem notandi beinir verkfærunum að er áfram háð leyfi og
-EULA þess leiks, og sú skylda hvílir á þeim sem keyrir verkfærið.
+[Reglurnar](rules.md). Ekkert úr leik fylgir með eða er dreift áfram, og það sem verkfærin búa til verður eftir á vél notandans. 3DHeat GameCapture tengist engum leikjaútgefanda og er ekki samþykkt af neinum þeirra; nöfn leikja og tengd vörumerki tilheyra eigendum sínum.

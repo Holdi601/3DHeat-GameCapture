@@ -3,7 +3,7 @@ title: Modellen en licenties
 nav_order: 7
 lang: "nl"
 source: models-and-licences.md
-source_hash: "87be1ce962da"
+source_hash: "b5410116f001"
 nav_exclude: true
 search_exclude: true
 ---
@@ -64,4 +64,4 @@ De eigen licentie van het pakket `vggt` is afgelezen uit het bestand `LICENSE.tx
 
 ## De games {#the-games}
 
-Telemetrie komt alleen uit interfaces die de games publiceren; frames komen van het scherm. Zie [De regels](rules.md). Waar een gebruiker de tools op richt, blijft onderworpen aan de licentie en EULA van dat spel, en die verplichting ligt bij wie de tool draait.
+Telemetrie komt alleen uit interfaces die de games publiceren; frames komen van het scherm. Zie [De regels](rules.md). Niets uit een game wordt meegeleverd of verder verspreid, en wat de tools maken blijft op de computer van de gebruiker. 3DHeat GameCapture is niet verbonden aan en niet goedgekeurd door een gamepublisher; gamenamen en bijbehorende handelsmerken behoren toe aan hun eigenaars.

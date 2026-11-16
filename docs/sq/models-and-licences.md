@@ -3,7 +3,7 @@ title: "Modelet dhe licencat"
 nav_order: 7
 lang: "sq"
 source: models-and-licences.md
-source_hash: "87be1ce962da"
+source_hash: "b5410116f001"
 nav_exclude: true
 search_exclude: true
 ---
@@ -86,5 +86,4 @@ ajo mbulon kodin, veçmas nga CC-BY-NC-4.0 e peshave.
 ## Lojërat {#the-games}
 
 Telemetria vjen vetëm nga ndërfaqet që publikojnë lojërat; kuadrot vijnë nga ekrani. Shih
-[Rregullat](rules.md). Ajo ku i drejton përdoruesi mjetet mbetet nën licencën dhe EULA-n e asaj loje,
-dhe ky detyrim i takon atij që e ekzekuton mjetin.
+[Rregullat](rules.md). Asgjë nga një lojë nuk dorëzohet as rishpërndahet, dhe ajo që prodhojnë mjetet mbetet në makinën e përdoruesit. 3DHeat GameCapture nuk është i lidhur me asnjë botues lojërash dhe nuk është miratuar nga asnjë prej tyre; emrat e lojërave dhe markat tregtare përkatëse u përkasin pronarëve të tyre.

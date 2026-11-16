@@ -53,9 +53,15 @@ The DiRT games' `hardware_settings_config.xml` and Richard Burns Rally's
 `RichardBurnsRally.ini` are **not** edited by the tool; you switch their UDP output on
 yourself (see [Rally games](telemetry-rally)).
 
-## What stays the user's responsibility
+## What is read, and what stays on your machine
 
-What a user points the tools at remains subject to that game's licence and EULA. Lap files,
-recordings, reconstructions and exported courses belong to whoever owns the game and the
-data; the repository's `.gitignore` keeps recordings, lap files, meshes, model weights and
-video out of version control by folder and by file type.
+The tools read what the game shows on screen and the telemetry and files it publishes for that,
+on your own computer. Nothing from a game is shipped or redistributed: no game assets, no game
+code, no DLLs. Lap files, recordings, reconstructions and exported courses stay on your machine;
+the repository's `.gitignore` keeps recordings, lap files, meshes, model weights and video out of
+version control by folder and by file type.
+
+3DHeat GameCapture is not affiliated with or endorsed by any game publisher. Game names and
+related trademarks belong to their owners. Rights holders: open an issue at
+[github.com/Holdi601/3DHeat-GameCapture/issues](https://github.com/Holdi601/3DHeat-GameCapture/issues) -
+we respond quickly and remove anything on request.

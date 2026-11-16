@@ -3,7 +3,7 @@ title: De regels
 nav_order: 2
 lang: "nl"
 source: rules.md
-source_hash: "88d5b7041a49"
+source_hash: "032350a1f53a"
 nav_exclude: true
 search_exclude: true
 ---
@@ -44,6 +44,8 @@ De dieptebuffer van ReShade is overwogen en niet gebruikt. ReShade schakelt diep
 
 Het `hardware_settings_config.xml` van de DiRT-games en het `RichardBurnsRally.ini` van Richard Burns Rally worden door de tool **niet** bewerkt; je zet hun UDP-uitvoer zelf aan (zie [Rallygames](telemetry-rally.md)).
 
-## Wat de verantwoordelijkheid van de gebruiker blijft {#what-stays-the-users-responsibility}
+## Wat er gelezen wordt, en wat op je computer blijft {#what-is-read-and-what-stays-on-your-machine}
 
-Waar een gebruiker de tools op richt, blijft onderworpen aan de licentie en EULA van dat spel. Rondebestanden, opnames, reconstructies en geëxporteerde banen horen toe aan wie het spel en de data bezit; de `.gitignore` van de repository houdt opnames, rondebestanden, meshes, modelgewichten en video per map en per bestandstype buiten versiebeheer.
+De tools lezen wat de game op het scherm toont en de telemetrie en bestanden die de game daarvoor publiceert, op je eigen computer. Niets uit een game wordt meegeleverd of verder verspreid: geen game-assets, geen gamecode, geen DLL's. Rondebestanden, opnames, reconstructies en geëxporteerde circuits blijven op je computer; de `.gitignore` van de repository houdt opnames, rondebestanden, meshes, modelgewichten en video per map en per bestandstype buiten versiebeheer.
+
+3DHeat GameCapture is niet verbonden aan en niet goedgekeurd door een gamepublisher. Gamenamen en bijbehorende handelsmerken behoren toe aan hun eigenaars. Rechthebbenden: open een issue op [github.com/Holdi601/3DHeat-GameCapture/issues](https://github.com/Holdi601/3DHeat-GameCapture/issues) - we reageren snel en verwijderen op verzoek alles.

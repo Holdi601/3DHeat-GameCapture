@@ -3,7 +3,7 @@ title: Reglerna
 nav_order: 2
 lang: "sv"
 source: rules.md
-source_hash: "88d5b7041a49"
+source_hash: "032350a1f53a"
 nav_exclude: true
 search_exclude: true
 ---
@@ -61,9 +61,8 @@ flerspelarsessioner med avsikt, så den skulle bara hjälpa enspelarstitlar (se
 DiRT-spelens `hardware_settings_config.xml` och Richard Burns Rallys `RichardBurnsRally.ini` redigeras
 **inte** av verktyget; du slår på deras UDP-utdata själv (se [Rallyspel](telemetry-rally.md)).
 
-## Vad som förblir användarens ansvar {#what-stays-the-users-responsibility}
+## Vad som läses, och vad som stannar på din dator {#what-is-read-and-what-stays-on-your-machine}
 
-Vad en användare riktar verktygen mot lyder fortfarande under det spelets licens och
-slutanvändarlicensavtal. Varvfiler, inspelningar, rekonstruktioner och exporterade banor tillhör den
-som äger spelet och datan; förrådets `.gitignore` håller inspelningar, varvfiler, nät, modellvikter och
-video utanför versionshanteringen, per mapp och per filtyp.
+Verktygen läser det spelet visar på skärmen och den telemetri och de filer spelet publicerar för det, på din egen dator. Inget från ett spel levereras med eller vidaredistribueras: inga speltillgångar, ingen spelkod, inga DLL-filer. Varvfiler, inspelningar, rekonstruktioner och exporterade banor stannar på din dator; repots `.gitignore` håller inspelningar, varvfiler, nät, modellvikter och video utanför versionshanteringen per mapp och filtyp.
+
+3DHeat GameCapture är inte knutet till eller godkänt av någon spelutgivare. Spelnamn och tillhörande varumärken tillhör sina ägare. Rättighetshavare: öppna ett issue på [github.com/Holdi601/3DHeat-GameCapture/issues](https://github.com/Holdi601/3DHeat-GameCapture/issues) - vi svarar snabbt och tar bort vad som helst på begäran.

@@ -3,7 +3,7 @@ title: "Modeli i licence"
 nav_order: 7
 lang: "bs"
 source: models-and-licences.md
-source_hash: "87be1ce962da"
+source_hash: "b5410116f001"
 nav_exclude: true
 search_exclude: true
 ---
@@ -86,5 +86,4 @@ pokriva kod, odvojeno od CC-BY-NC-4.0 licence težina.
 ## Igre {#the-games}
 
 Telemetrija dolazi samo iz sučelja koja igre objavljuju; kadrovi dolaze sa ekrana. Pogledajte
-[Pravila](rules.md). Ono na šta korisnik usmjeri alate i dalje podliježe licenci i EULA-i te
-igre, a ta obaveza je na onome ko pokreće alat.
+[Pravila](rules.md). Ništa iz igre se ne isporučuje niti dalje distribuira, a ono što alati naprave ostaje na računaru korisnika. 3DHeat GameCapture nije povezan ni sa jednim izdavačem igara niti ga on podržava; nazivi igara i povezani zaštitni znakovi pripadaju njihovim vlasnicima.

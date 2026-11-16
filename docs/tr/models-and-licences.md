@@ -3,7 +3,7 @@ title: Modeller ve lisanslar
 nav_order: 7
 lang: "tr"
 source: models-and-licences.md
-source_hash: "87be1ce962da"
+source_hash: "b5410116f001"
 nav_exclude: true
 search_exclude: true
 ---
@@ -86,5 +86,4 @@ CC-BY-NC-4.0 lisansından ayrı olarak kodu kapsar.
 ## Oyunlar {#the-games}
 
 Telemetri yalnızca oyunların bunun için yayımladığı arayüzlerden gelir; kareler ekrandan gelir. Bkz.
-[Kurallar](rules.md). Bir kullanıcının araçları yönelttiği şey, o oyunun lisansına ve EULA'sına tabidir; bu
-yükümlülük aracı çalıştıranındır.
+[Kurallar](rules.md). Bir oyundan hiçbir şey birlikte dağıtılmaz veya yeniden dağıtılmaz ve araçların ürettikleri kullanıcının makinesinde kalır. 3DHeat GameCapture hiçbir oyun yayıncısıyla bağlantılı değildir ve hiçbiri tarafından onaylanmamıştır; oyun adları ve ilgili ticari markalar sahiplerine aittir.

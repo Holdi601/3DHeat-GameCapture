@@ -3,7 +3,7 @@ title: "Reglurnar"
 nav_order: 2
 lang: "is"
 source: rules.md
-source_hash: "88d5b7041a49"
+source_hash: "032350a1f53a"
 nav_exclude: true
 search_exclude: true
 ---
@@ -62,9 +62,8 @@ fjölspilunarlotum að hönnun, svo það myndi aðeins gagnast einspilunarleikj
 eru **ekki** breytt af verkfærinu; þú kveikir sjálfur á UDP úttaki þeirra
 (sjá [Rallýleikir](telemetry-rally.md)).
 
-## Hvað er áfram á ábyrgð notandans {#what-stays-the-users-responsibility}
+## Hvað er lesið og hvað verður eftir á vélinni þinni {#what-is-read-and-what-stays-on-your-machine}
 
-Það sem notandi beinir verkfærunum að er áfram háð leyfi og EULA þess leiks. Hringskrár,
-upptökur, endurbyggingar og útfluttar brautir tilheyra þeim sem á leikinn og
-gögnin; `.gitignore` geymslunnar heldur upptökum, hringskrám, netum (meshes), líkanaþyngdum og
-myndbandi utan útgáfustjórnar eftir möppu og skráartegund.
+Verkfærin lesa það sem leikurinn sýnir á skjánum og mælingagögnin og skrárnar sem hann birtir til þess, á þinni eigin tölvu. Ekkert úr leik fylgir með eða er dreift áfram: engar eignir leiksins, enginn kóði leiksins, engar DLL-skrár. Hringjaskrár, upptökur, endurgerðir og útfluttar brautir verða eftir á vélinni þinni; `.gitignore` geymslunnar heldur upptökum, hringjaskrám, möskvum, líkanavigtum og myndböndum utan útgáfustýringar eftir möppu og skráartegund.
+
+3DHeat GameCapture tengist engum leikjaútgefanda og er ekki samþykkt af neinum þeirra. Nöfn leikja og tengd vörumerki tilheyra eigendum sínum. Rétthafar: stofnið issue á [github.com/Holdi601/3DHeat-GameCapture/issues](https://github.com/Holdi601/3DHeat-GameCapture/issues) - við svörum fljótt og fjarlægjum hvað sem er sé þess óskað.

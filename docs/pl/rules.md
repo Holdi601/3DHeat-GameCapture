@@ -3,7 +3,7 @@ title: "Obowiązujące zasady"
 nav_order: 2
 lang: "pl"
 source: rules.md
-source_hash: "88d5b7041a49"
+source_hash: "032350a1f53a"
 nav_exclude: true
 search_exclude: true
 ---
@@ -60,8 +60,8 @@ wieloosobowych, więc pomógłby tylko tytułom dla jednego gracza (zobacz
 Pliku `hardware_settings_config.xml` gier DiRT i pliku `RichardBurnsRally.ini` Richard Burns Rally narzędzie
 **nie** zmienia; wyjście UDP włączasz samodzielnie (zobacz [Gry rajdowe](telemetry-rally.md)).
 
-## Co pozostaje odpowiedzialnością użytkownika {#what-stays-the-users-responsibility}
+## Co jest odczytywane i co zostaje na komputerze {#what-is-read-and-what-stays-on-your-machine}
 
-To, na co użytkownik kieruje narzędzia, nadal podlega licencji i EULA tej gry. Pliki okrążeń, nagrania,
-rekonstrukcje i wyeksportowane tory należą do tego, kto ma grę i dane; `.gitignore` repozytorium trzyma
-nagrania, pliki okrążeń, siatki, wagi modeli i wideo poza kontrolą wersji - według folderu i typu pliku.
+Narzędzia odczytują to, co gra pokazuje na ekranie, oraz telemetrię i pliki, które gra w tym celu udostępnia, na własnym komputerze użytkownika. Nic z gry nie jest dostarczane ani rozpowszechniane dalej: żadne zasoby gry, żaden kod gry, żadne biblioteki DLL. Pliki okrążeń, nagrania, rekonstrukcje i wyeksportowane trasy zostają na komputerze; `.gitignore` repozytorium trzyma nagrania, pliki okrążeń, siatki, wagi modeli i wideo poza kontrolą wersji według folderu i typu pliku.
+
+3DHeat GameCapture nie jest powiązany z żadnym wydawcą gier ani przez żadnego zatwierdzony. Nazwy gier i powiązane znaki towarowe należą do ich właścicieli. Posiadacze praw: prosimy o zgłoszenie (issue) na [github.com/Holdi601/3DHeat-GameCapture/issues](https://github.com/Holdi601/3DHeat-GameCapture/issues) - odpowiadamy szybko i na żądanie usuwamy wszystko.

@@ -3,7 +3,7 @@ title: Les règles
 nav_order: 2
 lang: "fr"
 source: rules.md
-source_hash: "88d5b7041a49"
+source_hash: "032350a1f53a"
 nav_exclude: true
 search_exclude: true
 ---
@@ -64,9 +64,8 @@ Les fichiers `hardware_settings_config.xml` des jeux DiRT et `RichardBurnsRally.
 Rally ne sont **pas** modifiés par l'outil ; vous activez vous-même leur sortie UDP (voir
 [Jeux de rallye](telemetry-rally.md)).
 
-## Ce qui reste de la responsabilité de l'utilisateur {#what-stays-the-users-responsibility}
+## Ce qui est lu, et ce qui reste sur votre machine {#what-is-read-and-what-stays-on-your-machine}
 
-Ce que l'utilisateur fait pointer vers les outils reste soumis à la licence et au CLUF de ce jeu. Les
-fichiers de tour, les enregistrements, les reconstructions et les parcours exportés appartiennent à celui
-qui possède le jeu et les données ; le `.gitignore` du dépôt tient les enregistrements, fichiers de tour,
-maillages, poids de modèles et vidéos hors du contrôle de version, par dossier et par type de fichier.
+Les outils lisent ce que le jeu affiche à l'écran ainsi que la télémétrie et les fichiers qu'il publie pour cela, sur votre propre ordinateur. Rien d'un jeu n'est livré ni redistribué : aucune ressource du jeu, aucun code du jeu, aucune DLL. Les fichiers de tours, les enregistrements, les reconstructions et les circuits exportés restent sur votre machine ; le `.gitignore` du dépôt tient les enregistrements, les fichiers de tours, les maillages, les poids de modèles et la vidéo hors du contrôle de version, par dossier et par type de fichier.
+
+3DHeat GameCapture n'est affilié à aucun éditeur de jeux ni approuvé par l'un d'eux. Les noms des jeux et les marques associées appartiennent à leurs propriétaires. Ayants droit : ouvrez un ticket sur [github.com/Holdi601/3DHeat-GameCapture/issues](https://github.com/Holdi601/3DHeat-GameCapture/issues) - nous répondons vite et retirons tout ce qui est demandé.
