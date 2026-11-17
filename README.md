@@ -47,8 +47,8 @@ needed. Only for the other jobs: `hud` needs ffmpeg, `reconstruct` and `locate` 
 graphics card (see [Install from a checkout](#install-from-a-checkout)).
 
 1. Download the release,
-   <https://github.com/Holdi601/3DHeat-GameCapture/archive/refs/tags/v1.0.3.zip>, and unpack it.
-   Open PowerShell in the unpacked folder (`3DHeat-GameCapture-1.0.3`) and install what it needs
+   <https://github.com/Holdi601/3DHeat-GameCapture/archive/refs/tags/v1.0.4.zip>, and unpack it.
+   Open PowerShell in the unpacked folder (`3DHeat-GameCapture-1.0.4`) and install what it needs
    (about 350 MB, once):
 
    ```powershell

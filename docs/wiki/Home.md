@@ -43,8 +43,8 @@ You need Windows, Python 3.10 or later ("Add python.exe to PATH" ticked in its i
 racing game that sends telemetry - Forza here; no Git.
 New to the command line? Read [Before you start](before-you-start) first.
 
-Download the release, <https://github.com/Holdi601/3DHeat-GameCapture/archive/refs/tags/v1.0.3.zip>,
-unpack it, open PowerShell in the unpacked folder (`3DHeat-GameCapture-1.0.3`) and install what it
+Download the release, <https://github.com/Holdi601/3DHeat-GameCapture/archive/refs/tags/v1.0.4.zip>,
+unpack it, open PowerShell in the unpacked folder (`3DHeat-GameCapture-1.0.4`) and install what it
 needs (about 350 MB, once). Then switch Forza's Data Out on and start the recorder:
 
 ```powershell

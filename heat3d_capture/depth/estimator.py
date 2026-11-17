@@ -247,12 +247,12 @@ class DepthEstimator:
         small enough that a single 960-pixel frame does not fill a 5080, and the
         per-call overhead dominates.
         """
-        import torch
-
-        self._load()
         batch = [images] if isinstance(images, np.ndarray) and images.ndim == 3 else list(images)
         if not batch:
             return []
+        import torch
+
+        self._load()
 
         # Grouped by frame size before batching. The processor preserves aspect
         # ratio, so two different shapes become two different tensor shapes and

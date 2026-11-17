@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.4
+
+- The depth estimator answers an empty batch with nothing before it needs PyTorch, so the test
+  suite passes on an install without it.
+
 ## 1.0.3
 
 - `locate`: where each frame of the player's own recording was taken, against renders of the level

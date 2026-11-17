@@ -3,7 +3,7 @@ title: "Startseite"
 nav_order: 1
 lang: "de"
 source: index.md
-source_hash: "51faca7f9776"
+source_hash: "a678607034d2"
 nav_exclude: true
 search_exclude: true
 permalink: /de/
@@ -53,8 +53,8 @@ Du brauchst Windows, Python 3.10 oder neuer (im Installer "Add python.exe to PAT
 ein Rennspiel, das Telemetrie sendet - hier Forza; Git ist nicht nötig.
 Neu auf der Kommandozeile? Lies zuerst [Bevor du anfängst](before-you-start.md).
 
-Lade das Release herunter, <https://github.com/Holdi601/3DHeat-GameCapture/archive/refs/tags/v1.0.3.zip>,
-entpacke es, öffne PowerShell im entpackten Ordner (`3DHeat-GameCapture-1.0.3`) und installiere, was es
+Lade das Release herunter, <https://github.com/Holdi601/3DHeat-GameCapture/archive/refs/tags/v1.0.4.zip>,
+entpacke es, öffne PowerShell im entpackten Ordner (`3DHeat-GameCapture-1.0.4`) und installiere, was es
 braucht (etwa 350 MB, einmalig). Dann schalte in Forza Data Out ein und starte den Recorder:
 
 ```powershell
