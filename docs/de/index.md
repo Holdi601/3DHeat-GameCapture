@@ -3,7 +3,7 @@ title: "Startseite"
 nav_order: 1
 lang: "de"
 source: index.md
-source_hash: "af8f09bf55f3"
+source_hash: "51faca7f9776"
 nav_exclude: true
 search_exclude: true
 permalink: /de/
@@ -49,11 +49,15 @@ kann, haben eigene Lizenzen - siehe [Modelle und Lizenzen](models-and-licences.m
 
 ### Runden aufnehmen {#record-laps}
 
-Du brauchst Python 3.10 oder neuer ([Bevor du anfängst](before-you-start.md)). In PowerShell:
+Du brauchst Windows, Python 3.10 oder neuer (im Installer "Add python.exe to PATH" ankreuzen) und
+ein Rennspiel, das Telemetrie sendet - hier Forza; Git ist nicht nötig.
+Neu auf der Kommandozeile? Lies zuerst [Bevor du anfängst](before-you-start.md).
+
+Lade das Release herunter, <https://github.com/Holdi601/3DHeat-GameCapture/archive/refs/tags/v1.0.3.zip>,
+entpacke es, öffne PowerShell im entpackten Ordner (`3DHeat-GameCapture-1.0.3`) und installiere, was es
+braucht (etwa 350 MB, einmalig). Dann schalte in Forza Data Out ein und starte den Recorder:
 
 ```powershell
-git clone https://github.com/Holdi601/3DHeat-GameCapture
-cd 3DHeat-GameCapture
 python -m venv .venv
 .venv\Scripts\python -m pip install -r requirements.txt
 
@@ -62,8 +66,8 @@ python -m venv .venv
 ```
 
 **Du solltest sehen** `listening on port 5300. Laps go to laps. Ctrl+C to stop.`, dann eine Zeile pro Runde,
-sobald du die Linie überquerst, wie im Bild oben. Drücke Strg+C zum Beenden. Zieh die Dateien aus `laps\`
-in den Rennanalyse-Tab des Viewers. Jedes andere Spiel ist nur einen `--game`-Schalter entfernt:
+sobald du die Linie überquerst, wie im Bild oben. Drücke Strg+C zum Beenden. Jede Runde ist eine
+`<stamp>_car<n>_lap<k>_<s>s.lap.json` in `laps\`. Jedes andere Spiel ist nur einen `--game`-Schalter entfernt:
 
 ```powershell
 .venv\Scripts\python -m heat3d_capture telemetry --game acc -o laps
@@ -71,6 +75,16 @@ in den Rennanalyse-Tab des Viewers. Jedes andere Spiel ist nur einen `--game`-Sc
 ```
 
 Siehe [Telemetrie-Recorder](telemetry.md) für jedes Spiel und jede Option.
+
+Dann öffne die Runden im [3DHeat-Viewer](https://github.com/Holdi601/3DHeat#quick-start): herunterladen
+(**Code -> Download ZIP**, entpacken), `start.bat` doppelklicken (es bietet an, Node.js zu installieren,
+wenn es fehlt, und öffnet `http://127.0.0.1:5273`), dann den Tab **Rennanalyse**, **Rundendateien laden...**
+(oder **Ordner...**, oder die Dateien auf die 3D-Ansicht ziehen) und zwei oder mehr Runden derselben Strecke
+wählen ([Runden laden](https://holdi601.github.io/3DHeat/de/race-loading-laps.html)). Eine Level-`.glb` von
+unten kommt über **Hintergrund / Level -> 3D-Modell...** hinein.
+
+Wenn ein neues Release erscheint, sagt das Werkzeug es beim Start und bietet an, den Ordner aus dem
+Release zu aktualisieren.
 
 ### Ein Level scannen {#scan-a-level}
 

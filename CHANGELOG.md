@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.0.3
 
 - `locate`: where each frame of the player's own recording was taken, against renders of the level
   (experimental).
@@ -8,6 +8,7 @@
 - Scan `.glb` files say their unit (`extras.unit_metres: 0.01`), so `locate` reads a scan at its
   true size instead of 100 times too big.
 - Documentation: Before you start, generated command reference, maintaining checklist.
+- README: a quick start for new users.
 
 ## 1.0.2
 

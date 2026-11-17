@@ -44,11 +44,15 @@ run have their own licences - see [Models and licences](models-and-licences.md).
 
 ### Record laps
 
-You need Python 3.10 or later ([Before you start](before-you-start.md)). In PowerShell:
+You need Windows, Python 3.10 or later ("Add python.exe to PATH" ticked in its installer) and a
+racing game that sends telemetry - Forza here; no Git.
+New to the command line? Read [Before you start](before-you-start.md) first.
+
+Download the release, <https://github.com/Holdi601/3DHeat-GameCapture/archive/refs/tags/v1.0.3.zip>,
+unpack it, open PowerShell in the unpacked folder (`3DHeat-GameCapture-1.0.3`) and install what it
+needs (about 350 MB, once). Then switch Forza's Data Out on and start the recorder:
 
 ```powershell
-git clone https://github.com/Holdi601/3DHeat-GameCapture
-cd 3DHeat-GameCapture
 python -m venv .venv
 .venv\Scripts\python -m pip install -r requirements.txt
 
@@ -56,9 +60,9 @@ python -m venv .venv
 .venv\Scripts\python -m heat3d_capture telemetry -o laps
 ```
 
-**You should see** `listening on port 5300. Laps go to laps. Ctrl+C to stop.`, then a line per lap as you cross the line, as
-in the picture above. Press Ctrl+C to stop. Drop the files from `laps\` on the viewer's Race analysis tab.
-Every other game is one `--game` away:
+**You should see** `listening on port 5300. Laps go to laps. Ctrl+C to stop.`, then a line per lap as you
+cross the line, as in the picture above. Press Ctrl+C to stop. Each lap is one
+`<stamp>_car<n>_lap<k>_<s>s.lap.json` in `laps\`. Every other game is one `--game` away:
 
 ```powershell
 .venv\Scripts\python -m heat3d_capture telemetry --game acc -o laps
@@ -66,6 +70,16 @@ Every other game is one `--game` away:
 ```
 
 See [Telemetry recorders](telemetry.md) for every game and option.
+
+Then open the laps in the [3DHeat viewer](https://github.com/Holdi601/3DHeat#quick-start): download it
+(**Code -> Download ZIP**, unpack), double-click `start.bat` (it offers to install Node.js when it is
+missing and opens `http://127.0.0.1:5273`), then the **Race analysis** tab, **Load lap files...** (or
+**Folder...**, or drop the files on the 3D view) and pick two or more laps of the same course
+([loading laps](https://holdi601.github.io/3DHeat/race-loading-laps.html)). A level `.glb` from below
+goes in with **Background / level -> 3D model...**.
+
+When a new release is out, the tool says so when it starts and offers to update the folder from
+the release.
 
 ### Scan a level
 

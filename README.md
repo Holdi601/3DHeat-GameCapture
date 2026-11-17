@@ -37,7 +37,48 @@ laps. Two lap files appear in `laps`. Drop them on the viewer's Race analysis ta
 Nothing is injected into a game and nothing is hooked: frames come from the public screen-capture
 API, telemetry from interfaces the games publish for it.
 
-## Install
+## Quick start for new users
+
+You need: Windows, [Python](https://www.python.org/downloads/) 3.10 or later
+("Add python.exe to PATH" ticked in its installer), and a racing game that sends telemetry -
+Forza here; every other game is one `--game` away
+([Telemetry recorders](https://holdi601.github.io/3DHeat-GameCapture/telemetry.html)). No Git is
+needed. Only for the other jobs: `hud` needs ffmpeg, `reconstruct` and `locate` need PyTorch and a
+graphics card (see [Install from a checkout](#install-from-a-checkout)).
+
+1. Download the release,
+   <https://github.com/Holdi601/3DHeat-GameCapture/archive/refs/tags/v1.0.3.zip>, and unpack it.
+   Open PowerShell in the unpacked folder (`3DHeat-GameCapture-1.0.3`) and install what it needs
+   (about 350 MB, once):
+
+   ```powershell
+   python -m venv .venv
+   .venv\Scripts\python -m pip install -r requirements.txt
+   ```
+
+2. In Forza: Settings -> HUD and Gameplay -> Data Out = ON, IP `127.0.0.1`, port `5300`. Then
+   start the recorder and drive:
+
+   ```powershell
+   .venv\Scripts\python -m heat3d_capture telemetry -o laps
+   .venv\Scripts\python -m heat3d_capture telemetry --game acc -o laps      # ac, acc, acevo, acrally, ...
+   ```
+
+3. It says `listening on port 5300. Laps go to laps. Ctrl+C to stop.`, then a line per lap as you
+   cross the line; Ctrl+C stops it. Each lap is one `<stamp>_car<n>_lap<k>_<s>s.lap.json` in
+   `laps` (beside it `<stamp>_<game>.raw.parquet` and `.summary.json`, every packet kept whole).
+4. Open it in the [3DHeat viewer](https://github.com/Holdi601/3DHeat#quick-start):
+   download the viewer (**Code -> Download ZIP**, unpack) and double-click
+   `start.bat`; it offers to install [Node.js](https://nodejs.org/) when it is
+   missing and opens Chrome or Edge at `http://127.0.0.1:5273`. There, the **Race analysis** tab,
+   **Load lap files...** (or **Folder...**, or drop the files on the 3D view) and pick two or more
+   laps of the same course. A level `.glb` from the scan window (double-click `scan.bat`) or
+   `reconstruct` goes in with **Background / level -> 3D model...**.
+
+When a new release is out, the tool says so when it starts and offers to update the folder from
+the release (`.venv\Scripts\python -m heat3d_update` does the same).
+
+## Install from a checkout
 
 New to the command line? Read [Before you start](https://holdi601.github.io/3DHeat-GameCapture/before-you-start.html) first.
 
