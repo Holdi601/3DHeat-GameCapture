@@ -106,3 +106,4 @@ Thumbs.db
 *.raw.bin
 *.raw.parquet
 unused/
+dist-standalone/

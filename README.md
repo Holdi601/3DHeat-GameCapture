@@ -20,6 +20,17 @@ laps. Two lap files appear in `laps`. Drop them on the viewer's Race analysis ta
 > chosen: the default is Apache-2.0 and unrestricted, the larger variants and the offline VGGT
 > model are non-commercial. Details in [`LICENSES.md`](LICENSES.md).
 
+## The standalone lap recorder
+
+No Python needed for recording laps: download the file for your system (Windows, Linux, macOS) from the
+[latest release](https://github.com/Holdi601/3DHeat-GameCapture/releases/latest), check it against
+`SHA256SUMS`, unpack it and start `heat3d-gamecapture`. Its window starts and stops the recorder for your
+game (Forza, the Assetto Corsa games, EA WRC / DiRT / RBR, BeamNG.drive), converts a course from an FH
+Companion lap library, and asks before it updates itself. `heat3d-gamecapture --help` lists its commands;
+`heat3d-gamecapture telemetry ...` runs the command below unchanged. The scanner and the offline
+reconstruction need a source install (below). The 3DHeat app's Extractors panel can install and update it
+for you. See [Before you start](https://holdi601.github.io/3DHeat-GameCapture/before-you-start.html).
+
 ## What it is useful for
 
 - **Lap telemetry** - record every channel a racing game publishes (Forza Data Out, the Assetto

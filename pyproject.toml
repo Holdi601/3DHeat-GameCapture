@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+# The lap recorders and what the standalone program is built from. The scanner
+# and the offline reconstruction need more (requirements*.txt, and PyTorch for
+# the GPU this machine has); install those as the README says.
+[project]
+name = "heat3d-capture"
+version = "1.1.0"
+description = "Lap recorders and level reconstruction from gameplay for the 3DHeat viewer"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+dependencies = ["numpy>=2.0,<2.8", "pyarrow>=15"]
+
+[project.optional-dependencies]
+test = ["pytest>=8.0"]
+
+[project.scripts]
+heat3d-capture = "heat3d_capture.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["heat3d_capture*"]

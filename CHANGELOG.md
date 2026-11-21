@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.1.0
+
+- A standalone lap recorder for Windows, Linux and macOS (no Python needed), built by CI with a `SHA256SUMS`
+  file. Without arguments it opens a window that starts and stops the recorder for a game (Forza, the Assetto
+  Corsa games, EA WRC / DiRT / RBR, BeamNG.drive), converts a course from an FH Companion lap library, and
+  checks for updates. `heat3d-gamecapture <command>` runs the tool's commands unchanged; `--check --json` for
+  scripts. The scanner and the offline reconstruction stay with a source install.
+- A `pyproject.toml` with the recorders' own needs (numpy, pyarrow) and the `heat3d-capture` command;
+  `heat3d_capture.__version__` is set. Tests that need a library only the scanner or the reconstruction uses
+  skip where it is not installed.
+- Updates ask first (update now / later / skip this version) unless automatic updates were chosen
+  (`--auto-update`, the window's checkbox, or `HEAT3D_AUTO_UPDATE=1`); `heat3d_update.startup` asks through the
+  same code.
+
 ## 1.0.4
 
 - The depth estimator answers an empty batch with nothing before it needs PyTorch, so the test

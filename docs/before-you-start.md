@@ -8,6 +8,32 @@ nav_order: 1.5
 New to the command line? This page gets you from nothing to a first working command. It takes
 about ten minutes, once.
 
+## The standalone lap recorder (no Python needed)
+
+For recording laps only, each [release](https://github.com/Holdi601/3DHeat-GameCapture/releases/latest)
+has a ready-to-run program for Windows (`heat3d-gamecapture-<version>-windows-x64.zip`),
+Linux (`...-linux-x64.tar.gz`) and macOS (`...-macos-arm64.tar.gz`), with a
+`SHA256SUMS` file to check the download. Unpack it anywhere and start
+`heat3d-gamecapture` (on macOS the first start may need *Open* from the
+right-click menu, as the program is not notarised).
+
+Started without arguments it opens a window that:
+
+- starts the recorder for your game - Forza (Data Out), the Assetto Corsa games
+  (their shared memory, Windows only), EA WRC, DiRT and RBR (their UDP
+  telemetry), BeamNG.drive (the heat3d protocol mod) - and stops it with *Stop*;
+  each finished lap is one file, by default under `%LOCALAPPDATA%\3DHeat\laps`
+  on Windows and `~/.local/share/3dheat/laps` elsewhere;
+- converts a course from an FH Companion lap library;
+- checks for updates and asks before installing one, unless you tick
+  *Update automatically*.
+
+The same program runs the commands on these pages:
+`heat3d-gamecapture telemetry --game forza -o laps`. `heat3d-gamecapture --check --json`
+is for scripts. The scanner and the offline reconstruction are not in it: they
+need the steps below. The 3DHeat app's Extractors panel installs, updates and
+starts it for you.
+
 ## 1. Install Python
 
 GameCapture is a Python program. You need **Python 3.10 or later**.

@@ -1,0 +1,9 @@
+{
+  "spec": "heat3d_capture.standalone_spec",
+  "collect_submodules": ["numpy", "pyarrow"],
+  "platforms": {
+    "windows-x64": {"build": true, "tested": false, "note": "the lap recorders; CI builds, runs the tests (those needing the scanner's libraries skip) and smoke-runs"},
+    "linux-x64": {"build": true, "tested": false, "note": "the UDP recorders (Forza, rally games, BeamNG); Assetto Corsa's shared memory is Windows only; CI builds and smoke-runs"},
+    "macos-arm64": {"build": true, "tested": false, "note": "the UDP recorders; CI builds and smoke-runs"}
+  }
+}
