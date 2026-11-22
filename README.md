@@ -31,6 +31,8 @@ Companion lap library, and asks before it updates itself. `heat3d-gamecapture --
 reconstruction need a source install (below). The 3DHeat app's Extractors panel can install and update it
 for you. See [Before you start](https://holdi601.github.io/3DHeat-GameCapture/before-you-start.html).
 
+The window walks through four steps (find the game, choose, work, done) in the 3DHeat look, dark or light. On Windows the program opens only its window, with no console window; in a terminal it prints as usual, and `heat3d-gamecapture-cli.cmd` in the same folder makes the terminal wait for it and pass on its exit code.
+
 ## What it is useful for
 
 - **Lap telemetry** - record every channel a racing game publishes (Forza Data Out, the Assetto
