@@ -98,6 +98,8 @@ SPEC = Spec(
     ],
     min_free_gb=1.0,
     notice="Not affiliated with or endorsed by any game's makers or publishers.",
+    # Records in the background: an icon by the clock says so and opens, pauses or quits it.
+    tray=True,
 )
 
 if __name__ == "__main__":

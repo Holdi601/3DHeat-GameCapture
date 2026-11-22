@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.3.0
+
+- An icon by the clock while it records (Windows): its tooltip and the first line of its menu say what is
+  being recorded and for how long; Open brings the window back, Pause stops the recording (what was
+  recorded is saved) and Resume starts the same one again, Quit stops it and ends the program. Closing
+  the window during a recording keeps recording in the background instead of asking.
+
 ## 1.2.0
 
 - The Assetto Corsa games (`--game ac`, `acc`, `acevo`) write one `heat3d-session` file per session: every lap

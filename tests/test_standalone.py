@@ -283,3 +283,19 @@ def test_real_spec_replay_verbs(capsys):
     with pytest.raises(SystemExit) as e:
         app_entry.main(spec, ["convert", "--help"])
     assert e.value.code == 0
+
+
+def test_tray_says_what_it_does(monkeypatch):
+    tray = importlib.import_module(f"{PKG}.app.tray")
+    s = tray.TrayState("3DHeat Watcher")
+    assert s.status() == "Not recording" and [a for _, a in s.menu()] == [None, None, "open", "quit"]
+    s.state, s.what, s.since = "recording", "Watch my games", 1000.0
+    assert s.status(now=1000.0 + 75 * 60) == "Recording: Watch my games (1 h 15 min)"
+    assert "pause" in [a for _, a in s.menu()] and "resume" not in [a for _, a in s.menu()]
+    s.state = "paused"
+    assert s.status() == "Paused: Watch my games" and "resume" in [a for _, a in s.menu()]
+    s.what = "x" * 300
+    assert len(s.tooltip()) == 127
+    # No icon where there is none to have: the window then behaves as before.
+    monkeypatch.setenv("HEAT3D_NO_TRAY", "1")
+    assert tray.start("3DHeat Watcher", lambda a: None) is None
