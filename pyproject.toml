@@ -7,7 +7,7 @@ build-backend = "setuptools.build_meta"
 # the GPU this machine has); install those as the README says.
 [project]
 name = "heat3d-capture"
-version = "1.1.0"
+version = "1.2.0"
 description = "Lap recorders and level reconstruction from gameplay for the 3DHeat viewer"
 readme = "README.md"
 license = { file = "LICENSE" }

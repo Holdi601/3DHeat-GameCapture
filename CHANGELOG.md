@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.2.0
+
+- The Assetto Corsa games (`--game ac`, `acc`, `acevo`) write one `heat3d-session` file per session: every lap
+  and the runs between them, rewritten after each lap; `--per-lap` keeps one `heat3d-lap` file per lap.
+- AC and ACC: the graphics page's position along the lap, sector, lap time so far, race position and pit flags
+  are written per sample (`lapFraction`, `sector`, `lapTimeMs`, `racePosition`, `inPit`, `inPitLane`), ACC's
+  valid-lap flag too (`lapValid`); the static page's track layout, track length, sector count, the car's skin,
+  top rpm, fuel capacity and tyre radii go into the file.
+- ACC and AC EVO: the other cars' positions from the graphics page's table of every car, 10 times a second,
+  in the session file's `others`; written only when the table's entry for the player matches the player's own
+  position.
+- AC EVO: its own graphics page is read, after the published SharedFileOut.h layout (2026-04-28): laps close where
+  the game's position along the lap passes the line, with the game's lap time; the track's layout and length
+  and the car's model id are written.
+- A lap the game counted but that was joined part-way round is written as a run, not a complete lap.
+
 ## 1.1.0
 
 - A standalone lap recorder for Windows, Linux and macOS (no Python needed), built by CI with a `SHA256SUMS`

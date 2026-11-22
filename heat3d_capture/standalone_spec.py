@@ -1,7 +1,7 @@
 """
 The standalone app's description of this tool (app/spec.py): the lap
 recorders. Each game's recorder is a task that runs until it is stopped and
-writes one file per lap for the viewer's Race tab; a recorded FH Companion lap
+writes one file per lap (the Assetto Corsa games: per session) for the viewer's Race tab; a recorded FH Companion lap
 library is converted by another. The scanner (`python -m heat3d_capture.ui`)
 and the offline reconstruction need the GPU stack of a source install and are
 not part of this program. `python -m heat3d_capture.standalone_spec` runs the
@@ -49,7 +49,7 @@ SPEC = Spec(
     version=__version__,
     tools={TOOL: "heat3d_capture.__main__:main"},
     default_tool=TOOL,
-    description="lap recorders: every telemetry channel, one file per lap, for the 3DHeat Race tab",
+    description="lap recorders: every telemetry channel, one file per lap or session, for the 3DHeat Race tab",
     module="heat3d_capture.standalone_spec",
     games=[],
     tasks=[

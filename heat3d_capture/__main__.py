@@ -180,9 +180,10 @@ def _telemetry(args: argparse.Namespace) -> int:
     if args.game != "forza":
         from .telemetry import kunos
 
-        print(f"reading {args.game}'s shared memory. Laps go to {args.out}. Ctrl+C to stop.")
-        written = kunos.run(args.out, game=args.game)
-        print(f"\n{len(written)} laps written to {args.out}")
+        what = "one file per lap" if args.per_lap else "one file per session"
+        print(f"reading {args.game}'s shared memory, {what}, into {args.out}. Ctrl+C to stop.")
+        written = kunos.run(args.out, game=args.game, per_lap=args.per_lap)
+        print(f"\n{len(written)} {'laps' if args.per_lap else 'sessions'} written to {args.out}")
         return 0
 
     from .telemetry.fulllap import parse_forward, run
@@ -611,7 +612,7 @@ def main(argv: list[str] | None = None) -> int:
 
     p = sub.add_parser(
         "telemetry",
-        help="record every telemetry channel, one file per lap, for the viewer's Race tab",
+        help="record every telemetry channel, one file per lap (the Assetto Corsa games: per session), for the viewer's Race tab",
     )
     p.add_argument("-o", "--out", type=Path, default=Path("laps"), help="folder for the lap files")
     p.add_argument("--port", type=int, default=5300, help="the port the game sends to")
@@ -629,6 +630,11 @@ def main(argv: list[str] | None = None) -> int:
             "wrc, dirtrally2, dirtrally, dirt4 or rbr from their UDP telemetry; beamng from the heat3d "
             "protocol mod; trackmania from the Openplanet plugin's files (see docs/games.md)"
         ),
+    )
+    p.add_argument(
+        "--per-lap",
+        action="store_true",
+        help="ac, acc, acevo, acrally: one heat3d-lap file per lap instead of one heat3d-session file per session",
     )
     p.add_argument("--install", action="store_true", help="beamng / trackmania: copy the mod or plugin into the game's folder first")
     p.add_argument("--configure", default=None, help="wrc: the game's telemetry config.json to switch the packet on in (backed up first)")

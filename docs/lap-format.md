@@ -67,6 +67,16 @@ not told apart), `assetto-corsa`, `assetto-corsa-competizione`,
 - `surface`: `tarmac`, `loose`, `snow`, `ice` or `mixed`, when known (the rally
   recorders take it from `--surface`).
 
+## Several laps in one file: `heat3d-session`
+
+The Assetto Corsa recorders write a whole session into one file: `format` is
+`heat3d-session`, `laps` is a list of `heat3d-lap` documents as above, and the
+session's `game`, `track`, `layout`, `car`, `session` (and `sessionType` where
+the game numbers them) sit beside it. `others` holds the other cars'
+positions where the game publishes them, one entry per car: `id` and
+`channels` with `time`, `x`, `y`, `z` on the same clock as the laps' first
+sample. See [Assetto Corsa games](telemetry-assetto-corsa.md#sessions).
+
 ## Channels
 
 A channel a game does not send is absent, never filled with zeros. Per-wheel

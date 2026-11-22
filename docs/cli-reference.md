@@ -20,8 +20,8 @@ Reconstruct a level from a recording.
 positional arguments:
   {route,telemetry,laps,reconstruct,hud,locate}
     route               record a lap's positions from the game's telemetry, and nothing else
-    telemetry           record every telemetry channel, one file per lap, for the viewer's Race
-                        tab
+    telemetry           record every telemetry channel, one file per lap (the Assetto Corsa games:
+                        per session), for the viewer's Race tab
     laps                read a recorded lap library, and write out one course
     reconstruct         solve a recording offline and write a .glb
     hud                 read the player's own actions, deaths and minimap track, and the kill
@@ -52,7 +52,7 @@ options:
 ```text
 usage: heat3d_capture telemetry [-h] [-o OUT] [--port PORT] [--forward FORWARD]
                                 [--game {forza,ac,acc,acevo,acrally,wrc,dirtrally2,dirtrally,dirt4,rbr,beamng,trackmania}]
-                                [--install] [--configure CONFIGURE]
+                                [--per-lap] [--install] [--configure CONFIGURE]
                                 [--surface {tarmac,loose,snow,ice,mixed}]
 
 options:
@@ -65,6 +65,8 @@ options:
                         shared memory; wrc, dirtrally2, dirtrally, dirt4 or rbr from their UDP
                         telemetry; beamng from the heat3d protocol mod; trackmania from the
                         Openplanet plugin's files (see docs/games.md)
+  --per-lap             ac, acc, acevo, acrally: one heat3d-lap file per lap instead of one
+                        heat3d-session file per session
   --install             beamng / trackmania: copy the mod or plugin into the game's folder first
   --configure CONFIGURE
                         wrc: the game's telemetry config.json to switch the packet on in (backed
