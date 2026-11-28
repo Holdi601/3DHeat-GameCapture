@@ -1,0 +1,40 @@
+{
+  "format": "3dheat-plugin",
+  "version": 1,
+  "id": "gamecapture",
+  "name": "Racing laps",
+  "kind": "tool",
+  "what": "Records your laps from the telemetry a racing game sends, one file per lap",
+  "games": [
+    {
+      "id": "racing",
+      "name": "Racing games"
+    }
+  ],
+  "platforms": [
+    "windows-x64",
+    "linux-x64",
+    "macos-arm64"
+  ],
+  "icon": "icon-64.png",
+  "programs": [
+    {
+      "id": "heat3d-gamecapture",
+      "repo": "Holdi601/3DHeat-GameCapture",
+      "verbs": {
+        "check": [
+          "--check",
+          "--json"
+        ]
+      }
+    }
+  ],
+  "capabilities": {
+    "replays": {
+      "program": "heat3d-gamecapture",
+      "live": true
+    }
+  },
+  "requirements": [],
+  "detect": {}
+}

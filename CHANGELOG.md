@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- `plugin.json`: the manifest 3DHeat's Games page reads to know what this tool does, which games it is
+  for and how to call it. The release archive carries it and the tool's icon (`icon-64.png`) beside the
+  program.
+
 ## 1.3.0
 
 - An icon by the clock while it records (Windows): its tooltip and the first line of its menu say what is

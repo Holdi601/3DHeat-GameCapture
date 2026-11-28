@@ -20,6 +20,12 @@ laps. Two lap files appear in `laps`. Drop them on the viewer's Race analysis ta
 > chosen: the default is Apache-2.0 and unrestricted, the larger variants and the offline VGGT
 > model are non-commercial. Details in [`LICENSES.md`](LICENSES.md).
 
+## In 3DHeat
+
+Install it from the Games page of 3DHeat: 3DHeat installs it and runs it for you. The manifest
+[`plugin.json`](plugin.json) in this repository, also beside the program in every release, tells 3DHeat
+what the tool does, which games it is for and how to call it.
+
 ## The standalone lap recorder
 
 No Python needed for recording laps: download the file for your system (Windows, Linux, macOS) from the
